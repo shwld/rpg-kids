@@ -1,0 +1,191 @@
+import React from 'react';
+import { Permissions, ImagePicker } from 'expo'
+import { NavigationScreenProp } from 'react-navigation'
+import firebase from '../lib/firebase'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
+import styles from '../styles'
+import {
+  Content,
+  Button,
+  Text,
+  Card,
+  CardItem,
+  Body,
+  Thumbnail,
+  ActionSheet,
+} from 'native-base';
+import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
+
+interface Props {
+  navigation: NavigationScreenProp<any, any>
+  addCharacter(payload: { variables: {name, birthday, description} })
+}
+
+interface State {
+  name: InputString
+  birthday: InputDate
+  description: InputString
+  imageUri: string
+}
+
+const ADD_CHARACTER = gql`
+mutation addCharacter($name:String = "", $birthday:DateTime = "2000/1/1", $description:String = "") {
+  createCharacter(name: $name, birthday: $birthday, description: $description) {
+    character {
+      id
+      name
+      birthday
+      description
+    }
+    errors
+  }
+}
+`;
+
+class AddCharacterForm extends React.Component<Props, State> {
+  state: State = {
+    name: {
+      value: '',
+      validate: value => (value.trim() !== ''),
+    },
+    birthday: {
+      value: new Date(),
+      validate: value => (value ? true : false),
+    },
+    description: {
+      value: '',
+      validate: value => (value.trim() !== ''),
+    },
+    imageUri: '',
+  }
+
+  valid() {
+    const results: boolean[] = []
+    results.push(this.state.name.validate(this.state.name.value))
+    this.setState({name: {...this.state.name, isDirty: true}})
+    results.push(this.state.birthday.validate(this.state.birthday.value))
+    this.setState({birthday: {...this.state.birthday, isDirty: true}})
+    results.push(this.state.description.validate(this.state.description.value))
+    this.setState({description: {...this.state.description, isDirty: true}})
+    return results.every(x => x)
+  }
+
+  async save() {
+    const { navigation, addCharacter } = this.props
+    if (!this.valid()) { return }
+    const { name, birthday, description } = this.state
+    await addCharacter({
+      variables: {
+        name: name.value,
+        birthday: birthday.value,
+        description: description.value,
+      },
+    })
+    navigation.replace('Status')
+  }
+
+  async permit(type) {
+    await Permissions.askAsync(type)
+    const { status } = await Permissions.getAsync(type)
+    return status === 'granted'
+  }
+
+  async takeImage() {
+    const canCamera = await this.permit(Permissions.CAMERA)
+    if (!canCamera) { return }
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+    })
+    if (result.cancelled) { return }
+    this.setState({imageUri: result.uri})
+  }
+
+  async pickImage() {
+    const canCameraRoll = await this.permit(Permissions.CAMERA_ROLL)
+    if (!canCameraRoll) { return }
+    let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+    });
+    if (result.cancelled) { return }
+
+    this.setState({imageUri: result.uri});
+  }
+
+  getImageSource() {
+    if (this.state.imageUri) {
+      return { uri: this.state.imageUri }
+    }
+    return require('../assets/baby_asia_boy.png')
+  }
+
+  takeOrPickPicture() {
+    var BUTTONS = [
+      { text: 'カメラ', icon: 'camera', iconColor: '#2c8ef4' },
+      { text: 'カメラロール', icon: 'file', iconColor: '#f42ced' },
+      { text: 'キャンセル', icon: 'close', iconColor: '#25de5b' }
+    ]
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 2,
+        title: '写真をアップロード',
+      },
+      buttonIndex => {
+        switch(buttonIndex) {
+          case 0:
+            return this.takeImage()
+          case 1:
+            return this.pickImage()
+          default:
+            return
+        }
+      }
+    )
+  }
+
+  render() {
+    return (
+      <Content contentContainerStyle={styles.stretch}>
+        <Card>
+          <CardItem button onPress={() => this.takeOrPickPicture()} >
+            <Thumbnail
+              source={this.getImageSource()}
+              style={{marginRight: 20}}
+            />
+          </CardItem>
+          <CardItem>
+            <Body style={styles.stretch}>
+              <TextInput
+                label='名前'
+                onChange={name => this.setState({name})}
+                item={this.state.name}
+              />
+              <DateInput 
+                label='誕生日'
+                onChange={birthday => this.setState({birthday})}
+                item={this.state.birthday}
+              />
+              <TextInput
+                label='ひとこと'
+                onChange={description => this.setState({description})}
+                item={this.state.description}
+              />
+            </Body>
+          </CardItem>
+          <CardItem>
+            <Body style={styles.stretch}>
+              <Button block onPress={() => this.save()} >
+                <Text>登録</Text>
+              </Button>
+            </Body>
+          </CardItem>
+        </Card>
+      </Content>
+    )
+  }
+}
+
+export default graphql<Props>(ADD_CHARACTER,
+  { name: 'addCharacter'}
+)(AddCharacterForm)
