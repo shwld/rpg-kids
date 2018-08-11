@@ -7,7 +7,7 @@ import {
   View,
 } from "native-base"
 import Status from '../components/Status'
-import Skills from '../components/Skills'
+import Acquirements from '../components/Acquirements'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -22,6 +22,14 @@ interface Props {
             name: string
             birthday: Date
             description: string
+            acquirements: {
+              edges: {
+                node: {
+                  name: string
+                  acquiredAt: Date
+                }
+              }[]
+            }
           }
         }[]
       }
@@ -41,6 +49,15 @@ query {
           name
           birthday
           description
+          acquirements(last: 5) {
+            edges {
+              node {
+                id
+                name
+                acquiredAt
+              }
+            }
+          }
         }
       }
     }
@@ -67,7 +84,10 @@ class StatusScreen extends React.Component<Props> {
       return <AppLoading />
     }
     const characters = data.user.characters.edges.map(it => it.node)
+    // TODO: Change character
     const character = characters[0]
+    const acquirements: any[] = character.acquirements.edges.map(it => it.node)
+    console.log(acquirements)
     return (
       <View>
         <Status
@@ -76,18 +96,12 @@ class StatusScreen extends React.Component<Props> {
           goGetSkill={() => navigation.navigate('AcquireSkillScreen', {characterId: character.id})}
           onChangeCharacter={v => console.log(v)}
         ></Status>
-        <Skills
+        <Acquirements
           title="最近できるようになったこと"
-          skills={[]}
+          acquirements={acquirements}
           goLogs={() => navigation.navigate('Log')}
           goSkill={() => navigation.navigate('Skill')}
-        ></Skills>
-        <Skills
-          title="もうすぐできるかも"
-          skills={[]}
-          goLogs={() => navigation.navigate('Log')}
-          goSkill={() => navigation.navigate('Skill')}
-        ></Skills>
+        ></Acquirements>
       </View>
     )
   }
