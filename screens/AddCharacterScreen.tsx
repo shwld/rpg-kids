@@ -2,7 +2,8 @@ import React from 'react';
 import { Permissions, ImagePicker } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import firebase from '../lib/firebase'
-import { graphql } from 'react-apollo'
+import { compose, graphql } from 'react-apollo'
+import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
 import styles from '../styles'
 import {
@@ -20,6 +21,7 @@ import { TextInput, DateInput, InputString, InputDate } from '../components/Form
 interface Props {
   navigation: NavigationScreenProp<any, any>
   addCharacter(payload: { variables: {name, birthday, description} })
+  setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
 interface State {
@@ -27,6 +29,7 @@ interface State {
   birthday: InputDate
   description: InputString
   imageUri: string
+  proccessing: boolean
 }
 
 const ADD_CHARACTER = gql`
@@ -58,6 +61,7 @@ class AddCharacterForm extends React.Component<Props, State> {
       validate: value => (value.trim() !== ''),
     },
     imageUri: '',
+    proccessing: false,
   }
 
   valid() {
@@ -72,18 +76,26 @@ class AddCharacterForm extends React.Component<Props, State> {
   }
 
   async save() {
-    const { navigation, addCharacter } = this.props
-    if (!this.valid()) { return }
-    const { name, birthday, description } = this.state
-    const result = await addCharacter({
-      variables: {
-        name: name.value,
-        birthday: birthday.value,
-        description: description.value,
-      },
-    })
-    await this.uploadImage(this.state.imageUri, result.data.createCharacter.character.id)
-    navigation.replace('Status')
+    const { navigation, addCharacter, setInProgress } = this.props
+    setInProgress({variables: { inProgress: true }})
+    this.setState({proccessing: true})
+    try {
+      if (!this.valid()) { return }
+      const { name, birthday, description } = this.state
+      const result = await addCharacter({
+        variables: {
+          name: name.value,
+          birthday: birthday.value,
+          description: description.value,
+        },
+      })
+      await this.uploadImage(this.state.imageUri, result.data.createCharacter.character.id)
+      navigation.replace('Status')
+    } catch (e) {
+
+    } finally {
+      setInProgress({variables: { inProgress: false }})
+    }
   }
 
   async uploadImage(imageUri: string, characterId: string) {
@@ -207,6 +219,7 @@ class AddCharacterForm extends React.Component<Props, State> {
   }
 }
 
-export default graphql<Props>(ADD_CHARACTER,
-  { name: 'addCharacter'}
+export default compose(
+  graphql(ADD_CHARACTER, { name: 'addCharacter'}),
+  graphql(SET_IN_PROGRESS, { name: 'setInProgress'}),
 )(AddCharacterForm)

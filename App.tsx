@@ -3,6 +3,7 @@ import { Font, AppLoading } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
 import AuthSwitch from './navigator/AuthSwitch'
 import { Root } from 'native-base'
+import OverlayIndicator from './components/OverlayIndicator'
 
 import Apollo  from './graphql/Apollo'
 
@@ -17,6 +18,7 @@ class App extends React.Component {
     }
     return (
       <Apollo>
+        <OverlayIndicator />
         <Root>
           <AuthSwitch />
         </Root>
