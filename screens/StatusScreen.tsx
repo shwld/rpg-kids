@@ -68,13 +68,12 @@ class StatusScreen extends React.Component<Props> {
     }
     const characters = data.user.characters.edges.map(it => it.node)
     const character = characters[0]
-    console.log(character)
     return (
       <View>
         <Status
           character={character}
           selectableCharacters={characters}
-          goGetSkill={() => navigation.navigate('AddSkill')}
+          goGetSkill={() => navigation.navigate('AcquireSkillScreen', {characterId: character.id})}
           onChangeCharacter={v => console.log(v)}
         ></Status>
         <Skills
