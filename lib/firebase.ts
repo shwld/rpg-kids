@@ -14,4 +14,8 @@ export const authenticate = () => {
   })
 }
 
+export const generatePublicMediaUrl = (path: string) => {
+  return `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${encodeURIComponent(path)}?alt=media`
+}
+
 export default firebase

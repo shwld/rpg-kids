@@ -1,5 +1,6 @@
 import React from 'react';
 import format from 'date-fns/format'
+import { generatePublicMediaUrl } from '../lib/firebase'
 import {
   Body,
   Text,
@@ -25,11 +26,18 @@ interface Props {
   goGetSkill: () => any,
 }
 
+function getImageSource(imageUri: string) {
+  if (imageUri) {
+    return { uri: generatePublicMediaUrl(imageUri) }
+  }
+  return require('../assets/baby_asia_boy.png')
+}
+
 export default ({character, selectableCharacters, goGetSkill, onChangeCharacter}: Props) => (
   <Card style={{flex: 0}}>
     <CardItem style={{justifyContent: 'center', alignItems: 'center'}}>
       <Thumbnail
-        source={{ uri: `https://randomuser.me/api/portraits/women/${(Math.floor(Math.random()*(100+1-1))+1)}.jpg` }}
+        source={getImageSource(`characters/${character.id}/profile.jpg`)}
         style={{marginRight: 20}}
       />
       <Picker

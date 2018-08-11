@@ -75,14 +75,27 @@ class AddCharacterForm extends React.Component<Props, State> {
     const { navigation, addCharacter } = this.props
     if (!this.valid()) { return }
     const { name, birthday, description } = this.state
-    await addCharacter({
+    const result = await addCharacter({
       variables: {
         name: name.value,
         birthday: birthday.value,
         description: description.value,
       },
     })
+    await this.uploadImage(this.state.imageUri, result.data.createCharacter.character.id)
     navigation.replace('Status')
+  }
+
+  async uploadImage(imageUri: string, characterId: string) {
+    const response = await fetch(imageUri)
+    const blob = await response.blob()
+    const metadata = {
+      contentType: 'image/jpeg',
+    }
+    const ref = firebase.storage().ref(`characters/${characterId}/profile.jpg`)
+    const snapshot = await ref.put(blob, metadata)
+    console.log(snapshot)
+    console.log(ref.fullPath)
   }
 
   async permit(type) {
@@ -95,21 +108,30 @@ class AddCharacterForm extends React.Component<Props, State> {
     const canCamera = await this.permit(Permissions.CAMERA)
     if (!canCamera) { return }
     let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: 'Images',
       allowsEditing: true,
+      quality: 0.3,
+      exif: false,
     })
-    if (result.cancelled) { return }
-    this.setState({imageUri: result.uri})
+    this._handleImagePicked(result)
   }
 
   async pickImage() {
     const canCameraRoll = await this.permit(Permissions.CAMERA_ROLL)
     if (!canCameraRoll) { return }
     let result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
+      mediaTypes: 'Images',
+      allowsEditing: true,
+      quality: 0.3,
+      exif: false,
     });
-    if (result.cancelled) { return }
+    this._handleImagePicked(result)
+  }
 
-    this.setState({imageUri: result.uri});
+  async _handleImagePicked(pickerResult) {
+    if (!pickerResult.cancelled) {
+      this.setState({imageUri: pickerResult.uri});
+    }
   }
 
   getImageSource() {
