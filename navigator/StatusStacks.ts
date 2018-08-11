@@ -3,7 +3,7 @@ import { createStackNavigator } from 'react-navigation';
 import Status from '../screens/StatusScreen';
 import Log from '../screens/LogScreen';
 import Skill from '../screens/SkillScreen';
-import AddSkill from '../screens/AddSkillScreen';
+import AcquireSkillScreen from '../screens/AcquireSkillScreen';
 import AddCharacter from '../screens/AddCharacterScreen';
 
 export default createStackNavigator({
@@ -31,8 +31,8 @@ export default createStackNavigator({
       headerTitle: '自分を中心にして回転',
     },
   },
-  AddSkill: {
-    screen: AddSkill,
+  AcquireSkillScreen: {
+    screen: AcquireSkillScreen,
     navigationOptions: {
       headerTitle: 'これできた',
     },

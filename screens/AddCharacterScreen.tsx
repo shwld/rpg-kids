@@ -29,7 +29,6 @@ interface State {
   birthday: InputDate
   description: InputString
   imageUri: string
-  proccessing: boolean
 }
 
 const ADD_CHARACTER = gql`
@@ -61,24 +60,24 @@ class AddCharacterForm extends React.Component<Props, State> {
       validate: value => (value.trim() !== ''),
     },
     imageUri: '',
-    proccessing: false,
   }
 
   valid() {
-    const results: boolean[] = []
-    results.push(this.state.name.validate(this.state.name.value))
     this.setState({name: {...this.state.name, isDirty: true}})
-    results.push(this.state.birthday.validate(this.state.birthday.value))
     this.setState({birthday: {...this.state.birthday, isDirty: true}})
-    results.push(this.state.description.validate(this.state.description.value))
     this.setState({description: {...this.state.description, isDirty: true}})
+
+    const results: boolean[] = [
+      this.state.name.validate(this.state.name.value),
+      this.state.birthday.validate(this.state.birthday.value),
+      this.state.description.validate(this.state.description.value)
+    ]
     return results.every(x => x)
   }
 
   async save() {
     const { navigation, addCharacter, setInProgress } = this.props
     setInProgress({variables: { inProgress: true }})
-    this.setState({proccessing: true})
     try {
       if (!this.valid()) { return }
       const { name, birthday, description } = this.state
@@ -92,7 +91,7 @@ class AddCharacterForm extends React.Component<Props, State> {
       await this.uploadImage(this.state.imageUri, result.data.createCharacter.character.id)
       navigation.replace('Status')
     } catch (e) {
-
+      throw e
     } finally {
       setInProgress({variables: { inProgress: false }})
     }
