@@ -120,14 +120,13 @@ class AddCharacterForm extends React.Component<Props, State> {
   }
 
   takeOrPickPicture() {
-    var BUTTONS = [
-      { text: 'カメラ', icon: 'camera', iconColor: '#2c8ef4' },
-      { text: 'カメラロール', icon: 'file', iconColor: '#f42ced' },
-      { text: 'キャンセル', icon: 'close', iconColor: '#25de5b' }
-    ]
     ActionSheet.show(
       {
-        options: BUTTONS,
+        options: [
+          { text: 'カメラ', icon: 'camera', iconColor: '#2c8ef4' },
+          { text: 'カメラロール', icon: 'file', iconColor: '#f42ced' },
+          { text: 'キャンセル', icon: 'close', iconColor: '#25de5b' }
+        ],
         cancelButtonIndex: 2,
         title: '写真をアップロード',
       },
