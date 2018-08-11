@@ -2,7 +2,8 @@ import React from 'react';
 import { Permissions, ImagePicker } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import firebase from '../lib/firebase'
-import { graphql } from 'react-apollo'
+import { compose, graphql } from 'react-apollo'
+import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
 import styles from '../styles'
 import {
@@ -20,6 +21,7 @@ import { TextInput, DateInput, InputString, InputDate } from '../components/Form
 interface Props {
   navigation: NavigationScreenProp<any, any>
   addCharacter(payload: { variables: {name, birthday, description} })
+  setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
 interface State {
@@ -27,6 +29,7 @@ interface State {
   birthday: InputDate
   description: InputString
   imageUri: string
+  proccessing: boolean
 }
 
 const ADD_CHARACTER = gql`
@@ -58,6 +61,7 @@ class AddCharacterForm extends React.Component<Props, State> {
       validate: value => (value.trim() !== ''),
     },
     imageUri: '',
+    proccessing: false,
   }
 
   valid() {
@@ -72,17 +76,38 @@ class AddCharacterForm extends React.Component<Props, State> {
   }
 
   async save() {
-    const { navigation, addCharacter } = this.props
-    if (!this.valid()) { return }
-    const { name, birthday, description } = this.state
-    await addCharacter({
-      variables: {
-        name: name.value,
-        birthday: birthday.value,
-        description: description.value,
-      },
-    })
-    navigation.replace('Status')
+    const { navigation, addCharacter, setInProgress } = this.props
+    setInProgress({variables: { inProgress: true }})
+    this.setState({proccessing: true})
+    try {
+      if (!this.valid()) { return }
+      const { name, birthday, description } = this.state
+      const result = await addCharacter({
+        variables: {
+          name: name.value,
+          birthday: birthday.value,
+          description: description.value,
+        },
+      })
+      await this.uploadImage(this.state.imageUri, result.data.createCharacter.character.id)
+      navigation.replace('Status')
+    } catch (e) {
+
+    } finally {
+      setInProgress({variables: { inProgress: false }})
+    }
+  }
+
+  async uploadImage(imageUri: string, characterId: string) {
+    const response = await fetch(imageUri)
+    const blob = await response.blob()
+    const metadata = {
+      contentType: 'image/jpeg',
+    }
+    const ref = firebase.storage().ref(`characters/${characterId}/profile.jpg`)
+    const snapshot = await ref.put(blob, metadata)
+    console.log(snapshot)
+    console.log(ref.fullPath)
   }
 
   async permit(type) {
@@ -95,21 +120,30 @@ class AddCharacterForm extends React.Component<Props, State> {
     const canCamera = await this.permit(Permissions.CAMERA)
     if (!canCamera) { return }
     let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: 'Images',
       allowsEditing: true,
+      quality: 0.3,
+      exif: false,
     })
-    if (result.cancelled) { return }
-    this.setState({imageUri: result.uri})
+    this._handleImagePicked(result)
   }
 
   async pickImage() {
     const canCameraRoll = await this.permit(Permissions.CAMERA_ROLL)
     if (!canCameraRoll) { return }
     let result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
+      mediaTypes: 'Images',
+      allowsEditing: true,
+      quality: 0.3,
+      exif: false,
     });
-    if (result.cancelled) { return }
+    this._handleImagePicked(result)
+  }
 
-    this.setState({imageUri: result.uri});
+  async _handleImagePicked(pickerResult) {
+    if (!pickerResult.cancelled) {
+      this.setState({imageUri: pickerResult.uri});
+    }
   }
 
   getImageSource() {
@@ -120,14 +154,13 @@ class AddCharacterForm extends React.Component<Props, State> {
   }
 
   takeOrPickPicture() {
-    var BUTTONS = [
-      { text: 'カメラ', icon: 'camera', iconColor: '#2c8ef4' },
-      { text: 'カメラロール', icon: 'file', iconColor: '#f42ced' },
-      { text: 'キャンセル', icon: 'close', iconColor: '#25de5b' }
-    ]
     ActionSheet.show(
       {
-        options: BUTTONS,
+        options: [
+          { text: 'カメラ', icon: 'camera', iconColor: '#2c8ef4' },
+          { text: 'カメラロール', icon: 'file', iconColor: '#f42ced' },
+          { text: 'キャンセル', icon: 'close', iconColor: '#25de5b' }
+        ],
         cancelButtonIndex: 2,
         title: '写真をアップロード',
       },
@@ -186,6 +219,7 @@ class AddCharacterForm extends React.Component<Props, State> {
   }
 }
 
-export default graphql<Props>(ADD_CHARACTER,
-  { name: 'addCharacter'}
+export default compose(
+  graphql(ADD_CHARACTER, { name: 'addCharacter'}),
+  graphql(SET_IN_PROGRESS, { name: 'setInProgress'}),
 )(AddCharacterForm)

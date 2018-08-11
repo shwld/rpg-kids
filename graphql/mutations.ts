@@ -50,4 +50,28 @@ export default {
     cache.writeQuery({ query, data });
     return true;
   },
+  setInProgress: async (_obj, {inProgress}: {inProgress: boolean}, { cache }: { cache }) => {
+    const query = gql`
+      query getState @client {
+        state {
+          inProgress
+        }
+      }
+    `;
+    const data = {
+      state: {
+        __typename: 'State',
+        inProgress,
+      }
+    }
+    cache.writeQuery({ query, data });
+    return true;
+  },
 }
+
+export const SET_IN_PROGRESS = gql`
+  mutation SetInProgress($inProgress:Boolean = true) {
+    setInProgress(inProgress: $inProgress) @client
+  }
+`;
+
