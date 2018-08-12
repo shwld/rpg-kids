@@ -1,6 +1,6 @@
 import React from "react";
 import { AppLoading } from 'expo'
-import { graphql, compose } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { NavigationScreenProp } from 'react-navigation'
 import gql from 'graphql-tag'
 import {
@@ -13,23 +13,16 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
   data: {
     loading: boolean
-    user: {
-      id: string,
-      characters: {
+    character: {
+      id: string
+      name: string
+      birthday: Date
+      description: string
+      acquirements: {
         edges: {
           node: {
-            id: string
             name: string
-            birthday: Date
-            description: string
-            acquirements: {
-              edges: {
-                node: {
-                  name: string
-                  acquiredAt: Date
-                }
-              }[]
-            }
+            acquiredAt: Date
           }
         }[]
       }
@@ -37,27 +30,19 @@ interface Props {
   }
 }
 
-const GET_USER = gql`
-query {
-  user {
+const GET_CHARACTER = gql`
+query GetCharacter($id:ID = "") {
+  character(id: $id) {
     id
-    createdAt
-    characters {
+    name
+    birthday
+    description
+    acquirements(last: 5) {
       edges {
         node {
           id
           name
-          birthday
-          description
-          acquirements(last: 5) {
-            edges {
-              node {
-                id
-                name
-                acquiredAt
-              }
-            }
-          }
+          acquiredAt
         }
       }
     }
@@ -66,49 +51,40 @@ query {
 `;
 
 class StatusScreen extends React.Component<Props> {
-  _deckSwiper
 
   componentWillReceiveProps(newProps: Props) {
-    const { navigation, data } = newProps
-    if (data.loading) {
-      return
-    }
-    if (data.user.characters.edges.length === 0) {
-      navigation.replace('AddCharacter')
-    }
+    const { data } = newProps
+    console.log(data)
+    if (data.loading) { return }
   }
 
   render () {
     const { navigation, data } = this.props
-    if (data.loading || data.user.characters.edges.length === 0) {
+    if (data.loading || !data.character) {
       return <AppLoading />
     }
-    const characters = data.user.characters.edges.map(it => it.node)
-    // TODO: Change character
-    const character = characters[0]
+    const { character } = data
     const acquirements: any[] = character.acquirements.edges.map(it => it.node)
-    console.log(acquirements)
     return (
       <View>
-        <Status
-          character={character}
-          selectableCharacters={characters}
-          goGetSkill={() => navigation.navigate('AcquireSkillScreen', {characterId: character.id})}
-          onChangeCharacter={v => console.log(v)}
-        ></Status>
+        <Status character={character} />
         <Acquirements
           title="最近できるようになったこと"
           birthday={character.birthday}
           acquirements={acquirements}
           goLogs={() => navigation.navigate('Log', { characterId: character.id })}
           goSkill={() => {}}
-        ></Acquirements>
+        />
       </View>
     )
   }
 }
 
-export default compose(
-  graphql(GET_USER, { name: 'data'}),
-)(StatusScreen)
+export default graphql(GET_CHARACTER, {
+  name: 'data',
+  props: (props: any) => {
+    props.data.variables.id = props.ownProps.navigation.getParam('characterId', '')
+    return props
+  }
+})(StatusScreen)
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
-import Status from '../screens/StatusScreen';
+import MyStatus from '../screens/MyStatusScreen';
 import Log from '../screens/LogScreen';
 import AcquireSkillScreen from '../screens/AcquireSkillScreen';
 import AddCharacter from '../screens/AddCharacterScreen';
 
 export default createStackNavigator({
-  Status: {
-    screen: Status,
+  MyStatus: {
+    screen: MyStatus,
     navigationOptions: {
       headerTitle: '情報・記録',
     },
