@@ -3,7 +3,7 @@ import { Font, AppLoading } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
 import AuthSwitch from './navigator/AuthSwitch'
 import { Root } from 'native-base'
-import OverlayIndicator from './components/OverlayIndicator'
+import OverlayIndicator from './containers/OverlayIndicator'
 
 import Apollo  from './graphql/Apollo'
 

@@ -1,16 +1,15 @@
 import React from 'react';
-import { generatePublicMediaUrl } from '../lib/firebase'
 import {
   Body,
   Text,
   Card,
   CardItem,
-  Thumbnail,
   Icon,
   Button,
   Picker,
 } from "native-base";
 import getAge from '../lib/getAge'
+import CharacterIcon from '../components/CharacterIcon'
 
 interface Character {
   id: string
@@ -26,18 +25,11 @@ interface Props {
   goGetSkill: () => any,
 }
 
-function getImageSource(imageUri: string) {
-  if (imageUri) {
-    return { uri: generatePublicMediaUrl(imageUri) }
-  }
-  return require('../assets/baby_asia_boy.png')
-}
-
 export default ({character, selectableCharacters, goGetSkill, onChangeCharacter}: Props) => (
   <Card style={{flex: 0}}>
     <CardItem style={{justifyContent: 'center', alignItems: 'center'}}>
-      <Thumbnail
-        source={getImageSource(`characters/${character.id}/profile.jpg`)}
+      <CharacterIcon
+        characterId={character.id}
         style={{marginRight: 20}}
       />
       <Picker
