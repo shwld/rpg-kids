@@ -5,7 +5,7 @@ import differenceInMonths from 'date-fns/difference_in_months'
 import subMonths from 'date-fns/sub_months'
 import differenceInYears from 'date-fns/difference_in_years'
 
-export default function getAge(birthday: Date, baseDay: Date) {
+export default function getAge(birthday: Date|string, baseDay: Date|string = new Date()) {
   const baseDate = new Date(baseDay)
   const birthDate = new Date(birthday)
   if (!birthDate || !baseDate || !isAfter(baseDate, birthDate)) { return 'はやく生まれて！' }

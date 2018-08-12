@@ -147,7 +147,7 @@ class Screen extends React.Component<Props, State> {
       <Content>
         <FlatList
           data={edges.map(({node}) => ({key: node.id, ...node}))}
-          onEndReachedThreshold={100}
+          onEndReachedThreshold={30}
           onEndReached={() => this.onEndReached()}
           refreshing={this.state.refreshing}
           renderItem={(row) => this.renderItem(row)}
