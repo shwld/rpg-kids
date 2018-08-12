@@ -42,9 +42,9 @@ export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
             <Text>{it.name}</Text>
             <Text note numberOfLines={1}>{getAge(birthday, it.acquiredAt)}ころ</Text>
           </Body>
-          <Right>
+          {/* <Right>
             <Icon name="arrow-forward" />
-          </Right>
+          </Right> */}
         </ListItem>
       ))}
     </List>

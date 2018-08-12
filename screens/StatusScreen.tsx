@@ -101,7 +101,7 @@ class StatusScreen extends React.Component<Props> {
           birthday={character.birthday}
           acquirements={acquirements}
           goLogs={() => navigation.navigate('Log', { characterId: character.id })}
-          goSkill={() => navigation.navigate('Skill')}
+          goSkill={() => {}}
         ></Acquirements>
       </View>
     )

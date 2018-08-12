@@ -92,7 +92,7 @@ class Screen extends React.Component<Props> {
     return (
       <AcquirementCard
         acquirement={item}
-        onClick={() => this.props.navigation.navigate('Skill')}
+        onClick={() => {}}
       />
     )
   }
