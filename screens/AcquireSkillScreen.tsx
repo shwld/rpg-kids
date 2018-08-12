@@ -28,7 +28,7 @@ interface State {
 }
 
 const ACQUIRE_SKILL = gql`
-mutation AcquireSkill($characterId: String, $name:String, $acquiredAt:DateTime) {
+mutation AcquireSkill($characterId: String!, $name:String!, $acquiredAt:DateTime!) {
   acquireSkill(characterId: $characterId, name: $name, acquiredAt: $acquiredAt) {
     acquirement {
       skill {

@@ -1,5 +1,4 @@
 import React from 'react';
-import format from 'date-fns/format'
 import { generatePublicMediaUrl } from '../lib/firebase'
 import {
   Body,
@@ -11,6 +10,7 @@ import {
   Button,
   Picker,
 } from "native-base";
+import getAge from '../lib/getAge'
 
 interface Character {
   id: string
@@ -55,7 +55,7 @@ export default ({character, selectableCharacters, goGetSkill, onChangeCharacter}
     </CardItem>
     <CardItem style={{justifyContent: 'space-around', alignItems: 'center'}}>
       <Body style={{flexDirection: 'column', justifyContent: 'space-around'}}>
-        <Text note>{format(character.birthday, 'M月D日生まれ')}</Text>
+        <Text note>{getAge(character.birthday, new Date())}</Text>
         <Text>{character.description}</Text>
       </Body>
       <Button bordered onPress={() => goGetSkill()}>
