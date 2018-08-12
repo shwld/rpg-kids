@@ -33,7 +33,7 @@ export default (props: Props) => (
         </Body>
       </Left>
       <Right>
-      <Text note>{props.postedAt}</Text>
+        <Text note>{props.postedAt}</Text>
       </Right>
     </CardItem>
     <CardItem>

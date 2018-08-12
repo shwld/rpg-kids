@@ -3,15 +3,19 @@ import { AppLoading } from 'expo'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { NavigationScreenProp } from 'react-navigation'
+import format from 'date-fns/format'
+import ja from 'date-fns/locale/ja'
 import {
   Content,
   Text,
-  Separator,
   ListItem,
   Body,
   View,
+  Left,
+  Right,
 } from "native-base";
 import { FlatList, RefreshControl } from 'react-native'
+import getAge from '../lib/getAge'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -43,6 +47,15 @@ interface Props {
   }
 }
 
+interface State {
+  refreshing: boolean
+  character: {
+    id: string
+    name: string
+    birthday: Date
+  }
+}
+
 const GET_CHARACTER = gql`
 query Character($id:ID = "", $cursor: String) {
   character(id: $id) {
@@ -67,9 +80,20 @@ query Character($id:ID = "", $cursor: String) {
 }
 `;
 
-class Screen extends React.Component<Props> {
+class Screen extends React.Component<Props, State> {
   state = {
     refreshing: false,
+    character: {
+      id: '',
+      name: '',
+      birthday: new Date(),
+    }
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { data } = newProps
+    if (data.loading) { return }
+    this.setState({ character: data.character })
   }
 
   onEndReached() {
@@ -97,16 +121,19 @@ class Screen extends React.Component<Props> {
   }
 
   renderItem({ item, index }) {
+    const { birthday } = this.state.character
     return (
       <View>
-        <Separator bordered>
-          <Text>0歳10ヶ月</Text>
-        </Separator>
         <ListItem>
-          <Body>
-            <Text>{item.name}</Text>
-            <Text note numberOfLines={1}>{item.acquiredAt}</Text>
-          </Body>
+          <Left>
+            <Body>
+              <Text>{item.name}</Text>
+              <Text note numberOfLines={1}>{getAge(birthday, item.acquiredAt)}ころ</Text>
+            </Body>
+          </Left>
+          <Right>
+            <Text note numberOfLines={1}>{format(item.acquiredAt, 'MMMDo', {locale: ja})}</Text>
+          </Right>
         </ListItem>
       </View>
     )
