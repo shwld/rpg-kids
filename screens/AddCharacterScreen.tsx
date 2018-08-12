@@ -89,7 +89,7 @@ class AddCharacterForm extends React.Component<Props, State> {
         },
       })
       await this.uploadImage(this.state.imageUri, result.data.createCharacter.character.id)
-      navigation.replace('Status')
+      navigation.replace('MyStatus')
     } catch (e) {
       throw e
     } finally {

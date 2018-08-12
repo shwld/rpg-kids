@@ -22,12 +22,13 @@ interface Props {
       birthday: string
     }
   }
-  onClick: Function
+  onCharacterClick: Function
+  onAcquirementClick: Function
 }
 
-export default ({ acquirement, onClick }: Props) => (
+export default ({ acquirement, onCharacterClick, onAcquirementClick }: Props) => (
   <Card>
-    <CardItem>
+    <CardItem button onPress={() => onCharacterClick()}>
       <CharacterIcon characterId={acquirement.character.id} style={{marginRight: 20}} />
       <Body style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
         <Text>{acquirement.character.name}</Text>
@@ -36,7 +37,7 @@ export default ({ acquirement, onClick }: Props) => (
    </CardItem>
     <CardItem>
       <Body style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-        <Button primary rounded small onPress={() => onClick()}>
+        <Button primary rounded small onPress={() => onAcquirementClick()}>
           <Text>{acquirement.name}</Text>
         </Button>
         <Text style={{marginLeft: 10}}>できた！</Text>

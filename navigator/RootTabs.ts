@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation';
 import Flow from './FlowStacks'
-import Status from './StatusStacks'
+import MyStatus from './StatusStacks'
 import TabBarIcon from '../components/TabBarIcon'
 
 export default createBottomTabNavigator({
@@ -14,8 +14,8 @@ export default createBottomTabNavigator({
       ),
     },
   },
-  Status: {
-    screen: Status,
+  MyStatus: {
+    screen: MyStatus,
     navigationOptions: {
       tabBarLabel: '情報・記録',
       tabBarIcon: (elem) => (
