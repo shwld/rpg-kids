@@ -9,7 +9,7 @@ import {
   Button,
 } from "native-base";
 import CharacterIcon from './CharacterIcon'
-import getAge from '../lib/getAge'
+import getAge from '../lib/utils/getAge'
 import styles from '../styles'
 
 interface Props {

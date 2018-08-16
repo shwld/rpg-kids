@@ -8,7 +8,7 @@ import {
   Button,
   Picker,
 } from "native-base";
-import getAge from '../lib/getAge'
+import getAge from '../lib/utils/getAge'
 import CharacterIcon from '../components/CharacterIcon'
 
 interface Character {
