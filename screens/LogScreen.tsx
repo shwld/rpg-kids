@@ -1,6 +1,6 @@
-import React from "react";
+import React from "react"
 import { AppLoading } from 'expo'
-import { graphql, compose } from 'react-apollo'
+import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import { NavigationScreenProp } from 'react-navigation'
 import format from 'date-fns/format'
@@ -14,46 +14,12 @@ import {
   Left,
   Right,
 } from "native-base";
-import { FlatList, RefreshControl } from 'react-native'
+import { FlatList } from 'react-native'
 import getAge from '../lib/getAge'
+import isEmpty from '../lib/utils/isEmpty'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
-  options: any
-  data: {
-    loading: boolean
-    fetchMore: Function,
-    variables: any,
-    character: {
-      id: string,
-      name: string,
-      birthday: Date,
-      acquirements: {
-        edges: {
-          node: {
-            id: string
-            skillId: string
-            name: string
-            acquiredAt: Date
-          }
-          cursor: string
-        }[]
-        pageInfo: {
-          hasNextPage: boolean
-          endCursor: boolean
-        }
-      }
-    }
-  }
-}
-
-interface State {
-  refreshing: boolean
-  character: {
-    id: string
-    name: string
-    birthday: Date
-  }
 }
 
 const GET_CHARACTER = gql`
@@ -80,24 +46,8 @@ query Character($id:ID = "", $cursor: String) {
 }
 `;
 
-class Screen extends React.Component<Props, State> {
-  state = {
-    refreshing: false,
-    character: {
-      id: '',
-      name: '',
-      birthday: new Date(),
-    }
-  }
-
-  componentWillReceiveProps(newProps) {
-    const { data } = newProps
-    if (data.loading) { return }
-    this.setState({ character: data.character })
-  }
-
-  onEndReached() {
-    const { data } = this.props
+class Screen extends React.Component<Props> {
+  onEndReached(data) {
     const { pageInfo: { endCursor, hasNextPage } } = data.character.acquirements
     if (!hasNextPage) { return }
       data.fetchMore({
@@ -120,8 +70,7 @@ class Screen extends React.Component<Props, State> {
       })
   }
 
-  renderItem({ item, index }) {
-    const { birthday } = this.state.character
+  renderItem({ item, index }, birthday) {
     return (
       <View>
         <ListItem>
@@ -140,36 +89,25 @@ class Screen extends React.Component<Props, State> {
   }
 
   render() {
-    const { data } = this.props
-    if (data.loading) { return <AppLoading /> }
-    const { edges } = data.character.acquirements
+    const id = this. props.navigation.getParam('characterId', '')
     return (
-      <Content>
-        <FlatList
-          data={edges.map(({node}) => ({key: node.id, ...node}))}
-          onEndReachedThreshold={30}
-          onEndReached={() => this.onEndReached()}
-          refreshing={this.state.refreshing}
-          renderItem={(row) => this.renderItem(row)}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={() => {}}
-            />
+      <Query query={GET_CHARACTER} variables={{id}} fetchPolicy="cache-and-network">
+        {({data}) => {
+          if (isEmpty(data) || data.loading) {
+            return <AppLoading />
           }
-        />
-      </Content>
+          return <Content>
+            <FlatList
+              data={data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
+              onEndReachedThreshold={30}
+              onEndReached={() => this.onEndReached(data)}
+              renderItem={(row) => this.renderItem(row, data.character.birthday)}
+            />
+          </Content>
+        }}
+      </Query>
     )
   }
 }
 
-export default compose(
-  graphql(GET_CHARACTER, {
-    name: 'data',
-    props: (props: any) => {
-      props.data.variables.id = props.ownProps.navigation.getParam('characterId', '')
-      return props
-    },
-  }),
-)(Screen)
-
+export default Screen
