@@ -15,8 +15,9 @@ import {
   Right,
 } from "native-base";
 import { FlatList } from 'react-native'
-import getAge from '../lib/getAge'
+import getAge from '../lib/utils/getAge'
 import isEmpty from '../lib/utils/isEmpty'
+import getParam from '../lib/utils/getParam'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -46,68 +47,61 @@ query Character($id:ID = "", $cursor: String) {
 }
 `;
 
-class Screen extends React.Component<Props> {
-  onEndReached(data) {
-    const { pageInfo: { endCursor, hasNextPage } } = data.character.acquirements
-    if (!hasNextPage) { return }
-      data.fetchMore({
-        query: GET_CHARACTER,
-        variables: { ...data.variables, cursor: endCursor },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          const newEdges = fetchMoreResult.character.acquirements.edges;
-          const pageInfo = fetchMoreResult.character.acquirements.pageInfo;
+const onEndReached = (data) => {
+  const { pageInfo: { endCursor, hasNextPage } } = data.character.acquirements
+  if (!hasNextPage) { return }
+  data.fetchMore({
+    query: GET_CHARACTER,
+    variables: { ...data.variables, cursor: endCursor },
+    updateQuery: (previousResult, { fetchMoreResult }) => {
+      const newEdges = fetchMoreResult.character.acquirements.edges;
+      const pageInfo = fetchMoreResult.character.acquirements.pageInfo;
 
-          if (!newEdges.length) { return previousResult }
+      if (!newEdges.length) { return previousResult }
 
-          fetchMoreResult.character.acquirements = {
-            __typename: previousResult.character.acquirements.__typename,
-            edges: [...previousResult.character.acquirements.edges, ...newEdges],
-            pageInfo,
-          }
+      fetchMoreResult.character.acquirements = {
+        __typename: previousResult.character.acquirements.__typename,
+        edges: [...previousResult.character.acquirements.edges, ...newEdges],
+        pageInfo,
+      }
 
-          return fetchMoreResult
-        }
-      })
-  }
-
-  renderItem({ item, index }, birthday) {
-    return (
-      <View>
-        <ListItem>
-          <Left>
-            <Body>
-              <Text>{item.name}</Text>
-              <Text note numberOfLines={1}>{getAge(birthday, item.acquiredAt)}ころ</Text>
-            </Body>
-          </Left>
-          <Right>
-            <Text note numberOfLines={1}>{format(item.acquiredAt, 'MMMDo', {locale: ja})}</Text>
-          </Right>
-        </ListItem>
-      </View>
-    )
-  }
-
-  render() {
-    const id = this. props.navigation.getParam('characterId', '')
-    return (
-      <Query query={GET_CHARACTER} variables={{id}} fetchPolicy="cache-and-network">
-        {({data}) => {
-          if (isEmpty(data) || data.loading) {
-            return <AppLoading />
-          }
-          return <Content>
-            <FlatList
-              data={data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
-              onEndReachedThreshold={30}
-              onEndReached={() => this.onEndReached(data)}
-              renderItem={(row) => this.renderItem(row, data.character.birthday)}
-            />
-          </Content>
-        }}
-      </Query>
-    )
-  }
+      return fetchMoreResult
+    }
+  })
 }
 
-export default Screen
+const renderItem = ({ item, index }, birthday) => {
+  return (
+    <View>
+      <ListItem>
+        <Left>
+          <Body>
+            <Text>{item.name}</Text>
+            <Text note numberOfLines={1}>{getAge(birthday, item.acquiredAt)}ころ</Text>
+          </Body>
+        </Left>
+        <Right>
+          <Text note numberOfLines={1}>{format(item.acquiredAt, 'MMMDo', {locale: ja})}</Text>
+        </Right>
+      </ListItem>
+    </View>
+  )
+}
+
+export default (props: Props) => (
+  <Query query={GET_CHARACTER} variables={{id: getParam(props, 'characterId')}} fetchPolicy="cache-and-network">
+    {({data}) => {
+      if (isEmpty(data) || data.loading) {
+        return <AppLoading />
+      }
+      return <Content>
+        <FlatList
+          data={data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
+          onEndReachedThreshold={30}
+          onEndReached={() => onEndReached(data)}
+          renderItem={(row) => renderItem(row, data.character.birthday)}
+        />
+      </Content>
+    }}
+  </Query>
+)
