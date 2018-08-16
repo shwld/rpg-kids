@@ -1,6 +1,6 @@
 import React from "react";
 import { AppLoading } from 'expo'
-import { graphql, compose } from 'react-apollo'
+import { Query } from 'react-apollo'
 import { NavigationScreenProp } from 'react-navigation'
 import gql from 'graphql-tag'
 import {
@@ -8,36 +8,14 @@ import {
 } from "native-base"
 import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
+import getParam from '../lib/utils/getParam'
+import isEmpty from '../lib/utils/isEmpty'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
-  data: {
-    loading: boolean
-    user: {
-      id: string,
-      characters: {
-        edges: {
-          node: {
-            id: string
-            name: string
-            birthday: Date
-            description: string
-            acquirements: {
-              edges: {
-                node: {
-                  name: string
-                  acquiredAt: Date
-                }
-              }[]
-            }
-          }
-        }[]
-      }
-    }
-  }
 }
 
-const GET_USER = gql`
+export const GET_USER = gql`
 query {
   user {
     id
@@ -65,49 +43,41 @@ query {
 }
 `;
 
-class StatusScreen extends React.Component<Props> {
+export default (props: Props) => (
+  <Query query={GET_USER} variables={{id: getParam(props, 'characterId')}} fetchPolicy="cache-and-network">
+    {({data}) => {
+      if (isEmpty(data) || data.loading) {
+        return <AppLoading />
+      }
 
-  componentWillReceiveProps(newProps: Props) {
-    const { navigation, data } = newProps
-    if (data.loading) {
-      return
-    }
-    if (data.user.characters.edges.length === 0) {
-      navigation.replace('AddCharacter')
-    }
-  }
+      const characters = data.user.characters.edges.map(it => it.node)
 
-  render () {
-    const { navigation, data } = this.props
-    if (data.loading || data.user.characters.edges.length === 0) {
-      return <AppLoading />
-    }
-    const characters = data.user.characters.edges.map(it => it.node)
-    // TODO: Change character
-    const character = characters[0]
-    const acquirements: any[] = character.acquirements.edges.map(it => it.node)
-    console.log(acquirements)
-    return (
-      <View>
-        <Status
-          character={character}
-          selectableCharacters={characters}
-          goGetSkill={() => navigation.navigate('AcquireSkillScreen', {characterId: character.id})}
-          onChangeCharacter={v => console.log(v)}
-        ></Status>
-        <Acquirements
-          title="最近できるようになったこと"
-          birthday={character.birthday}
-          acquirements={acquirements}
-          goLogs={() => navigation.navigate('Log', { characterId: character.id })}
-          goSkill={() => {}}
-        ></Acquirements>
-      </View>
-    )
-  }
-}
+      if (data.user.characters.edges.length === 0) {
+        props.navigation.replace('AddCharacter')
+        return
+      }
 
-export default compose(
-  graphql(GET_USER, { name: 'data'}),
-)(StatusScreen)
+      // TODO: Change character
+      const character = characters[0]
+      const acquirements: any[] = character.acquirements.edges.map(it => it.node)
 
+      return (
+        <View>
+          <Status
+            character={character}
+            selectableCharacters={characters}
+            goGetSkill={() => props.navigation.navigate('AcquireSkillScreen', {characterId: character.id})}
+            onChangeCharacter={v => console.log(v)}
+          ></Status>
+          <Acquirements
+            title="最近できるようになったこと"
+            birthday={character.birthday}
+            acquirements={acquirements}
+            goLogs={() => props.navigation.navigate('Log', { characterId: character.id })}
+            goSkill={() => {}}
+          ></Acquirements>
+        </View>
+      )
+    }}
+  </Query>
+)

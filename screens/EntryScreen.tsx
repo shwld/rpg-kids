@@ -16,10 +16,8 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
   data: any
 }
-interface State {
-}
 
-class Entry extends React.Component<Props, State> {
+class Entry extends React.Component<Props> {
   async componentWillMount() {
     const { navigation } = this.props
     const { data: { authenticate } } = await this.props.authenticate()
