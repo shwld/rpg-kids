@@ -1,7 +1,5 @@
 import React from 'react';
-import { Permissions, ImagePicker } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
-import firebase from '../lib/firebase'
 import { compose, graphql } from 'react-apollo'
 import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
@@ -14,13 +12,15 @@ import {
   CardItem,
   Body,
   Thumbnail,
-  ActionSheet,
 } from 'native-base';
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
+import { GET_USER } from './MyStatusScreen';
+import { uploadToFireStorage } from '../lib/firebase'
+import imagePicker from '../lib/nativeHelpers/imagePicker'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
-  addCharacter(payload: { variables: {name, birthday, description} })
+  addCharacter(payload: { variables: {name, birthday, description}, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
@@ -33,12 +33,21 @@ interface State {
 
 const ADD_CHARACTER = gql`
 mutation addCharacter($name:String = "", $birthday:DateTime = "2000/1/1", $description:String = "") {
-  createCharacter(name: $name, birthday: $birthday, description: $description) {
+  addCharacter(name: $name, birthday: $birthday, description: $description) {
     character {
       id
       name
       birthday
       description
+      acquirements(first: 5) {
+        edges {
+          node {
+            id
+            name
+            acquiredAt
+          }
+        }
+      }
     }
     errors
   }
@@ -87,61 +96,23 @@ class AddCharacterForm extends React.Component<Props, State> {
           birthday: birthday.value,
           description: description.value,
         },
+        update: (store, result) => {
+          const data = store.readQuery({ query: GET_USER });
+          data.user.characters.edges = [
+            { node: result.data.addCharacter.character, __typename: 'CharacterEdge' },
+            ...data.user.characters.edges
+          ]
+          store.writeQuery({ query: GET_USER, data });
+        },
       })
-      await this.uploadImage(this.state.imageUri, result.data.createCharacter.character.id)
+      if (this.state.imageUri) {
+        await uploadToFireStorage(this.state.imageUri, `characters/${result.data.addCharacter.character.id}/profile.jpg`)
+      }
       navigation.replace('MyStatus')
     } catch (e) {
       throw e
     } finally {
       setInProgress({variables: { inProgress: false }})
-    }
-  }
-
-  async uploadImage(imageUri: string, characterId: string) {
-    const response = await fetch(imageUri)
-    const blob = await response.blob()
-    const metadata = {
-      contentType: 'image/jpeg',
-    }
-    const ref = firebase.storage().ref(`characters/${characterId}/profile.jpg`)
-    const snapshot = await ref.put(blob, metadata)
-    console.log(snapshot)
-    console.log(ref.fullPath)
-  }
-
-  async permit(type) {
-    await Permissions.askAsync(type)
-    const { status } = await Permissions.getAsync(type)
-    return status === 'granted'
-  }
-
-  async takeImage() {
-    const canCamera = await this.permit(Permissions.CAMERA)
-    if (!canCamera) { return }
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: 'Images',
-      allowsEditing: true,
-      quality: 0.3,
-      exif: false,
-    })
-    this._handleImagePicked(result)
-  }
-
-  async pickImage() {
-    const canCameraRoll = await this.permit(Permissions.CAMERA_ROLL)
-    if (!canCameraRoll) { return }
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: 'Images',
-      allowsEditing: true,
-      quality: 0.3,
-      exif: false,
-    });
-    this._handleImagePicked(result)
-  }
-
-  async _handleImagePicked(pickerResult) {
-    if (!pickerResult.cancelled) {
-      this.setState({imageUri: pickerResult.uri});
     }
   }
 
@@ -152,35 +123,11 @@ class AddCharacterForm extends React.Component<Props, State> {
     return require('../assets/baby_asia_boy.png')
   }
 
-  takeOrPickPicture() {
-    ActionSheet.show(
-      {
-        options: [
-          { text: 'カメラ', icon: 'camera', iconColor: '#2c8ef4' },
-          { text: 'カメラロール', icon: 'file', iconColor: '#f42ced' },
-          { text: 'キャンセル', icon: 'close', iconColor: '#25de5b' }
-        ],
-        cancelButtonIndex: 2,
-        title: '写真をアップロード',
-      },
-      buttonIndex => {
-        switch(buttonIndex) {
-          case 0:
-            return this.takeImage()
-          case 1:
-            return this.pickImage()
-          default:
-            return
-        }
-      }
-    )
-  }
-
   render() {
     return (
       <Content contentContainerStyle={styles.stretch}>
         <Card>
-          <CardItem button onPress={() => this.takeOrPickPicture()} >
+          <CardItem button onPress={() => imagePicker(uri => this.setState({imageUri: uri}))} >
             <Thumbnail
               source={this.getImageSource()}
               style={{marginRight: 20}}

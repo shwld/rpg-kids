@@ -67,11 +67,33 @@ export default {
     cache.writeQuery({ query, data });
     return true;
   },
+  selectCharacter: (_obj, {characterId}: {characterId: string}, { cache }: { cache }) => {
+    const query = gql`
+      query getState @client {
+        state {
+          selectedCharacterId
+        }
+      }
+    `;
+    const data = {
+      state: {
+        __typename: 'State',
+        selectedCharacterId: characterId,
+      }
+    }
+    cache.writeQuery({ query, data });
+    return characterId;
+  }
 }
 
 export const SET_IN_PROGRESS = gql`
   mutation SetInProgress($inProgress:Boolean = true) {
     setInProgress(inProgress: $inProgress) @client
   }
-`;
+`
 
+export const SELECT_CHARACTER = gql`
+  mutation SelectCharacter($characterId:ID!) {
+    selectCharacter(characterId: $characterId) @client
+  }
+`

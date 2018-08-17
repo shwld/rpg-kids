@@ -21,9 +21,11 @@ interface Character {
 interface Props {
   character: Character,
   selectableCharacters?: Character[],
-  onChangeCharacter?: (character: Character) => any,
+  onChangeCharacter?: (id: string) => any,
   goGetSkill?: () => any,
 }
+
+export const NEW_CHARACTER_ID = '__new'
 
 export default ({character, selectableCharacters, goGetSkill, onChangeCharacter = () => {}}: Props) => (
   <Card style={{flex: 0}}>
@@ -44,6 +46,7 @@ export default ({character, selectableCharacters, goGetSkill, onChangeCharacter 
           {selectableCharacters.map((c) => (
             <Picker.Item key={c.id} label={c.name} value={c.id} />
           ))}
+          <Picker.Item label="子供を追加" value={NEW_CHARACTER_ID} />
         </Picker>
       )}
       {!selectableCharacters && (

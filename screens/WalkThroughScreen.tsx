@@ -5,8 +5,6 @@ import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import {
-  View,
-  Card,
   Text,
   Button,
 } from 'native-base'
@@ -21,14 +19,14 @@ interface State {
 
 
 const SIGNIN = gql`
-  mutation {
+  mutation SignIn {
     signIn @client
   }
 `;
 
 const SIGNUP = gql`
-  mutation signUp {
-    signUp {
+  mutation SignUp {
+    signUp @client {
       user {
         id
       }

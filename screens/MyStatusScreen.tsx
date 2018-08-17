@@ -1,18 +1,19 @@
-import React from "react";
+import React from "react"
 import { AppLoading } from 'expo'
-import { Query } from 'react-apollo'
+import { Query, graphql } from 'react-apollo'
 import { NavigationScreenProp } from 'react-navigation'
 import gql from 'graphql-tag'
 import {
   View,
 } from "native-base"
-import Status from '../components/Status'
+import Status, { NEW_CHARACTER_ID } from '../components/Status'
 import Acquirements from '../components/Acquirements'
-import getParam from '../lib/utils/getParam'
 import isEmpty from '../lib/utils/isEmpty'
+import { SELECT_CHARACTER } from '../graphql/mutations'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
+  selectCharacter(payload: { variables: {characterId: string}})
 }
 
 export const GET_USER = gql`
@@ -40,14 +41,23 @@ query GetUser {
       }
     }
   }
+  state @client {
+    selectedCharacterId
+  }
 }
-`;
+`
 
-export default (props: Props) => (
+const getCharacter = (characters, id) => {
+  let character = null
+  if (id) {
+    character = characters.find(it => it.id === id)
+  }
+  return character || characters[0]
+}
+
+const Screen = (props: Props) => (
   <Query query={GET_USER} fetchPolicy="cache-and-network">
-    {(res) => {
-      const {data} = res
-      console.log(res)
+    {({data}) => {
       if (isEmpty(data) || data.loading) {
         return <AppLoading />
       }
@@ -59,8 +69,7 @@ export default (props: Props) => (
         return
       }
 
-      // TODO: Change character
-      const character = characters[0]
+      const character = getCharacter(characters, data.state.selectedCharacterId)
       const acquirements: any[] = character.acquirements.edges.map(it => it.node)
 
       return (
@@ -69,7 +78,13 @@ export default (props: Props) => (
             character={character}
             selectableCharacters={characters}
             goGetSkill={() => props.navigation.navigate('AcquireSkillScreen', {characterId: character.id})}
-            onChangeCharacter={v => console.log(v)}
+            onChangeCharacter={async characterId => {
+              if (characterId === NEW_CHARACTER_ID) {
+                props.navigation.navigate('AddCharacter')
+                return
+              }
+              await props.selectCharacter({variables: {characterId}})
+            }}
           ></Status>
           <Acquirements
             title="最近できるようになったこと"
@@ -83,3 +98,6 @@ export default (props: Props) => (
     }}
   </Query>
 )
+
+export default graphql<Props>(SELECT_CHARACTER, { name: 'selectCharacter'})(Screen)
+
