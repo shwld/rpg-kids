@@ -32,10 +32,7 @@ const ACQUIRE_SKILL = gql`
 mutation AcquireSkill($characterId: String!, $name:String!, $acquiredAt:DateTime!) {
   acquireSkill(characterId: $characterId, name: $name, acquiredAt: $acquiredAt) {
     acquirement {
-      skill {
-        id
-        name
-      }
+      id
       name
       acquiredAt
     }
@@ -73,7 +70,7 @@ class Screen extends React.Component<Props, State> {
     try {
       if (!this.valid()) { return }
       const { name, acquiredAt } = this.state
-      const skill = await acquireSkill({
+      await acquireSkill({
         variables: {
           characterId: this.props.navigation.getParam('characterId', ''),
           name: name.value,
@@ -81,10 +78,13 @@ class Screen extends React.Component<Props, State> {
         },
         update: (store, result) => {
           const data = store.readQuery({ query: GET_USER });
+          data.user.characters.edges[0].node.acquirements.edges = [
+            { node: result.data.acquireSkill.acquirement, __typename: 'AcquirementEdge' },
+            ...data.user.characters.edges[0].node.acquirements.edges
+          ]
           store.writeQuery({ query: GET_USER, data });
         },
       })
-      console.log(skill)
       navigation.pop()
     } catch (e) {
       throw e

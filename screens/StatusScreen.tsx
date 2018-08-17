@@ -22,7 +22,7 @@ query GetCharacter($id:ID = "") {
     name
     birthday
     description
-    acquirements(last: 5) {
+    acquirements(first: 5) {
       edges {
         node {
           id
