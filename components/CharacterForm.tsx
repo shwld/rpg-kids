@@ -10,9 +10,23 @@ import {
 } from 'native-base';
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
+import { profileImageSource } from '../lib/utils/imageHelper'
 
 interface Props {
+  defaultValues?: {
+    name: string
+    birthday: Date
+    description: string
+    imageUri: string
+  }
   save(data: State): void
+}
+
+const getDefaultValue = (props: Props, propName: string, defaultValue: any = '') => {
+  if (props.defaultValues) {
+    return props.defaultValues[propName]
+  }
+  return defaultValue
 }
 
 export interface State {
@@ -25,18 +39,18 @@ export interface State {
 export default class extends React.Component<Props, State> {
   state: State = {
     name: {
-      value: '',
+      value: getDefaultValue(this.props, 'name'),
       validate: value => (value.trim() !== ''),
     },
     birthday: {
-      value: new Date(),
+      value: new Date(getDefaultValue(this.props, 'birthday')),
       validate: value => (value ? true : false),
     },
     description: {
-      value: '',
+      value: getDefaultValue(this.props, 'description'),
       validate: value => (value.trim() !== ''),
     },
-    imageUri: '',
+    imageUri: getDefaultValue(this.props, 'imageUri'),
   }
 
   valid() {
@@ -52,13 +66,6 @@ export default class extends React.Component<Props, State> {
     return results.every(x => x)
   }
 
-  getImageSource() {
-    if (this.state.imageUri) {
-      return { uri: this.state.imageUri }
-    }
-    return require('../assets/baby_asia_boy.png')
-  }
-
   save() {
     if (!this.valid()) { return }
     this.props.save(this.state)
@@ -69,7 +76,7 @@ export default class extends React.Component<Props, State> {
       <Card>
         <CardItem button onPress={() => imagePicker(uri => this.setState({imageUri: uri}))} >
           <Thumbnail
-            source={this.getImageSource()}
+            source={profileImageSource(this.state.imageUri)}
             style={{marginRight: 20}}
           />
         </CardItem>

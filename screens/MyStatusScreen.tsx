@@ -28,6 +28,7 @@ query GetUser {
           name
           birthday
           description
+          imageUrl
           acquirements(first: 5) {
             edges {
               node {
@@ -77,7 +78,8 @@ const Screen = (props: Props) => (
           <Status
             character={character}
             selectableCharacters={characters}
-            goGetSkill={() => props.navigation.navigate('AcquireSkillScreen', {characterId: character.id})}
+            goGetSkill={() => props.navigation.navigate('AcquireSkill', {characterId: character.id})}
+            goSettings={() => props.navigation.navigate('EditCharacter', {characterId: character.id})}
             onChangeCharacter={async characterId => {
               if (characterId === NEW_CHARACTER_ID) {
                 props.navigation.navigate('AddCharacter')
