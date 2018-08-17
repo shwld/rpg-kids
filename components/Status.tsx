@@ -16,6 +16,7 @@ interface Character {
   name: string
   birthday: Date
   description: string
+  imageUrl: string
 }
 
 interface Props {
@@ -23,15 +24,16 @@ interface Props {
   selectableCharacters?: Character[],
   onChangeCharacter?: (id: string) => any,
   goGetSkill?: () => any,
+  goSettings?: () => any,
 }
 
 export const NEW_CHARACTER_ID = '__new'
 
-export default ({character, selectableCharacters, goGetSkill, onChangeCharacter = () => {}}: Props) => (
+export default ({character, selectableCharacters, goGetSkill, goSettings, onChangeCharacter = () => {}}: Props) => (
   <Card style={{flex: 0}}>
     <CardItem style={{justifyContent: 'center', alignItems: 'center'}}>
       <CharacterIcon
-        characterId={character.id}
+        uri={character.imageUrl}
         style={{marginRight: 20}}
       />
       {selectableCharacters && (
@@ -52,6 +54,7 @@ export default ({character, selectableCharacters, goGetSkill, onChangeCharacter 
       {!selectableCharacters && (
         <Text>{character.name}</Text>
       )}
+      {goSettings && <Icon name="settings" onPress={() => goSettings()} />}
     </CardItem>
     <CardItem style={{justifyContent: 'space-around', alignItems: 'center'}}>
       <Body style={{flexDirection: 'column', justifyContent: 'space-around'}}>

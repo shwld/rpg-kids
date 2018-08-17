@@ -30,6 +30,7 @@ query Character($id:ID = "", $cursor: String) {
     id
     name
     birthday
+    imageUrl
     acquirements(first: 30, after: $cursor) {
       edges {
         node {

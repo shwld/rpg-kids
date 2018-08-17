@@ -1,19 +1,12 @@
-import React from 'react';
+import React from 'react'
 import {
   Thumbnail,
 } from "native-base";
-import { generatePublicMediaUrl } from '../lib/firebase'
+import { profileImageSource } from '../lib/utils/imageHelper'
 
-function getImageSource(imageUri: string) {
-  if (imageUri) {
-    return { uri: generatePublicMediaUrl(imageUri) }
-  }
-  return require('../assets/baby_asia_boy.png')
-}
-
-export default ({characterId, style}: {characterId: string, style?: any}) => (
+export default ({uri, style}: {uri: string, style?: any}) => (
   <Thumbnail
-    source={getImageSource(`characters/${characterId}/profile.jpg`)}
+    source={profileImageSource(uri)}
     style={style}
   />
 )

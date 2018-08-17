@@ -6,13 +6,15 @@ import gql from 'graphql-tag'
 import styles from '../styles'
 import { Content } from 'native-base';
 import { GET_USER } from './MyStatusScreen';
-import { uploadToFireStorage } from '../lib/firebase'
+import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
 import { SELECT_CHARACTER } from '../graphql/mutations'
+import { profileImagePath } from '../lib/utils/imageHelper'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
   addCharacter(payload: { variables: {name, birthday, description}, update: any })
+  updateImageUrl(payload: { variables: {id, imageUrl}, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
   selectCharacter(payload: { variables: {characterId: string}})
 }
@@ -40,30 +42,65 @@ mutation addCharacter($name:String = "", $birthday:DateTime = "2000/1/1", $descr
 }
 `
 
+const UPDATE_IMAGE_URL = gql`
+mutation editCharacter($id:ID!, $imageUrl:String = null) {
+  editCharacter(id: $id, imageUrl: $imageUrl) {
+    character {
+      id
+      name
+      birthday
+      description
+      imageUrl
+      acquirements(first: 5) {
+        edges {
+          node {
+            id
+            name
+            acquiredAt
+          }
+        }
+      }
+    }
+    errors
+  }
+}
+`
+
+const updateCache = (store, result) => {
+  const data = store.readQuery({ query: GET_USER })
+  data.user.characters.edges = [
+    { node: result.data.addCharacter.character, __typename: 'CharacterEdge' },
+    ...data.user.characters.edges
+  ]
+  store.writeQuery({ query: GET_USER, data })
+}
+
 const save = async (props: Props, data: formData) => {
-  const { navigation, addCharacter, setInProgress, selectCharacter } = props
+  const { navigation, addCharacter, updateImageUrl, setInProgress, selectCharacter } = props
   setInProgress({variables: { inProgress: true }})
   try {
-    const { name, birthday, description } = data
+    const { name, birthday, description, imageUri } = data
     const result = await addCharacter({
       variables: {
         name: name.value,
         birthday: birthday.value,
         description: description.value,
       },
-      update: (store, result) => {
-        const data = store.readQuery({ query: GET_USER });
-        data.user.characters.edges = [
-          { node: result.data.addCharacter.character, __typename: 'CharacterEdge' },
-          ...data.user.characters.edges
-        ]
-        store.writeQuery({ query: GET_USER, data });
-        selectCharacter({variables: { characterId: result.data.addCharacter.character.id }})
-      },
+      update: updateCache,
     })
-    if (data.imageUri) {
-      await uploadToFireStorage(data.imageUri, `characters/${result.data.addCharacter.character.id}/profile.jpg`)
+    const characterId = result.data.addCharacter.character.id
+    const imagePath = profileImagePath(characterId)
+    if (imageUri) {
+      await uploadToFireStorage(imageUri, imagePath)
+      await updateImageUrl({
+        variables: {
+          id: characterId,
+          imageUrl: generatePublicMediaUrl(imagePath),
+        },
+        update: updateCache,
+      })
     }
+    await selectCharacter({variables: { characterId }})
     navigation.replace('MyStatus')
   } catch (e) {
     throw e
@@ -81,6 +118,7 @@ const Screen = (props: Props) => (
 
 export default compose(
   graphql(ADD_CHARACTER, { name: 'addCharacter'}),
+  graphql(UPDATE_IMAGE_URL, { name: 'updateImageUrl'}),
   graphql(SET_IN_PROGRESS, { name: 'setInProgress'}),
   graphql(SELECT_CHARACTER, { name: 'selectCharacter'}),
 )(Screen)

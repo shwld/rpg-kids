@@ -4,13 +4,10 @@ import {
   Text,
   Card,
   CardItem,
-  Left,
-  Right,
   Button,
 } from "native-base";
 import CharacterIcon from './CharacterIcon'
 import getAge from '../lib/utils/getAge'
-import styles from '../styles'
 
 interface Props {
   acquirement: {
@@ -20,6 +17,7 @@ interface Props {
       id: string
       name: string
       birthday: string
+      imageUrl: string
     }
   }
   onCharacterClick: Function
@@ -29,7 +27,7 @@ interface Props {
 export default ({ acquirement, onCharacterClick, onAcquirementClick }: Props) => (
   <Card>
     <CardItem button onPress={() => onCharacterClick()}>
-      <CharacterIcon characterId={acquirement.character.id} style={{marginRight: 20}} />
+      <CharacterIcon uri={acquirement.character.imageUrl} style={{marginRight: 20}} />
       <Body style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
         <Text>{acquirement.character.name}</Text>
         <Text note numberOfLines={1}>{getAge(acquirement.character.birthday, acquirement.postedAt)}ころ</Text>

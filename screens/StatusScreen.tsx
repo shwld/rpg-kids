@@ -33,7 +33,7 @@ query GetCharacter($id:ID = "") {
     }
   }
 }
-`;
+`
 
 export default (props: Props) => (
   <Query query={GET_CHARACTER} variables={{id: getParam(props, 'characterId')}} fetchPolicy="cache-and-network">

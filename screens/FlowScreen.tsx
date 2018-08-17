@@ -26,6 +26,7 @@ query Acquirements($cursor: String) {
           id
           name
           birthday
+          imageUrl
         }
       }
     }
