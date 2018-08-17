@@ -13,12 +13,13 @@ import { TextInput, DateInput, InputString, InputDate } from '../components/Form
 import { compose, graphql } from 'react-apollo'
 import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
+import { GET_USER } from './MyStatusScreen';
 
 
 interface Props {
   characterId: string
   navigation: NavigationScreenProp<any, any>
-  acquireSkill(payload: { variables: {characterId: string, name: string, acquiredAt: Date} })
+  acquireSkill(payload: { variables: {characterId: string, name: string, acquiredAt: Date}, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
@@ -77,6 +78,10 @@ class Screen extends React.Component<Props, State> {
           characterId: this.props.navigation.getParam('characterId', ''),
           name: name.value,
           acquiredAt: acquiredAt.value,
+        },
+        update: (store, result) => {
+          const data = store.readQuery({ query: GET_USER });
+          store.writeQuery({ query: GET_USER, data });
         },
       })
       console.log(skill)

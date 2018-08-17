@@ -9,7 +9,7 @@ import {
   Right,
   Body,
 } from "native-base";
-import getAge from '../lib/getAge'
+import getAge from '../lib/utils/getAge'
 
 interface Acquirement {
   id: string

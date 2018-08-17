@@ -1,0 +1,1 @@
+export default ({navigation}, key: string, defaultValue: any = null) => navigation.getParam(key, defaultValue)
