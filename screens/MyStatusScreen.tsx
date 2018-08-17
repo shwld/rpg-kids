@@ -6,9 +6,8 @@ import gql from 'graphql-tag'
 import {
   View,
 } from "native-base"
-import Status from '../components/Status'
+import Status, { NEW_CHARACTER_ID } from '../components/Status'
 import Acquirements from '../components/Acquirements'
-import getParam from '../lib/utils/getParam'
 import isEmpty from '../lib/utils/isEmpty'
 
 interface Props {
@@ -69,7 +68,13 @@ export default (props: Props) => (
             character={character}
             selectableCharacters={characters}
             goGetSkill={() => props.navigation.navigate('AcquireSkillScreen', {characterId: character.id})}
-            onChangeCharacter={v => console.log(v)}
+            onChangeCharacter={id => {
+              if (id === NEW_CHARACTER_ID) {
+                props.navigation.navigate('AddCharacter')
+                return
+              }
+              // TODO: Change character
+            }}
           ></Status>
           <Acquirements
             title="最近できるようになったこと"
