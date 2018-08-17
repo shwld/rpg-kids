@@ -94,7 +94,6 @@ class Screen extends React.Component<Props, State> {
   }
 
   render() {
-    console.log(this.props.navigation.getParam('characterId', ''))
     return (
       <Content contentContainerStyle={styles.stretch}>
         <Card>
