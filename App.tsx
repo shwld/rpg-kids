@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { Font, AppLoading } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
 import AuthSwitch from './navigator/AuthSwitch'
@@ -31,8 +31,8 @@ class App extends React.Component {
       ...Ionicons.font,
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-    });
-    this.setState({ isLoading: false });
+    })
+    this.setState({ isLoading: false })
   }
 }
 

@@ -7,4 +7,4 @@ export default StyleSheet.create({
   stretch: {
     flex: 1, justifyContent: 'space-between', alignItems: 'stretch'
   },
-});
+})

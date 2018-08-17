@@ -22,7 +22,7 @@ const SIGNIN = gql`
   mutation SignIn {
     signIn @client
   }
-`;
+`
 
 const SIGNUP = gql`
   mutation SignUp {
@@ -32,19 +32,19 @@ const SIGNUP = gql`
       }
     }
   }
-`;
+`
 
 class Screen extends React.Component<Props, State> {
   render() {
     return (
       <Container>
         <Button block onPress={async () => {
-          await this.props.signIn();
-          await this.props.signUp();
+          await this.props.signIn()
+          await this.props.signUp()
           this.props.navigation.navigate('App')
         }}><Text>始める</Text></Button>
       </Container>
-    );
+    )
   }
 }
 

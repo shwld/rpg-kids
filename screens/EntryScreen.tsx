@@ -1,18 +1,12 @@
-import React from 'react';
+import React from 'react'
 import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 
 import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
-
-const AUTHENTICATE = gql`
-mutation {
-  authenticate @client
-}
-`;
+import { AUTHENTICATE } from '../graphql/mutations'
 
 interface Props {
-  authenticate: () => { data: { authenticate: boolean} }
+  authenticate(): { data: { authenticate: boolean} }
   navigation: NavigationScreenProp<any, any>
   data: any
 }

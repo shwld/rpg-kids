@@ -1,5 +1,5 @@
-import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation';
+import React from 'react'
+import { createBottomTabNavigator } from 'react-navigation'
 import Flow from './FlowStacks'
 import MyStatus from './StatusStacks'
 import TabBarIcon from '../components/TabBarIcon'
@@ -24,4 +24,4 @@ export default createBottomTabNavigator({
       
     },
   },
-});
+})

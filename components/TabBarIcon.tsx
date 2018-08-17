@@ -1,5 +1,5 @@
-import React from 'react';
-import { Icon } from 'native-base';
+import React from 'react'
+import { Icon } from 'native-base'
 
 export default (name: string, {focused, tintColor}) => (
   <Icon

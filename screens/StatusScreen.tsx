@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import { AppLoading } from 'expo'
 import { Query } from 'react-apollo'
 import { NavigationScreenProp } from 'react-navigation'
@@ -33,7 +33,7 @@ query GetCharacter($id:ID = "") {
     }
   }
 }
-`;
+`
 
 export default (props: Props) => (
   <Query query={GET_CHARACTER} variables={{id: getParam(props, 'characterId')}} fetchPolicy="cache-and-network">
