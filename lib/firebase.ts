@@ -18,4 +18,14 @@ export const generatePublicMediaUrl = (path: string) => {
   return `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${encodeURIComponent(path)}?alt=media`
 }
 
+export const uploadToFireStorage = async (imageUri: string, path: string) => {
+  const response = await fetch(imageUri)
+  const blob = await response.blob()
+  const metadata = {
+    contentType: 'image/jpeg',
+  }
+  const ref = firebase.storage().ref(path)
+  return ref.put(blob, metadata)
+}
+
 export default firebase
