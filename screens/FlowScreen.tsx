@@ -73,7 +73,7 @@ const renderItem = ({ item, index }, navigation) => {
 }
 
 export default ({navigation}: Props) => (
-  <Query query={GET_ACQUIREMENTS} fetchPolicy="cache-and-network">
+  <Query query={GET_ACQUIREMENTS} fetchPolicy="cache-and-network" pollInterval={15000}>
     {response => {
       const {data, refetch, networkStatus} = response
       if (isEmpty(data) || data.loading) {

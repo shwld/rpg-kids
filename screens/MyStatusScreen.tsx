@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const GET_USER = gql`
-query {
+query GetUser {
   user {
     id
     createdAt
@@ -27,7 +27,7 @@ query {
           name
           birthday
           description
-          acquirements(last: 5) {
+          acquirements(first: 5) {
             edges {
               node {
                 id
@@ -44,8 +44,10 @@ query {
 `;
 
 export default (props: Props) => (
-  <Query query={GET_USER} variables={{id: getParam(props, 'characterId')}} fetchPolicy="cache-and-network">
-    {({data}) => {
+  <Query query={GET_USER} fetchPolicy="cache-and-network">
+    {(res) => {
+      const {data} = res
+      console.log(res)
       if (isEmpty(data) || data.loading) {
         return <AppLoading />
       }
