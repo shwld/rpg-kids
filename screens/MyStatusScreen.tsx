@@ -42,9 +42,7 @@ query GetUser {
       }
     }
   }
-  state @client {
-    selectedCharacterId
-  }
+  getSelectedCharacter @client
 }
 `
 
@@ -70,7 +68,7 @@ const Screen = (props: Props) => (
         return
       }
 
-      const character = getCharacter(characters, data.state.selectedCharacterId)
+      const character = getCharacter(characters, data.getSelectedCharacter)
       const acquirements: any[] = character.acquirements.edges.map(it => it.node)
 
       return (

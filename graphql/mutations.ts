@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import firebase, { authenticate } from '../lib/firebase'
+import { AsyncStorage } from 'react-native'
 
 export default {
   signIn: async (_obj, _args, { cache }: { cache }) => {
@@ -11,7 +12,7 @@ export default {
           }
         }
       }
-    `;
+    `
     const data = {
       state: {
         __typename: 'State',
@@ -37,7 +38,7 @@ export default {
           }
         }
       }
-    `;
+    `
     const data = {
       state: {
         __typename: 'State',
@@ -57,7 +58,7 @@ export default {
           inProgress
         }
       }
-    `;
+    `
     const data = {
       state: {
         __typename: 'State',
@@ -67,24 +68,35 @@ export default {
     cache.writeQuery({ query, data });
     return true;
   },
-  selectCharacter: (_obj, {characterId}: {characterId: string}, { cache }: { cache }) => {
+  selectCharacter: async (_obj, {characterId}: {characterId: string}, { cache }: { cache }) => {
     const query = gql`
       query getState @client {
         state {
           selectedCharacterId
         }
       }
-    `;
+    `
     const data = {
       state: {
         __typename: 'State',
         selectedCharacterId: characterId,
       }
     }
-    cache.writeQuery({ query, data });
-    return characterId;
-  }
+    cache.writeQuery({ query, data })
+    try {
+      await AsyncStorage.setItem('rpg:selectedCharacterId', characterId)
+    } catch (e) {
+      console.error(e)
+    }
+    return characterId
+  },
 }
+
+export const AUTHENTICATE = gql`
+  mutation {
+    authenticate @client
+  }
+`
 
 export const SET_IN_PROGRESS = gql`
   mutation SetInProgress($inProgress:Boolean = true) {

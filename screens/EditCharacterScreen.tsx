@@ -79,7 +79,7 @@ const save = async (props: Props, values: formData) => {
           character.node = result.data.editCharacter.character
         }
         store.writeQuery({ query: GET_USER, data });
-        selectCharacter({variables: { characterId: result.data.editCharacter.character.id }})
+        selectCharacter({variables: { characterId }})
       },
     })
     if (imageUri) {
