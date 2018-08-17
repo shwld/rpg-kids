@@ -2,11 +2,10 @@ import React from "react"
 import { AppLoading } from 'expo'
 import AcquirementCard from '../components/AcquirementCard'
 import { FlatList } from 'react-native'
-import {
-  Content,
-} from "native-base";
+import { List } from "native-base";
 import gql from 'graphql-tag'
 import { NavigationScreenProp } from 'react-navigation'
+import { NetworkStatus } from 'apollo-client'
 import { Query } from 'react-apollo'
 import isEmpty from '../lib/utils/isEmpty'
 
@@ -75,20 +74,23 @@ const renderItem = ({ item, index }, navigation) => {
 
 export default ({navigation}: Props) => (
   <Query query={GET_ACQUIREMENTS} fetchPolicy="cache-and-network">
-    {({data}) => {
+    {response => {
+      const {data, refetch, networkStatus} = response
       if (isEmpty(data) || data.loading) {
         return <AppLoading />
       }
 
       return (
-        <Content>
+        <List>
           <FlatList
             data={data.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
             onEndReachedThreshold={30}
             onEndReached={() => onEndReached(data)}
             renderItem={(row) => renderItem(row, navigation)}
+            refreshing={networkStatus === NetworkStatus.refetch}
+            onRefresh={() => refetch({cursor: null})}
           />
-        </Content>
+        </List>
       )
     }}
   </Query>

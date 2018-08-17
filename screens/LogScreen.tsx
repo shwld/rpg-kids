@@ -6,7 +6,7 @@ import { NavigationScreenProp } from 'react-navigation'
 import format from 'date-fns/format'
 import ja from 'date-fns/locale/ja'
 import {
-  Content,
+  List,
   Text,
   ListItem,
   Body,
@@ -15,6 +15,7 @@ import {
   Right,
 } from "native-base";
 import { FlatList } from 'react-native'
+import { NetworkStatus } from 'apollo-client'
 import getAge from '../lib/utils/getAge'
 import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
@@ -89,19 +90,24 @@ const renderItem = ({ item, index }, birthday) => {
 }
 
 export default (props: Props) => (
-  <Query query={GET_CHARACTER} variables={{id: getParam(props, 'characterId')}} fetchPolicy="cache-and-network">
-    {({data}) => {
+  <Query query={GET_CHARACTER} variables={{id: getParam(props, 'characterId'), cursor: null}} fetchPolicy="cache-and-network">
+    {response => {
+      const {data, refetch, networkStatus} = response
       if (isEmpty(data) || data.loading) {
         return <AppLoading />
       }
-      return <Content>
-        <FlatList
-          data={data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
-          onEndReachedThreshold={30}
-          onEndReached={() => onEndReached(data)}
-          renderItem={(row) => renderItem(row, data.character.birthday)}
-        />
-      </Content>
+      return (
+        <List>
+          <FlatList
+            data={data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
+            onEndReachedThreshold={30}
+            onEndReached={() => onEndReached(data)}
+            renderItem={(row) => renderItem(row, data.character.birthday)}
+            refreshing={networkStatus === NetworkStatus.refetch}
+            onRefresh={() => refetch({id: getParam(props, 'characterId'), cursor: null})}
+          />
+        </List>
+      )
     }}
   </Query>
 )
