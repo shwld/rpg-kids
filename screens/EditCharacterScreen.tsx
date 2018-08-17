@@ -73,12 +73,12 @@ const save = async (props: Props, values: formData) => {
         imageUrl: imageUri ? generatePublicMediaUrl(imagePath) : null,
       },
       update: (store, result) => {
-        const data = store.readQuery({ query: GET_USER });
+        const data = store.readQuery({ query: GET_USER })
         let character = data.user.characters.edges.find(it => it.node.id === characterId)
         if (character.node) {
           character.node = result.data.editCharacter.character
         }
-        store.writeQuery({ query: GET_USER, data });
+        store.writeQuery({ query: GET_USER, data })
         selectCharacter({variables: { characterId }})
       },
     })

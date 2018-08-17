@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   Text,
   Card,
@@ -8,7 +8,7 @@ import {
   ListItem,
   Right,
   Body,
-} from "native-base";
+} from "native-base"
 import getAge from '../lib/utils/getAge'
 
 interface Acquirement {

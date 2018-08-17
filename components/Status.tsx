@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   Body,
   Text,
@@ -7,7 +7,7 @@ import {
   Icon,
   Button,
   Picker,
-} from "native-base";
+} from "native-base"
 import getAge from '../lib/utils/getAge'
 import CharacterIcon from '../components/CharacterIcon'
 

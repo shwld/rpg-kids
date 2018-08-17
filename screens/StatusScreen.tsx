@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import { AppLoading } from 'expo'
 import { Query } from 'react-apollo'
 import { NavigationScreenProp } from 'react-navigation'

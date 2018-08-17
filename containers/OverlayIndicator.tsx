@@ -1,9 +1,9 @@
-import React from 'react';
+import React from 'react'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 
 import { ActivityIndicator, StyleSheet } from 'react-native'
-import { View } from 'native-base';
+import { View } from 'native-base'
 
 const GET_IN_PROGRESS = gql`
   query getState @client {

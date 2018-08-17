@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 

@@ -1,10 +1,10 @@
-import React from 'react';
+import React from 'react'
 import {
   Item,
   Input,
   Label,
   DatePicker,
-} from 'native-base';
+} from 'native-base'
 import subYears from 'date-fns/sub_years'
 
 export interface InputString {
@@ -29,9 +29,9 @@ export class TextInput extends React.Component<TextInputProps> {
   shouldComponentUpdate(nextProps: TextInputProps){
     // input valueが変更された場合はコンポーネントを更新させない
     if(this.props.item.value !== nextProps.item.value){
-      return false;
+      return false
     }
-    return true;
+    return true
   }
 
   render() {

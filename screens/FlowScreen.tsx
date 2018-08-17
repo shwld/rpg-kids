@@ -2,7 +2,7 @@ import React from "react"
 import { AppLoading } from 'expo'
 import AcquirementCard from '../components/AcquirementCard'
 import { FlatList } from 'react-native'
-import { List } from "native-base";
+import { List } from "native-base"
 import gql from 'graphql-tag'
 import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
@@ -45,8 +45,8 @@ const onEndReached = (data) => {
     query: GET_ACQUIREMENTS,
     variables: { ...data.variables, cursor: endCursor },
     updateQuery: (previousResult, { fetchMoreResult }) => {
-      const newEdges = fetchMoreResult.acquirements.edges;
-      const pageInfo = fetchMoreResult.acquirements.pageInfo;
+      const newEdges = fetchMoreResult.acquirements.edges
+      const pageInfo = fetchMoreResult.acquirements.pageInfo
 
       if (!newEdges.length) { return previousResult }
 

@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 import {
   Body,
   Text,
   Card,
   CardItem,
   Button,
-} from "native-base";
+} from "native-base"
 import CharacterIcon from './CharacterIcon'
 import getAge from '../lib/utils/getAge'
 

@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 import { NavigationScreenProp } from 'react-navigation'
 import { compose, graphql } from 'react-apollo'
 import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
 import styles from '../styles'
-import { Content } from 'native-base';
-import { GET_USER } from './MyStatusScreen';
+import { Content } from 'native-base'
+import { GET_USER } from './MyStatusScreen'
 import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
 import { SELECT_CHARACTER } from '../graphql/mutations'

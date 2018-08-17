@@ -1,7 +1,7 @@
-import React from 'react';
-import { createStackNavigator } from 'react-navigation';
-import FlowScreen from '../screens/FlowScreen';
-import StatusScreen from '../screens/StatusScreen';
+import React from 'react'
+import { createStackNavigator } from 'react-navigation'
+import FlowScreen from '../screens/FlowScreen'
+import StatusScreen from '../screens/StatusScreen'
 
 export default createStackNavigator({
   Flow: {
@@ -16,4 +16,4 @@ export default createStackNavigator({
       headerTitle: '情報'
     }
   }
-});
+})

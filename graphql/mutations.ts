@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 import firebase, { authenticate } from '../lib/firebase'
 import { AsyncStorage } from 'react-native'
 
@@ -24,7 +24,7 @@ export default {
     }
     await firebase.auth().signInAnonymously()
     cache.writeQuery({ query, data })
-    return true;
+    return true
   },
   authenticate: async (_obj, _args, { cache }: { cache }) => {
     const isSignedIn: boolean = await authenticate()
@@ -48,8 +48,8 @@ export default {
         }
       }
     }
-    cache.writeQuery({ query, data });
-    return true;
+    cache.writeQuery({ query, data })
+    return true
   },
   setInProgress: async (_obj, {inProgress}: {inProgress: boolean}, { cache }: { cache }) => {
     const query = gql`
@@ -65,8 +65,8 @@ export default {
         inProgress,
       }
     }
-    cache.writeQuery({ query, data });
-    return true;
+    cache.writeQuery({ query, data })
+    return true
   },
   selectCharacter: async (_obj, {characterId}: {characterId: string}, { cache }: { cache }) => {
     const query = gql`

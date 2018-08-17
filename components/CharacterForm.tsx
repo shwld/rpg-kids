@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import styles from '../styles'
 import {
   Button,
@@ -7,7 +7,7 @@ import {
   CardItem,
   Body,
   Thumbnail,
-} from 'native-base';
+} from 'native-base'
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
 import { profileImageSource } from '../lib/utils/imageHelper'

@@ -23,7 +23,7 @@ const pickImage = async () => {
     allowsEditing: true,
     quality: 0.3,
     exif: false,
-  });
+  })
   if (result.cancelled) { return null }
   return result.uri
 }

@@ -13,7 +13,7 @@ import {
   View,
   Left,
   Right,
-} from "native-base";
+} from "native-base"
 import { FlatList } from 'react-native'
 import { NetworkStatus } from 'apollo-client'
 import getAge from '../lib/utils/getAge'
@@ -47,7 +47,7 @@ query Character($id:ID = "", $cursor: String) {
     }
   }
 }
-`;
+`
 
 const onEndReached = (data) => {
   const { pageInfo: { endCursor, hasNextPage } } = data.character.acquirements
@@ -56,8 +56,8 @@ const onEndReached = (data) => {
     query: GET_CHARACTER,
     variables: { ...data.variables, cursor: endCursor },
     updateQuery: (previousResult, { fetchMoreResult }) => {
-      const newEdges = fetchMoreResult.character.acquirements.edges;
-      const pageInfo = fetchMoreResult.character.acquirements.pageInfo;
+      const newEdges = fetchMoreResult.character.acquirements.edges
+      const pageInfo = fetchMoreResult.character.acquirements.pageInfo
 
       if (!newEdges.length) { return previousResult }
 

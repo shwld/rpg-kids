@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
 import styles from '../styles'
 import {
@@ -8,12 +8,12 @@ import {
   Body,
   Button,
   Text,
-} from "native-base";
+} from "native-base"
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import { compose, graphql } from 'react-apollo'
 import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
-import { GET_USER } from './MyStatusScreen';
+import { GET_USER } from './MyStatusScreen'
 
 
 interface Props {
@@ -39,7 +39,7 @@ mutation AcquireSkill($characterId: String!, $name:String!, $acquiredAt:DateTime
     errors
   }
 }
-`;
+`
 
 class Screen extends React.Component<Props, State> {
   state: State = {
@@ -77,12 +77,12 @@ class Screen extends React.Component<Props, State> {
           acquiredAt: acquiredAt.value,
         },
         update: (store, result) => {
-          const data = store.readQuery({ query: GET_USER });
+          const data = store.readQuery({ query: GET_USER })
           data.user.characters.edges[0].node.acquirements.edges = [
             { node: result.data.acquireSkill.acquirement, __typename: 'AcquirementEdge' },
             ...data.user.characters.edges[0].node.acquirements.edges
           ]
-          store.writeQuery({ query: GET_USER, data });
+          store.writeQuery({ query: GET_USER, data })
         },
       })
       navigation.pop()
