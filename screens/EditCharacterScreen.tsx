@@ -1,11 +1,12 @@
 import React from 'react'
 import { AppLoading } from 'expo'
+import { Alert } from 'react-native'
 import { NavigationScreenProp } from 'react-navigation'
 import { compose, graphql, Query } from 'react-apollo'
 import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
 import styles from '../styles'
-import { Content } from 'native-base'
+import { Content, CardItem, Body, Button, Text } from 'native-base'
 import { GET_USER } from './MyStatusScreen'
 import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
@@ -18,12 +19,13 @@ interface Props {
   characterId: string
   navigation: NavigationScreenProp<any, any>
   editCharacter(payload: { variables: {id, name, birthday, description, imageUrl}, update: any })
+  removeCharacter(payload: { variables: {id: string}, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
   selectCharacter(payload: { variables: {characterId: string}})
 }
 
 const EDIT_CHARACTER = gql`
-mutation editCharacter($id:ID!, $name:String = null, $birthday:DateTime = null, $description:String = null, $imageUrl:String = null) {
+mutation EditCharacter($id:ID!, $name:String = null, $birthday:DateTime = null, $description:String = null, $imageUrl:String = null) {
   editCharacter(id: $id, name: $name, birthday: $birthday, description: $description, imageUrl: $imageUrl) {
     character {
       id
@@ -42,6 +44,37 @@ mutation editCharacter($id:ID!, $name:String = null, $birthday:DateTime = null, 
       }
     }
     errors
+  }
+}
+`
+
+const REMOVE_CHARACTER = gql`
+mutation RemoveCharacter($id:ID!) {
+  removeCharacter(id: $id) {
+    user {
+      id
+      createdAt
+      characters {
+        edges {
+          node {
+            id
+            name
+            birthday
+            description
+            imageUrl
+            acquirements(first: 5) {
+              edges {
+                node {
+                  id
+                  name
+                  acquiredAt
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 `
@@ -85,7 +118,28 @@ const save = async (props: Props, values: formData) => {
     if (imageUri) {
       await uploadToFireStorage(imageUri, imagePath)
     }
-    navigation.replace('MyStatus')
+    navigation.pop()
+  } catch (e) {
+    throw e
+  } finally {
+    setInProgress({variables: { inProgress: false }})
+  }
+}
+
+const remove = async (props: Props) => {
+  const characterId = getParam(props, 'characterId')
+  const { navigation, removeCharacter, setInProgress } = props
+  setInProgress({variables: { inProgress: true }})
+  try {
+    await removeCharacter({
+      variables: { id: characterId },
+      update: (store, result) => {
+        const data = store.readQuery({ query: GET_USER })
+        data.user = result.data.removeCharacter.user
+        store.writeQuery({ query: GET_USER, data })
+      },
+    })
+    navigation.pop()
   } catch (e) {
     throw e
   } finally {
@@ -100,10 +154,29 @@ const Screen = (props: Props) => (
         if (isEmpty(data) || data.loading) {
           return <AppLoading />
         }
-        return <CharacterForm
-          save={(values: formData) => save(props, values)}
-          defaultValues={data.character}
-        />
+        return (
+          <CharacterForm
+            save={(values: formData) => save(props, values)}
+            defaultValues={data.character}
+          >
+            <CardItem>
+              <Body style={styles.stretch}>
+                <Button danger block onPress={() => {
+                  Alert.alert(
+                    '子供の情報を削除します',
+                    'よろしいですか?',
+                    [
+                      {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                      {text: 'OK', onPress: () => remove(props)},
+                    ],
+                  )
+                }} >
+                  <Text>削除</Text>
+                </Button>
+              </Body>
+            </CardItem>
+          </CharacterForm>
+        )
       }}
     </Query>
   </Content>
@@ -112,6 +185,7 @@ const Screen = (props: Props) => (
 
 export default compose(
   graphql(EDIT_CHARACTER, { name: 'editCharacter'}),
+  graphql(REMOVE_CHARACTER, { name: 'removeCharacter'}),
   graphql(SET_IN_PROGRESS, { name: 'setInProgress'}),
   graphql(SELECT_CHARACTER, { name: 'selectCharacter'}),
 )(Screen)
