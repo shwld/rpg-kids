@@ -14,6 +14,7 @@ import { compose, graphql } from 'react-apollo'
 import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
 import { GET_USER } from './MyStatusScreen'
+import getParam from '../lib/utils/getParam'
 
 
 interface Props {
@@ -66,21 +67,24 @@ class Screen extends React.Component<Props, State> {
 
   async save() {
     const { navigation, acquireSkill, setInProgress } = this.props
+    const characterId = getParam({navigation}, 'characterId')
     setInProgress({variables: { inProgress: true }})
     try {
       if (!this.valid()) { return }
       const { name, acquiredAt } = this.state
       await acquireSkill({
         variables: {
-          characterId: this.props.navigation.getParam('characterId', ''),
+          characterId,
           name: name.value,
           acquiredAt: acquiredAt.value,
         },
         update: (store, result) => {
           const data = store.readQuery({ query: GET_USER })
-          data.user.characters.edges[0].node.acquirements.edges = [
+          const character = data.user.characters.edges.map(it => it.node).find(it => it.id === characterId)
+          if (!character) { return }
+          character.acquirements.edges = [
             { node: result.data.acquireSkill.acquirement, __typename: 'AcquirementEdge' },
-            ...data.user.characters.edges[0].node.acquirements.edges
+            ...character.acquirements.edges
           ]
           store.writeQuery({ query: GET_USER, data })
         },

@@ -106,6 +106,7 @@ export default class extends React.Component<Props, State> {
             </Button>
           </Body>
         </CardItem>
+        {this.props.children}
       </Card>
     )
   }

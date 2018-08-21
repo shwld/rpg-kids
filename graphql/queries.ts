@@ -1,33 +1,32 @@
-import gql from 'graphql-tag'
 import { AsyncStorage } from 'react-native'
+import gql from 'graphql-tag'
+
+const getSelectedCharacterIdFromStorage = async (newValue: string) => {
+  if (newValue) { return newValue }
+  let selectedCharacterId = ''
+  try {
+    const value = await AsyncStorage.getItem('rpg:selectedCharacterId')
+    if (value !== null) {
+      selectedCharacterId = value
+    }
+  } catch (e) {
+    console.error(e)
+  }
+  return selectedCharacterId
+}
 
 export default {
-  getSelectedCharacter: async (_obj, _args, { cache }: { cache }) => {
-    let selectedCharacterId = ''
-    try {
-      const value = await AsyncStorage.getItem('rpg:selectedCharacterId')
-      if (value !== null) {
-        selectedCharacterId = value
-        console.log(selectedCharacterId)
-        const query = gql`
-          query getState @client {
-            state {
-              selectedCharacterId
-            }
-          }
-        `
-        const data = {
-          state: {
-            __typename: 'State',
-            selectedCharacterId,
-          }
+  state: async (_obj, _args, { cache }: { cache }) => {
+    const query = gql`
+      query getState @client {
+        state {
+          selectedCharacterId
         }
-        cache.writeQuery({ query, data })
-        console.log(cache)
       }
-    } catch (e) {
-      console.error(e)
-    }
-    return selectedCharacterId
+    `
+    const data = cache.readQuery({ query })
+    data.state.selectedCharacterId = await getSelectedCharacterIdFromStorage(data.state.selectedCharacterId)
+
+    return data.state
   },
 }
