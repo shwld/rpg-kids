@@ -37,7 +37,7 @@ export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
         </Right>
       </ListItem>
       {acquirements.map(it => (
-        <ListItem key={it.id} onPress={() => {goSkill('')}}>
+        <ListItem key={it.id} onPress={() => {goSkill(it.id)}}>
           <Body>
             <Text>{it.name}</Text>
             <Text note numberOfLines={1}>{getAge(birthday, it.acquiredAt)}ころ</Text>

@@ -95,7 +95,7 @@ const Screen = (props: Props) => (
             birthday={character.birthday}
             acquirements={acquirements}
             goLogs={() => props.navigation.navigate('Log', { characterId: character.id })}
-            goSkill={() => {}}
+            goSkill={id => props.navigation.navigate('EditAcquirement', { acquirementId: id, characterId: character.id})}
           ></Acquirements>
         </View>
       )
