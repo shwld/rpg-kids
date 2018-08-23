@@ -1,21 +1,26 @@
-import React from 'react'
+import React from "react"
 import styles from '../styles'
 import {
-  Button,
-  Text,
   Card,
   CardItem,
   Body,
-} from 'native-base'
+  Button,
+  Text,
+} from "native-base"
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
-import imagePicker from '../lib/nativeHelpers/imagePicker'
-import CharacterIcon from './CharacterIcon'
 import toDate from '../lib/utils/toDate'
-import { Character } from '../graphql/types'
 
 interface Props {
-  defaultValues?: Character
+  defaultValues?: {
+    name: string
+    acquiredAt: string|Date
+  }
   save(data: State): void
+}
+
+export interface State {
+  name: InputString
+  acquiredAt: InputDate
 }
 
 const getDefaultValue = (props: Props, propName: string, defaultValue: any = '') => {
@@ -25,39 +30,25 @@ const getDefaultValue = (props: Props, propName: string, defaultValue: any = '')
   return defaultValue
 }
 
-export interface State {
-  name: InputString
-  birthday: InputDate
-  description: InputString
-  imageUri: string
-}
-
 export default class extends React.Component<Props, State> {
   state: State = {
     name: {
       value: getDefaultValue(this.props, 'name'),
       validate: value => (value.trim() !== ''),
     },
-    birthday: {
-      value: toDate(getDefaultValue(this.props, 'birthday', new Date())),
+    acquiredAt: {
+      value: toDate(getDefaultValue(this.props, 'acquiredAt', new Date())),
       validate: value => (value ? true : false),
     },
-    description: {
-      value: getDefaultValue(this.props, 'description'),
-      validate: value => (value.trim() !== ''),
-    },
-    imageUri: getDefaultValue(this.props, 'imageUri'),
   }
 
   valid() {
     this.setState({name: {...this.state.name, isDirty: true}})
-    this.setState({birthday: {...this.state.birthday, isDirty: true}})
-    this.setState({description: {...this.state.description, isDirty: true}})
+    this.setState({acquiredAt: {...this.state.acquiredAt, isDirty: true}})
 
     const results: boolean[] = [
       this.state.name.validate(this.state.name.value),
-      this.state.birthday.validate(this.state.birthday.value),
-      this.state.description.validate(this.state.description.value)
+      this.state.acquiredAt.validate(this.state.acquiredAt.value),
     ]
     return results.every(x => x)
   }
@@ -70,28 +61,17 @@ export default class extends React.Component<Props, State> {
   render() {
     return (
       <Card>
-        <CardItem button onPress={() => imagePicker(uri => this.setState({imageUri: uri}))} >
-          <CharacterIcon
-            uri={this.state.imageUri}
-            style={{marginRight: 20}}
-          />
-        </CardItem>
         <CardItem>
           <Body style={styles.stretch}>
             <TextInput
-              label='名前'
+              label='できたこと'
               onChange={name => this.setState({name})}
               item={this.state.name}
             />
             <DateInput 
-              label='誕生日'
-              onChange={birthday => this.setState({birthday})}
-              item={this.state.birthday}
-            />
-            <TextInput
-              label='ひとこと'
-              onChange={description => this.setState({description})}
-              item={this.state.description}
+              label='できた日'
+              onChange={acquiredAt => this.setState({acquiredAt})}
+              item={this.state.acquiredAt}
             />
           </Body>
         </CardItem>

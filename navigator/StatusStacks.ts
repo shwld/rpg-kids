@@ -2,9 +2,10 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import MyStatus from '../screens/MyStatusScreen'
 import Log from '../screens/LogScreen'
-import AcquireSkillScreen from '../screens/AcquireSkillScreen'
 import AddCharacter from '../screens/AddCharacterScreen'
 import EditCharacter from '../screens/EditCharacterScreen'
+import AcquireSkill from '../screens/AcquireSkillScreen'
+import EditAcquirement from '../screens/EditAcquirementScreen'
 
 export default createStackNavigator({
   MyStatus: {
@@ -32,9 +33,15 @@ export default createStackNavigator({
     },
   },
   AcquireSkill: {
-    screen: AcquireSkillScreen,
+    screen: AcquireSkill,
     navigationOptions: {
-      headerTitle: 'これできた',
+      headerTitle: 'これできた を登録',
+    },
+  },
+  EditAcquirement: {
+    screen: EditAcquirement,
+    navigationOptions: {
+      headerTitle: 'これできた を編集',
     },
   },
 })

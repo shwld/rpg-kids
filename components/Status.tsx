@@ -10,14 +10,8 @@ import {
 } from "native-base"
 import getAge from '../lib/utils/getAge'
 import CharacterIcon from '../components/CharacterIcon'
+import { Character } from '../graphql/types'
 
-interface Character {
-  id: string
-  name: string
-  birthday: Date
-  description: string
-  imageUrl: string
-}
 
 interface Props {
   character: Character,

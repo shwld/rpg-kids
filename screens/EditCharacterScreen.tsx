@@ -14,6 +14,7 @@ import { SELECT_CHARACTER } from '../graphql/mutations'
 import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import { profileImagePath } from '../lib/utils/imageHelper'
+import { Data, Character } from '../graphql/types'
 
 interface Props {
   characterId: string
@@ -79,6 +80,13 @@ mutation RemoveCharacter($id:ID!) {
 }
 `
 
+interface GetCharacterType extends Data {
+  character: Character
+}
+interface Variables {
+  id: string
+}
+class GetCharacter extends Query<GetCharacterType, Variables> {}
 const GET_CHARACTER = gql`
 query GetCharacter($id:ID = "") {
   character(id: $id) {
@@ -149,9 +157,13 @@ const remove = async (props: Props) => {
 
 const Screen = (props: Props) => (
   <Content contentContainerStyle={styles.stretch}>
-    <Query query={GET_CHARACTER} variables={{id: getParam(props, 'characterId')}} fetchPolicy="cache-and-network">
+    <GetCharacter
+      query={GET_CHARACTER}
+      variables={{id: getParam(props, 'characterId')}}
+      fetchPolicy="cache-and-network"
+    >
       {({data}) => {
-        if (isEmpty(data) || data.loading) {
+        if (isEmpty(data) || !data || data.loading) {
           return <AppLoading />
         }
         return (
@@ -178,7 +190,7 @@ const Screen = (props: Props) => (
           </CharacterForm>
         )
       }}
-    </Query>
+    </GetCharacter>
   </Content>
 
 )
