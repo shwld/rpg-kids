@@ -8,12 +8,19 @@ import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
 import { Query } from 'react-apollo'
 import isEmpty from '../lib/utils/isEmpty'
-
+import { Data, Acquirement, RelayConnection } from '../graphql/types'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
+interface GetAcquirementsType extends Data {
+  acquirements: RelayConnection<Acquirement>
+}
+interface Variables {
+  cursor: string|null
+}
+class GetAcquirements extends Query<GetAcquirementsType, Variables> {}
 const GET_ACQUIREMENTS = gql`
 query Acquirements($cursor: String) {
   acquirements(first: 30, after: $cursor) {
@@ -74,10 +81,14 @@ const renderItem = ({ item, index }, navigation) => {
 }
 
 export default ({navigation}: Props) => (
-  <Query query={GET_ACQUIREMENTS} fetchPolicy="cache-and-network" pollInterval={15000}>
+  <GetAcquirements
+    query={GET_ACQUIREMENTS}
+    fetchPolicy="cache-and-network"
+    pollInterval={15000}
+  >
     {response => {
       const {data, refetch, networkStatus} = response
-      if (isEmpty(data) || data.loading) {
+      if (isEmpty(data) || !data || data.loading) {
         return <AppLoading />
       }
 
@@ -94,5 +105,5 @@ export default ({navigation}: Props) => (
         </List>
       )
     }}
-  </Query>
+  </GetAcquirements>
 )

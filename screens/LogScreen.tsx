@@ -19,11 +19,20 @@ import { NetworkStatus } from 'apollo-client'
 import getAge from '../lib/utils/getAge'
 import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
+import { Data, Character } from '../graphql/types'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
+interface GetCharacterType extends Data {
+  character: Character
+}
+interface Variables {
+  id: string
+  cursor: string|null
+}
+class GetCharacter extends Query<GetCharacterType, Variables> {}
 const GET_CHARACTER = gql`
 query Character($id:ID = "", $cursor: String) {
   character(id: $id) {
@@ -72,14 +81,14 @@ const onEndReached = (data) => {
   })
 }
 
-const renderItem = ({ item, index }, birthday) => {
+const renderItem = ({ item, index }, character: { id: string, birthday: Date}, navigation: NavigationScreenProp<any, any>) => {
   return (
     <View>
-      <ListItem>
+      <ListItem onPress={() => navigation.navigate('EditAcquirement', { acquirementId: item.id, characterId: character.id})}>
         <Left>
           <Body>
             <Text>{item.name}</Text>
-            <Text note numberOfLines={1}>{getAge(birthday, item.acquiredAt)}ころ</Text>
+            <Text note numberOfLines={1}>{getAge(character.birthday, item.acquiredAt)}ころ</Text>
           </Body>
         </Left>
         <Right>
@@ -91,10 +100,14 @@ const renderItem = ({ item, index }, birthday) => {
 }
 
 export default (props: Props) => (
-  <Query query={GET_CHARACTER} variables={{id: getParam(props, 'characterId'), cursor: null}} fetchPolicy="cache-and-network">
+  <GetCharacter
+    query={GET_CHARACTER}
+    variables={{id: getParam(props, 'characterId'), cursor: null}}
+    fetchPolicy="cache-and-network"
+  >
     {response => {
       const {data, refetch, networkStatus} = response
-      if (isEmpty(data) || data.loading) {
+      if (isEmpty(data) || !data || data.loading) {
         return <AppLoading />
       }
       return (
@@ -103,12 +116,12 @@ export default (props: Props) => (
             data={data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
             onEndReachedThreshold={30}
             onEndReached={() => onEndReached(data)}
-            renderItem={(row) => renderItem(row, data.character.birthday)}
+            renderItem={(row) => renderItem(row, data.character, props.navigation)}
             refreshing={networkStatus === NetworkStatus.refetch}
             onRefresh={() => refetch({id: getParam(props, 'characterId'), cursor: null})}
           />
         </List>
       )
     }}
-  </Query>
+  </GetCharacter>
 )

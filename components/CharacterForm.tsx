@@ -6,20 +6,15 @@ import {
   Card,
   CardItem,
   Body,
-  Thumbnail,
 } from 'native-base'
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
-import { profileImageSource } from '../lib/utils/imageHelper'
+import CharacterIcon from './CharacterIcon'
 import toDate from '../lib/utils/toDate'
+import { Character } from '../graphql/types'
 
 interface Props {
-  defaultValues?: {
-    name: string
-    birthday: Date
-    description: string
-    imageUri: string
-  }
+  defaultValues?: Character
   save(data: State): void
 }
 
@@ -76,8 +71,8 @@ export default class extends React.Component<Props, State> {
     return (
       <Card>
         <CardItem button onPress={() => imagePicker(uri => this.setState({imageUri: uri}))} >
-          <Thumbnail
-            source={profileImageSource(this.state.imageUri)}
+          <CharacterIcon
+            uri={this.state.imageUri}
             style={{marginRight: 20}}
           />
         </CardItem>

@@ -10,12 +10,14 @@ import Status, { NEW_CHARACTER_ID } from '../components/Status'
 import Acquirements from '../components/Acquirements'
 import isEmpty from '../lib/utils/isEmpty'
 import { SELECT_CHARACTER } from '../graphql/mutations'
+import { User } from '../graphql/types'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
   selectCharacter(payload: { variables: {characterId: string}})
 }
 
+class GetUser extends Query<{ user: User, loading: boolean, state: any }, {first: number}> {}
 export const GET_USER = gql`
 query GetUser {
   user {
@@ -57,9 +59,9 @@ const getCharacter = (characters, id) => {
 }
 
 const Screen = (props: Props) => (
-  <Query query={GET_USER} fetchPolicy="cache-and-network">
+  <GetUser query={GET_USER} fetchPolicy="cache-and-network">
     {({data}) => {
-      if (isEmpty(data) || data.loading) {
+      if (isEmpty(data) || !data ||  data.loading) {
         return <AppLoading />
       }
 
@@ -98,7 +100,7 @@ const Screen = (props: Props) => (
         </View>
       )
     }}
-  </Query>
+  </GetUser>
 )
 
 export default graphql<Props>(SELECT_CHARACTER, { name: 'selectCharacter'})(Screen)

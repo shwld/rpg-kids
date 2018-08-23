@@ -10,11 +10,19 @@ import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
 import getParam from '../lib/utils/getParam'
 import isEmpty from '../lib/utils/isEmpty'
+import { Data, Character } from '../graphql/types'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
+interface GetCharacterType extends Data {
+  character: Character
+}
+interface Variables {
+  id: string
+}
+class GetCharacter extends Query<GetCharacterType, Variables> {}
 const GET_CHARACTER = gql`
 query GetCharacter($id:ID = "") {
   character(id: $id) {
@@ -36,9 +44,13 @@ query GetCharacter($id:ID = "") {
 `
 
 export default (props: Props) => (
-  <Query query={GET_CHARACTER} variables={{id: getParam(props, 'characterId')}} fetchPolicy="cache-and-network">
+  <GetCharacter
+    query={GET_CHARACTER}
+    variables={{id: getParam(props, 'characterId')}}
+    fetchPolicy="cache-and-network"
+  >
     {({data}) => {
-      if (isEmpty(data) || data.loading) {
+      if (isEmpty(data) || !data || data.loading) {
         return <AppLoading />
       }
 
@@ -56,5 +68,5 @@ export default (props: Props) => (
         />
       </View>
     }}
-  </Query>
+  </GetCharacter>
 )
