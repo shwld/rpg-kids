@@ -1,16 +1,18 @@
 import React from "react"
+import { Alert } from 'react-native'
 import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import styles from '../styles'
-import { Content } from "native-base"
+import { Content, CardItem, Body, Button, Text } from 'native-base'
 import { Query, compose, graphql } from 'react-apollo'
 import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
-import { GET_USER } from './MyStatusScreen'
+import { Query as MyStatusQuery, Getter as MyStatusGetter } from '../graphql/screens/MyStatus'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
 import isEmpty from '../lib/utils/isEmpty'
 import { Data, Character } from '../graphql/types'
+import { GET_CHARACTER } from './LogScreen'
 
 interface Props {
   characterId: string
@@ -20,12 +22,18 @@ interface Props {
 }
 
 const EDIT_ACQUIREMENT = gql`
-mutation EditAcquirement($id:ID!, $characterId: String!, $name:String!, $acquiredAt:DateTime!) {
+mutation EditAcquirement($id:ID!, $characterId: ID!, $name:String!, $acquiredAt:DateTime!) {
   editAcquirement(id: $id, characterId: $characterId, name: $name, acquiredAt: $acquiredAt) {
     acquirement {
       id
       name
       acquiredAt
+      skillId
+    }
+    errors
+  }
+}
+`
     }
     errors
   }
@@ -56,6 +64,14 @@ query GetAcquirement($id:ID!, $characterId:ID!) {
 }
 `
 
+const updateAcquirement = (store, character, updatedAcquirement) => {
+  if (!character) { return }
+  const acquirement = character.acquirements.edges.find(it => it.node.id === updatedAcquirement.id)
+  if (!acquirement) { return }
+  acquirement.node = updatedAcquirement
+  return character
+}
+
 const save = async (props: Props, data: formData) => {
   const { navigation, editAcquirement, setInProgress } = props
   const characterId = getParam({navigation}, 'characterId')
@@ -71,13 +87,26 @@ const save = async (props: Props, data: formData) => {
         acquiredAt: acquiredAt.value,
       },
       update: (store, result) => {
-        const data = store.readQuery({ query: GET_USER })
-        const character = data.user.characters.edges.map(it => it.node).find(it => it.id === characterId)
-        const acquirement = character.acquirements.edges.find(it => it.node.id === acquirementId)
-        if (acquirement) {
-          acquirement.node = result.data.editAcquirement.acquirement
-        }
-        store.writeQuery({ query: GET_USER, data })
+        const acquirement = result.data.editAcquirement.acquirement
+
+        let data = store.readQuery({ query: MyStatusQuery.GetUser })
+        const character = MyStatusGetter.getCharacter(data, characterId)
+        updateAcquirement(store, character, acquirement)
+        store.writeQuery({ query: MyStatusQuery.GetUser, data })
+
+        data = store.readQuery({ query: GET_CHARACTER, variables: {id:characterId, cursor: null} })
+        console.log(data)
+        updateAcquirement(store, data.character, acquirement)
+        store.writeQuery({ query: GET_CHARACTER, data })
+      },
+    })
+    navigation.pop()
+  } catch (e) {
+    throw e
+  } finally {
+    setInProgress({variables: { inProgress: false }})
+  }
+}
       },
     })
     navigation.pop()

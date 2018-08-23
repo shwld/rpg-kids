@@ -32,8 +32,8 @@ interface Variables {
   id: string
   cursor: string|null
 }
-class GetCharacter extends Query<GetCharacterType, Variables> {}
-const GET_CHARACTER = gql`
+export class GetCharacter extends Query<GetCharacterType, Variables> {}
+export const GET_CHARACTER = gql`
 query Character($id:ID = "", $cursor: String) {
   character(id: $id) {
     id

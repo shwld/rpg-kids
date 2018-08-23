@@ -34,3 +34,11 @@ export interface Acquirement {
   name: string
   acquiredAt: Date
 }
+
+export interface State {
+  inProgress: false
+  selectedCharacterId: ''
+  user: {
+    isSignedIn: false
+  }
+}

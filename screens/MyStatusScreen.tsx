@@ -1,8 +1,7 @@
 import React from "react"
 import { AppLoading } from 'expo'
-import { Query, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { NavigationScreenProp } from 'react-navigation'
-import gql from 'graphql-tag'
 import {
   View,
 } from "native-base"
@@ -10,69 +9,28 @@ import Status, { NEW_CHARACTER_ID } from '../components/Status'
 import Acquirements from '../components/Acquirements'
 import isEmpty from '../lib/utils/isEmpty'
 import { SELECT_CHARACTER } from '../graphql/mutations'
-import { User } from '../graphql/types'
+import { Query, Component, Getter } from '../graphql/screens/MyStatus'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
   selectCharacter(payload: { variables: {characterId: string}})
 }
 
-class GetUser extends Query<{ user: User, loading: boolean, state: any }, {first: number}> {}
-export const GET_USER = gql`
-query GetUser {
-  user {
-    id
-    createdAt
-    characters {
-      edges {
-        node {
-          id
-          name
-          birthday
-          description
-          imageUrl
-          acquirements(first: 5) {
-            edges {
-              node {
-                id
-                name
-                acquiredAt
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  state @client {
-    selectedCharacterId
-  }
-}
-`
-
-const getCharacter = (characters, id) => {
-  let character = null
-  if (id) {
-    character = characters.find(it => it.id === id)
-  }
-  return character || characters[0]
-}
-
 const Screen = (props: Props) => (
-  <GetUser query={GET_USER} fetchPolicy="cache-and-network">
+  <Component.GetUser query={Query.GetUser} fetchPolicy="cache-and-network">
     {({data}) => {
       if (isEmpty(data) || !data ||  data.loading) {
         return <AppLoading />
       }
 
       const characters = data.user.characters.edges.map(it => it.node)
+      const character = Getter.getCurrentCharacter(data)
 
-      if (data.user.characters.edges.length === 0) {
+      if (!character) {
         props.navigation.replace('AddCharacter')
         return
       }
 
-      const character = getCharacter(characters, data.state.selectedCharacterId)
       const acquirements: any[] = character.acquirements.edges.map(it => it.node)
 
       return (
@@ -100,7 +58,7 @@ const Screen = (props: Props) => (
         </View>
       )
     }}
-  </GetUser>
+  </Component.GetUser>
 )
 
 export default graphql<Props>(SELECT_CHARACTER, { name: 'selectCharacter'})(Screen)

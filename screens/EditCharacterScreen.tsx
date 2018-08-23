@@ -7,7 +7,7 @@ import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
 import styles from '../styles'
 import { Content, CardItem, Body, Button, Text } from 'native-base'
-import { GET_USER } from './MyStatusScreen'
+import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
 import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
 import { SELECT_CHARACTER } from '../graphql/mutations'
@@ -114,12 +114,12 @@ const save = async (props: Props, values: formData) => {
         imageUrl: imageUri ? generatePublicMediaUrl(imagePath) : null,
       },
       update: (store, result) => {
-        const data = store.readQuery({ query: GET_USER })
+        const data = store.readQuery({ query: MyStatusQuery.GetUser })
         let character = data.user.characters.edges.find(it => it.node.id === characterId)
         if (character.node) {
           character.node = result.data.editCharacter.character
         }
-        store.writeQuery({ query: GET_USER, data })
+        store.writeQuery({ query: MyStatusQuery.GetUser, data })
         selectCharacter({variables: { characterId }})
       },
     })
@@ -142,9 +142,9 @@ const remove = async (props: Props) => {
     await removeCharacter({
       variables: { id: characterId },
       update: (store, result) => {
-        const data = store.readQuery({ query: GET_USER })
+        const data = store.readQuery({ query: MyStatusQuery.GetUser })
         data.user = result.data.removeCharacter.user
-        store.writeQuery({ query: GET_USER, data })
+        store.writeQuery({ query: MyStatusQuery.GetUser, data })
       },
     })
     navigation.pop()

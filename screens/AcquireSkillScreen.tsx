@@ -5,7 +5,7 @@ import { Content } from "native-base"
 import { compose, graphql } from 'react-apollo'
 import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
-import { GET_USER } from './MyStatusScreen'
+import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
 
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const ACQUIRE_SKILL = gql`
-mutation AcquireSkill($characterId: String!, $name:String!, $acquiredAt:DateTime!) {
+mutation AcquireSkill($characterId: ID!, $name:String!, $acquiredAt:DateTime!) {
   acquireSkill(characterId: $characterId, name: $name, acquiredAt: $acquiredAt) {
     acquirement {
       id
@@ -42,14 +42,14 @@ const save = async (props: Props, data: formData) => {
         acquiredAt: acquiredAt.value,
       },
       update: (store, result) => {
-        const data = store.readQuery({ query: GET_USER })
+        const data = store.readQuery({ query: MyStatusQuery.GetUser })
         const character = data.user.characters.edges.map(it => it.node).find(it => it.id === characterId)
         if (!character) { return }
         character.acquirements.edges = [
           { node: result.data.acquireSkill.acquirement, __typename: 'AcquirementEdge' },
           ...character.acquirements.edges
         ]
-        store.writeQuery({ query: GET_USER, data })
+        store.writeQuery({ query: MyStatusQuery.GetUser, data })
       },
     })
     navigation.pop()

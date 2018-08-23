@@ -5,7 +5,7 @@ import { SET_IN_PROGRESS } from '../graphql/mutations'
 import gql from 'graphql-tag'
 import styles from '../styles'
 import { Content } from 'native-base'
-import { GET_USER } from './MyStatusScreen'
+import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
 import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
 import { SELECT_CHARACTER } from '../graphql/mutations'
@@ -67,12 +67,12 @@ mutation editCharacter($id:ID!, $imageUrl:String = null) {
 `
 
 const updateCache = (store, result) => {
-  const data = store.readQuery({ query: GET_USER })
+  const data = store.readQuery({ query: MyStatusQuery.GetUser })
   data.user.characters.edges = [
     { node: result.data.addCharacter.character, __typename: 'CharacterEdge' },
     ...data.user.characters.edges
   ]
-  store.writeQuery({ query: GET_USER, data })
+  store.writeQuery({ query: MyStatusQuery.GetUser, data })
 }
 
 const save = async (props: Props, data: formData) => {
