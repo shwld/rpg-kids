@@ -18,6 +18,7 @@ interface Props {
   characterId: string
   navigation: NavigationScreenProp<any, any>
   editAcquirement(payload: { variables: {id: string, characterId: string, name: string, acquiredAt: Date}, update: any })
+  removeAcquirement(payload: { variables: {id: string, characterId: string}, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
@@ -34,6 +35,12 @@ mutation EditAcquirement($id:ID!, $characterId: ID!, $name:String!, $acquiredAt:
   }
 }
 `
+
+const REMOVE_ACQUIREMENT = gql`
+mutation RemoveAcquirement($id:ID!, $characterId:ID!) {
+  removeAcquirement(characterId: $characterId, id: $id) {
+    character {
+      id
     }
     errors
   }
@@ -95,7 +102,6 @@ const save = async (props: Props, data: formData) => {
         store.writeQuery({ query: MyStatusQuery.GetUser, data })
 
         data = store.readQuery({ query: GET_CHARACTER, variables: {id:characterId, cursor: null} })
-        console.log(data)
         updateAcquirement(store, data.character, acquirement)
         store.writeQuery({ query: GET_CHARACTER, data })
       },
@@ -107,6 +113,31 @@ const save = async (props: Props, data: formData) => {
     setInProgress({variables: { inProgress: false }})
   }
 }
+
+const remove = async (props: Props) => {
+  const { navigation, removeAcquirement, setInProgress } = props
+  const characterId = getParam({navigation}, 'characterId')
+  const acquirementId = getParam({navigation}, 'acquirementId')
+  setInProgress({variables: { inProgress: true }})
+  try {
+    await removeAcquirement({
+      variables: {
+        id: acquirementId,
+        characterId,
+      },
+      update: (store) => {
+        let data = store.readQuery({ query: MyStatusQuery.GetUser })
+        const character = MyStatusGetter.getCharacter(data, characterId)
+        if (!character) { return }
+        let acquirementsEdges = character.acquirements.edges.filter(it => it.node.id !== acquirementId)
+        character.acquirements.edges = acquirementsEdges
+        store.writeQuery({ query: MyStatusQuery.GetUser, data })
+
+        data = store.readQuery({ query: GET_CHARACTER, variables: {id:characterId, cursor: null} })
+        if (!data.character) { return }
+        acquirementsEdges = data.character.acquirements.edges.filter(it => it.node.id !== acquirementId)
+        data.character.acquirements.edges = acquirementsEdges
+        store.writeQuery({ query: GET_CHARACTER, data })
       },
     })
     navigation.pop()
@@ -135,7 +166,24 @@ const Screen = (props: Props) => (
           <AcquirementForm
             save={(data: formData) => save(props, data)}
             defaultValues={data.character.acquirement}
-          />
+          >
+            <CardItem>
+              <Body style={styles.stretch}>
+                <Button danger block onPress={() => {
+                  Alert.alert(
+                    '削除します',
+                    'よろしいですか?',
+                    [
+                      {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                      {text: 'OK', onPress: () => remove(props)},
+                    ],
+                  )
+                }} >
+                  <Text>削除</Text>
+                </Button>
+              </Body>
+            </CardItem>
+          </AcquirementForm>
         )
       }}
     </GetAcquirement>
@@ -144,5 +192,6 @@ const Screen = (props: Props) => (
 
 export default compose(
   graphql(EDIT_ACQUIREMENT, { name: 'editAcquirement' }),
+  graphql(REMOVE_ACQUIREMENT, { name: 'removeAcquirement' }),
   graphql(SET_IN_PROGRESS, { name: 'setInProgress' }),
 )(Screen)
