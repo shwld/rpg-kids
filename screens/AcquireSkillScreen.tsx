@@ -34,7 +34,6 @@ const save = async (props: Props, data: formData) => {
   const characterId = getParam({navigation}, 'characterId')
   setInProgress({variables: { inProgress: true }})
   try {
-    console.log(data)
     const { name, acquiredAt } = data
     await acquireSkill({
       variables: {

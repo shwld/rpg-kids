@@ -8,11 +8,12 @@ import {
   Text,
 } from "native-base"
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
+import toDate from '../lib/utils/toDate'
 
 interface Props {
   defaultValues?: {
     name: string
-    acquiredAt: Date
+    acquiredAt: string|Date
   }
   save(data: State): void
 }
@@ -36,7 +37,7 @@ export default class extends React.Component<Props, State> {
       validate: value => (value.trim() !== ''),
     },
     acquiredAt: {
-      value: getDefaultValue(this.props, 'acquiredAt', new Date()),
+      value: toDate(getDefaultValue(this.props, 'acquiredAt', new Date())),
       validate: value => (value ? true : false),
     },
   }

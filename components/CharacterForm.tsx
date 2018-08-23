@@ -11,6 +11,7 @@ import {
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
 import { profileImageSource } from '../lib/utils/imageHelper'
+import toDate from '../lib/utils/toDate'
 
 interface Props {
   defaultValues?: {
@@ -43,7 +44,7 @@ export default class extends React.Component<Props, State> {
       validate: value => (value.trim() !== ''),
     },
     birthday: {
-      value: new Date(getDefaultValue(this.props, 'birthday')),
+      value: toDate(getDefaultValue(this.props, 'birthday', new Date())),
       validate: value => (value ? true : false),
     },
     description: {
