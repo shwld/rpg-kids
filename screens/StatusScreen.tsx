@@ -1,8 +1,6 @@
 import React from "react"
 import { AppLoading } from 'expo'
-import { Query } from 'react-apollo'
 import { NavigationScreenProp } from 'react-navigation'
-import gql from 'graphql-tag'
 import {
   View,
 } from "native-base"
@@ -10,47 +8,20 @@ import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
 import getParam from '../lib/utils/getParam'
 import isEmpty from '../lib/utils/isEmpty'
-import { Data, Character } from '../graphql/types'
+import { Component, Query } from '../graphql/screens/Status'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
-interface GetCharacterType extends Data {
-  character: Character
-}
-interface Variables {
-  id: string
-}
-class GetCharacter extends Query<GetCharacterType, Variables> {}
-const GET_CHARACTER = gql`
-query GetCharacter($id:ID = "") {
-  character(id: $id) {
-    id
-    name
-    birthday
-    description
-    acquirements(first: 5) {
-      edges {
-        node {
-          id
-          name
-          acquiredAt
-        }
-      }
-    }
-  }
-}
-`
-
 export default (props: Props) => (
-  <GetCharacter
-    query={GET_CHARACTER}
+  <Component.GetCharacter
+    query={Query.GetCharacter}
     variables={{id: getParam(props, 'characterId')}}
     fetchPolicy="cache-and-network"
   >
-    {({data}) => {
-      if (isEmpty(data) || !data || data.loading) {
+    {({data, loading}) => {
+      if (isEmpty(data) || !data || loading) {
         return <AppLoading />
       }
 
@@ -68,5 +39,5 @@ export default (props: Props) => (
         />
       </View>
     }}
-  </GetCharacter>
+  </Component.GetCharacter>
 )

@@ -1,8 +1,3 @@
-export interface Data {
-  loading: boolean
-  refetch: boolean
-}
-
 export interface RelayConnection<T> {
   edges: Array<{
     node: T
@@ -33,4 +28,14 @@ export interface Acquirement {
   id: string
   name: string
   acquiredAt: Date
+}
+
+export interface State {
+  inProgress: boolean
+  selectedCharacterId: string
+  user: UserState
+}
+
+export interface UserState {
+  isSignedIn: false
 }
