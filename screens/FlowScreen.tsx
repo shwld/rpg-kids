@@ -3,53 +3,20 @@ import { AppLoading } from 'expo'
 import AcquirementCard from '../components/AcquirementCard'
 import { FlatList } from 'react-native'
 import { List } from "native-base"
-import gql from 'graphql-tag'
 import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
-import { Query } from 'react-apollo'
 import isEmpty from '../lib/utils/isEmpty'
-import { Data, Acquirement, RelayConnection } from '../graphql/types'
+import { Component, Query } from '../graphql/screens/Flow'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
-interface GetAcquirementsType extends Data {
-  acquirements: RelayConnection<Acquirement>
-}
-interface Variables {
-  cursor: string|null
-}
-class GetAcquirements extends Query<GetAcquirementsType, Variables> {}
-const GET_ACQUIREMENTS = gql`
-query Acquirements($cursor: String) {
-  acquirements(first: 30, after: $cursor) {
-    edges {
-      node {
-        id
-        name
-        acquiredAt
-        character {
-          id
-          name
-          birthday
-          imageUrl
-        }
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-  }
-}
-`
-
 const onEndReached = (data) => {
   const { pageInfo: { endCursor, hasNextPage } } = data.acquirements
   if (!hasNextPage) { return }
   data.fetchMore({
-    query: GET_ACQUIREMENTS,
+    query: Query.GetAcquirements,
     variables: { ...data.variables, cursor: endCursor },
     updateQuery: (previousResult, { fetchMoreResult }) => {
       const newEdges = fetchMoreResult.acquirements.edges
@@ -81,14 +48,13 @@ const renderItem = ({ item, index }, navigation) => {
 }
 
 export default ({navigation}: Props) => (
-  <GetAcquirements
-    query={GET_ACQUIREMENTS}
+  <Component.GetAcquirements
+    query={Query.GetAcquirements}
     fetchPolicy="cache-and-network"
     pollInterval={15000}
   >
-    {response => {
-      const {data, refetch, networkStatus} = response
-      if (isEmpty(data) || !data || data.loading) {
+    {({data, refetch, networkStatus, loading}) => {
+      if (isEmpty(data) || !data || loading) {
         return <AppLoading />
       }
 
@@ -105,5 +71,5 @@ export default ({navigation}: Props) => (
         </List>
       )
     }}
-  </GetAcquirements>
+  </Component.GetAcquirements>
 )

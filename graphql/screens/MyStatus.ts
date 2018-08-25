@@ -1,6 +1,7 @@
 import { Query as ApolloQuery } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Data, User, State, Character } from '../types'
+import { User, State, Character } from '../types'
+import { SelectCharacter } from './shared/mutations'
 
 const getUserQuery = gql`
   query GetUser {
@@ -34,16 +35,16 @@ const getUserQuery = gql`
   }
 `
 
-export interface GetUserResult extends Data {
+type GetUserResponse = {
   user: User
   state: State
 }
 
-export interface GetUserVariables {
+type GetUserVariables = {
   first: number
 }
 
-class GetUser extends ApolloQuery<GetUserResult, GetUserVariables> {}
+class GetUser extends ApolloQuery<GetUserResponse, GetUserVariables> {}
 
 export const Query = {
   GetUser: getUserQuery,
@@ -54,11 +55,11 @@ export const Component = {
 }
 
 export const Getter = {
-  getCurrentCharacter(result: GetUserResult) {
+  getCurrentCharacter(result: GetUserResponse) {
     const id = result.state.selectedCharacterId
     return this.getCharacter(result, id)
   },
-  getCharacter(result: GetUserResult, id: string) {
+  getCharacter(result: GetUserResponse, id: string) {
     const characters = result.user.characters.edges.map(it => it.node)
     if (characters.length === 0) { return null }
     let character: Character|undefined
@@ -67,4 +68,8 @@ export const Getter = {
     }
     return character || characters[0]
   }
+}
+
+export const Graphql = {
+  SelectCharacter,
 }

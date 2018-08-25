@@ -1,7 +1,5 @@
 import React from "react"
 import { AppLoading } from 'expo'
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
 import { NavigationScreenProp } from 'react-navigation'
 import format from 'date-fns/format'
 import ja from 'date-fns/locale/ja'
@@ -19,50 +17,17 @@ import { NetworkStatus } from 'apollo-client'
 import getAge from '../lib/utils/getAge'
 import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
-import { Data, Character } from '../graphql/types'
+import { Component, Query } from '../graphql/screens/Log'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
-interface GetCharacterType extends Data {
-  character: Character
-}
-interface Variables {
-  id: string
-  cursor: string|null
-}
-export class GetCharacter extends Query<GetCharacterType, Variables> {}
-export const GET_CHARACTER = gql`
-query Character($id:ID = "", $cursor: String) {
-  character(id: $id) {
-    id
-    name
-    birthday
-    imageUrl
-    acquirements(first: 30, after: $cursor) {
-      edges {
-        node {
-          id
-          skillId
-          name
-          acquiredAt
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-}
-`
-
 const onEndReached = (data) => {
   const { pageInfo: { endCursor, hasNextPage } } = data.character.acquirements
   if (!hasNextPage) { return }
   data.fetchMore({
-    query: GET_CHARACTER,
+    query: Query.GetCharacter,
     variables: { ...data.variables, cursor: endCursor },
     updateQuery: (previousResult, { fetchMoreResult }) => {
       const newEdges = fetchMoreResult.character.acquirements.edges
@@ -100,14 +65,13 @@ const renderItem = ({ item, index }, character: { id: string, birthday: Date}, n
 }
 
 export default (props: Props) => (
-  <GetCharacter
-    query={GET_CHARACTER}
+  <Component.GetCharacter
+    query={Query.GetCharacter}
     variables={{id: getParam(props, 'characterId'), cursor: null}}
     fetchPolicy="cache-and-network"
   >
-    {response => {
-      const {data, refetch, networkStatus} = response
-      if (isEmpty(data) || !data || data.loading) {
+    {({data, refetch, networkStatus, loading}) => {
+      if (isEmpty(data) || !data || loading) {
         return <AppLoading />
       }
       return (
@@ -123,5 +87,5 @@ export default (props: Props) => (
         </List>
       )
     }}
-  </GetCharacter>
+  </Component.GetCharacter>
 )

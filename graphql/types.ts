@@ -1,8 +1,3 @@
-export interface Data {
-  loading: boolean
-  refetch: boolean
-}
-
 export interface RelayConnection<T> {
   edges: Array<{
     node: T
