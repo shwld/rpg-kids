@@ -2,19 +2,15 @@ import React from 'react'
 import { AppLoading } from 'expo'
 import { Alert } from 'react-native'
 import { NavigationScreenProp } from 'react-navigation'
-import { compose, graphql, Query } from 'react-apollo'
-import { SET_IN_PROGRESS } from '../graphql/mutations'
-import gql from 'graphql-tag'
+import { compose } from 'react-apollo'
 import styles from '../styles'
 import { Content, CardItem, Body, Button, Text } from 'native-base'
-import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
 import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
-import { SELECT_CHARACTER } from '../graphql/mutations'
 import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import { profileImagePath } from '../lib/utils/imageHelper'
-import { Data, Character } from '../graphql/types'
+import { Component, Query, Graphql } from '../graphql/screens/EditCharacter'
 
 interface Props {
   characterId: string
@@ -24,79 +20,6 @@ interface Props {
   setInProgress(payload: { variables: {inProgress: boolean}})
   selectCharacter(payload: { variables: {characterId: string}})
 }
-
-const EDIT_CHARACTER = gql`
-mutation EditCharacter($id:ID!, $name:String = null, $birthday:DateTime = null, $description:String = null, $imageUrl:String = null) {
-  editCharacter(id: $id, name: $name, birthday: $birthday, description: $description, imageUrl: $imageUrl) {
-    character {
-      id
-      name
-      birthday
-      description
-      imageUrl
-      acquirements(first: 5) {
-        edges {
-          node {
-            id
-            name
-            acquiredAt
-          }
-        }
-      }
-    }
-    errors
-  }
-}
-`
-
-const REMOVE_CHARACTER = gql`
-mutation RemoveCharacter($id:ID!) {
-  removeCharacter(id: $id) {
-    user {
-      id
-      createdAt
-      characters {
-        edges {
-          node {
-            id
-            name
-            birthday
-            description
-            imageUrl
-            acquirements(first: 5) {
-              edges {
-                node {
-                  id
-                  name
-                  acquiredAt
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-`
-
-interface GetCharacterType extends Data {
-  character: Character
-}
-interface Variables {
-  id: string
-}
-class GetCharacter extends Query<GetCharacterType, Variables> {}
-const GET_CHARACTER = gql`
-query GetCharacter($id:ID = "") {
-  character(id: $id) {
-    id
-    name
-    birthday
-    description
-  }
-}
-`
 
 const save = async (props: Props, values: formData) => {
   const characterId = getParam(props, 'characterId')
@@ -114,12 +37,12 @@ const save = async (props: Props, values: formData) => {
         imageUrl: imageUri ? generatePublicMediaUrl(imagePath) : null,
       },
       update: (store, result) => {
-        const data = store.readQuery({ query: MyStatusQuery.GetUser })
+        const data = store.readQuery({ query: Query.GetUser })
         let character = data.user.characters.edges.find(it => it.node.id === characterId)
         if (character.node) {
           character.node = result.data.editCharacter.character
         }
-        store.writeQuery({ query: MyStatusQuery.GetUser, data })
+        store.writeQuery({ query: Query.GetUser, data })
         selectCharacter({variables: { characterId }})
       },
     })
@@ -142,9 +65,9 @@ const remove = async (props: Props) => {
     await removeCharacter({
       variables: { id: characterId },
       update: (store, result) => {
-        const data = store.readQuery({ query: MyStatusQuery.GetUser })
+        const data = store.readQuery({ query: Query.GetUser })
         data.user = result.data.removeCharacter.user
-        store.writeQuery({ query: MyStatusQuery.GetUser, data })
+        store.writeQuery({ query: Query.GetUser, data })
       },
     })
     navigation.pop()
@@ -157,13 +80,13 @@ const remove = async (props: Props) => {
 
 const Screen = (props: Props) => (
   <Content contentContainerStyle={styles.stretch}>
-    <GetCharacter
-      query={GET_CHARACTER}
+    <Component.GetCharacter
+      query={Query.GetCharacter}
       variables={{id: getParam(props, 'characterId')}}
       fetchPolicy="cache-and-network"
     >
-      {({data}) => {
-        if (isEmpty(data) || !data || data.loading) {
+      {({data, loading}) => {
+        if (isEmpty(data) || !data || loading) {
           return <AppLoading />
         }
         return (
@@ -190,14 +113,14 @@ const Screen = (props: Props) => (
           </CharacterForm>
         )
       }}
-    </GetCharacter>
+    </Component.GetCharacter>
   </Content>
 
 )
 
 export default compose(
-  graphql(EDIT_CHARACTER, { name: 'editCharacter'}),
-  graphql(REMOVE_CHARACTER, { name: 'removeCharacter'}),
-  graphql(SET_IN_PROGRESS, { name: 'setInProgress'}),
-  graphql(SELECT_CHARACTER, { name: 'selectCharacter'}),
+  Graphql.EditCharacter(),
+  Graphql.RemoveCharacter(),
+  Graphql.SetInProgress(),
+  Graphql.SelectCharacter(),
 )(Screen)

@@ -4,15 +4,12 @@ import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import styles from '../styles'
 import { Content, CardItem, Body, Button, Text } from 'native-base'
-import { Query, compose, graphql } from 'react-apollo'
-import { SET_IN_PROGRESS } from '../graphql/mutations'
-import gql from 'graphql-tag'
-import { Query as MyStatusQuery, Getter as MyStatusGetter } from '../graphql/screens/MyStatus'
+import { compose } from 'react-apollo'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
 import isEmpty from '../lib/utils/isEmpty'
-import { Data, Character } from '../graphql/types'
-import { GET_CHARACTER } from './LogScreen'
+import { Component, Query, Graphql, Getter } from '../graphql/screens/EditAcquirement'
+
 
 interface Props {
   characterId: string
@@ -21,55 +18,6 @@ interface Props {
   removeAcquirement(payload: { variables: {id: string, characterId: string}, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
 }
-
-const EDIT_ACQUIREMENT = gql`
-mutation EditAcquirement($id:ID!, $characterId: ID!, $name:String!, $acquiredAt:DateTime!) {
-  editAcquirement(id: $id, characterId: $characterId, name: $name, acquiredAt: $acquiredAt) {
-    acquirement {
-      id
-      name
-      acquiredAt
-      skillId
-    }
-    errors
-  }
-}
-`
-
-const REMOVE_ACQUIREMENT = gql`
-mutation RemoveAcquirement($id:ID!, $characterId:ID!) {
-  removeAcquirement(characterId: $characterId, id: $id) {
-    character {
-      id
-    }
-    errors
-  }
-}
-`
-
-interface GetAcquirementType extends Data {
-  character: Character
-}
-interface Variables {
-  id: string
-  characterId: string
-}
-class GetAcquirement extends Query<GetAcquirementType, Variables> {}
-const GET_ACQUIREMENT = gql`
-query GetAcquirement($id:ID!, $characterId:ID!) {
-  character(id: $characterId) {
-    id
-    name
-    birthday
-    description
-    acquirement(id: $id) {
-      id
-      name
-      acquiredAt
-    }
-  }
-}
-`
 
 const updateAcquirement = (store, character, updatedAcquirement) => {
   if (!character) { return }
@@ -96,17 +44,15 @@ const save = async (props: Props, data: formData) => {
       update: (store, result) => {
         const acquirement = result.data.editAcquirement.acquirement
 
-        let data = store.readQuery({ query: MyStatusQuery.GetUser })
-        const character = MyStatusGetter.getCharacter(data, characterId)
-        updateAcquirement(store, character, acquirement)
-        store.writeQuery({ query: MyStatusQuery.GetUser, data })
-
-        data = store.readQuery({ query: GET_CHARACTER, variables: {id:characterId, cursor: null} })
-        updateAcquirement(store, data.character, acquirement)
-        store.writeQuery({ query: GET_CHARACTER, data })
+        let data = store.readQuery({ query: Query.GetUser })
+        if (data) {
+          const character = Getter.GetCharacter(data, characterId)
+          updateAcquirement(store, character, acquirement)
+          store.writeQuery({ query: Query.GetUser, data })
+        }
       },
     })
-    navigation.pop()
+    navigation.replace('MyStatus')
   } catch (e) {
     throw e
   } finally {
@@ -126,21 +72,16 @@ const remove = async (props: Props) => {
         characterId,
       },
       update: (store) => {
-        let data = store.readQuery({ query: MyStatusQuery.GetUser })
-        const character = MyStatusGetter.getCharacter(data, characterId)
-        if (!character) { return }
-        let acquirementsEdges = character.acquirements.edges.filter(it => it.node.id !== acquirementId)
-        character.acquirements.edges = acquirementsEdges
-        store.writeQuery({ query: MyStatusQuery.GetUser, data })
-
-        data = store.readQuery({ query: GET_CHARACTER, variables: {id:characterId, cursor: null} })
-        if (!data.character) { return }
-        acquirementsEdges = data.character.acquirements.edges.filter(it => it.node.id !== acquirementId)
-        data.character.acquirements.edges = acquirementsEdges
-        store.writeQuery({ query: GET_CHARACTER, data })
+        let data = store.readQuery({ query: Query.GetUser })
+        const character = Getter.GetCharacter(data, characterId)
+        if (character) {
+          let acquirementsEdges = character.acquirements.edges.filter(it => it.node.id !== acquirementId)
+          character.acquirements.edges = acquirementsEdges
+          store.writeQuery({ query: Query.GetUser, data })
+        }
       },
     })
-    navigation.pop()
+    navigation.replace('MyStatus')
   } catch (e) {
     throw e
   } finally {
@@ -150,16 +91,16 @@ const remove = async (props: Props) => {
 
 const Screen = (props: Props) => (
   <Content contentContainerStyle={styles.stretch}>
-    <GetAcquirement
-      query={GET_ACQUIREMENT}
+    <Component.GetAcquirement
+      query={Query.GetAcquirement}
       variables={{
         id: getParam(props, 'acquirementId'),
         characterId: getParam(props, 'characterId'),
       }}
       fetchPolicy="cache-and-network"
     >
-      {({data}) => {
-        if (isEmpty(data) || !data || data.loading) {
+      {({data, loading}) => {
+        if (isEmpty(data) || !data || loading) {
           return <AppLoading />
         }
         return (
@@ -186,12 +127,12 @@ const Screen = (props: Props) => (
           </AcquirementForm>
         )
       }}
-    </GetAcquirement>
+    </Component.GetAcquirement>
   </Content>
 )
 
 export default compose(
-  graphql(EDIT_ACQUIREMENT, { name: 'editAcquirement' }),
-  graphql(REMOVE_ACQUIREMENT, { name: 'removeAcquirement' }),
-  graphql(SET_IN_PROGRESS, { name: 'setInProgress' }),
+  Graphql.EditAcquirement(),
+  Graphql.RemoveAcquirement(),
+  Graphql.SetInProgress(),
 )(Screen)

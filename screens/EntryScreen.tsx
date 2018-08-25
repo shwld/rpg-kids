@@ -1,9 +1,8 @@
 import React from 'react'
 import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
+import { Graphql } from '../graphql/screens/Entry'
 
-import { graphql } from 'react-apollo'
-import { AUTHENTICATE } from '../graphql/mutations'
 
 interface Props {
   authenticate(): { data: { authenticate: boolean} }
@@ -24,4 +23,4 @@ class Entry extends React.Component<Props> {
   }
 }
 
-export default graphql<Props>(AUTHENTICATE, { name: 'authenticate'})(Entry)
+export default Graphql.Authenticate<Props>()(Entry)

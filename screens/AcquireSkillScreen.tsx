@@ -2,12 +2,11 @@ import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
 import styles from '../styles'
 import { Content } from "native-base"
-import { compose, graphql } from 'react-apollo'
-import { SET_IN_PROGRESS } from '../graphql/mutations'
-import gql from 'graphql-tag'
+import { compose } from 'react-apollo'
 import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
+import { Graphql } from '../graphql/screens/AcquireSkill'
 
 interface Props {
   characterId: string
@@ -16,18 +15,6 @@ interface Props {
   setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
-const ACQUIRE_SKILL = gql`
-mutation AcquireSkill($characterId: ID!, $name:String!, $acquiredAt:DateTime!) {
-  acquireSkill(characterId: $characterId, name: $name, acquiredAt: $acquiredAt) {
-    acquirement {
-      id
-      name
-      acquiredAt
-    }
-    errors
-  }
-}
-`
 
 const save = async (props: Props, data: formData) => {
   const { navigation, acquireSkill, setInProgress } = props
@@ -60,13 +47,11 @@ const save = async (props: Props, data: formData) => {
   }
 }
 
-const Screen = (props: Props) => (
+export default compose(
+  Graphql.AcquireSkill(),
+  Graphql.SetInProgress(),
+)((props: Props) => (
   <Content contentContainerStyle={styles.stretch}>
     <AcquirementForm save={(data: formData) => save(props, data)} />
   </Content>
-)
-
-export default compose(
-  graphql(ACQUIRE_SKILL, { name: 'acquireSkill' }),
-  graphql(SET_IN_PROGRESS, { name: 'setInProgress' }),
-)(Screen)
+))

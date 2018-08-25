@@ -31,9 +31,11 @@ export interface Acquirement {
 }
 
 export interface State {
-  inProgress: false
-  selectedCharacterId: ''
-  user: {
-    isSignedIn: false
-  }
+  inProgress: boolean
+  selectedCharacterId: string
+  user: UserState
+}
+
+export interface UserState {
+  isSignedIn: false
 }
