@@ -13,3 +13,11 @@ export default StyleSheet.create({
 export const headerStyle = {
   headerTintColor: '#5E4141',
 }
+
+export const footerStyle = {
+  activeTintColor: '#FFF',
+  inactiveTintColor: '#CCC',
+  style: {
+    backgroundColor: '#C76B63',
+  },
+}

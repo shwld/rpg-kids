@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from 'react-navigation'
 import Flow from './FlowStacks'
 import MyStatus from './StatusStacks'
 import TabBarIcon from '../components/TabBarIcon'
+import { footerStyle } from '../styles'
 
 export default createBottomTabNavigator({
   Flow: {
@@ -12,6 +13,7 @@ export default createBottomTabNavigator({
       tabBarIcon: (elem) => (
         TabBarIcon('stats', elem)
       ),
+      tabBarOptions: footerStyle,
     },
   },
   MyStatus: {
@@ -21,7 +23,7 @@ export default createBottomTabNavigator({
       tabBarIcon: (elem) => (
         TabBarIcon('happy', elem)
       ),
-      
+      tabBarOptions: footerStyle,
     },
   },
 })
