@@ -8,3 +8,8 @@ export default StyleSheet.create({
     flex: 1, justifyContent: 'space-between', alignItems: 'stretch'
   },
 })
+
+
+export const headerStyle = {
+  headerTintColor: '#5E4141',
+}
