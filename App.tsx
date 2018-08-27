@@ -2,7 +2,9 @@ import React from 'react'
 import { Font, AppLoading } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
 import AuthSwitch from './navigator/AuthSwitch'
-import { Root } from 'native-base'
+import { StyleProvider, Root } from 'native-base'
+import getTheme from './native-base-theme/components'
+import platform from './native-base-theme/variables/platform'
 import OverlayIndicator from './containers/OverlayIndicator'
 
 import Apollo  from './graphql/Apollo'
@@ -19,9 +21,11 @@ class App extends React.Component {
     return (
       <Apollo>
         <OverlayIndicator />
-        <Root>
-          <AuthSwitch />
-        </Root>
+        <StyleProvider style={getTheme(platform)}>
+          <Root>
+            <AuthSwitch />
+          </Root>
+        </StyleProvider>
       </Apollo>
     )
   }
