@@ -5,6 +5,7 @@ import {
   Label,
   DatePicker,
 } from 'native-base'
+import formatFromDate from '../lib/utils/formatFromDate'
 import subYears from 'date-fns/sub_years'
 
 export interface InputString {
@@ -72,10 +73,11 @@ export const DateInput = (props: DateInputProps) => (
       modalTransparent={false}
       animationType={"fade"}
       androidMode={"default"}
-      placeHolderText="選択する"
-      textStyle={{ color: "green" }}
-      placeHolderTextStyle={{ color: "#d3d3d3" }}
+      placeHolderText={formatFromDate(props.item.value, 'YYYY年MMMDo') || '選択する'}
+      textStyle={{ color: '#333' }}
+      placeHolderTextStyle={{ color: '#d3d3d3' }}
       onDateChange={value => props.onChange({ ...props.item, value, isDirty: true })}
+      formatChosenDate={date => formatFromDate(date, 'YYYY年MMMDo')}
     />
   </Item>
 )
