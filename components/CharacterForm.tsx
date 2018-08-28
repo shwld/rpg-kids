@@ -46,7 +46,7 @@ export default class extends React.Component<Props, State> {
       value: getDefaultValue(this.props, 'description'),
       validate: value => (value.trim() !== ''),
     },
-    imageUri: getDefaultValue(this.props, 'imageUri'),
+    imageUri: getDefaultValue(this.props, 'imageUrl'),
   }
 
   valid() {
