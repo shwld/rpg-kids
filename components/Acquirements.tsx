@@ -22,20 +22,20 @@ interface Props {
   title: string,
   birthday: Date,
   acquirements: Acquirement[],
-  goLogs: () => any,
+  goLogs?: () => any,
   goSkill: (id: string) => any,
 }
 
 export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
   <Card style={{flex: 0}}>
     <List style={{ elevation: 3, backgroundColor: 'white' }}>
-      <ListItem header itemDivider onPress={() => {goLogs()}}>
+      <ListItem header itemDivider onPress={() => {goLogs ? goLogs() : () => {}}}>
         <Left>
           <Text>{title}</Text>
         </Left>
-        <Right>
+        {goLogs && <Right>
           <Icon name="arrow-forward" />
-        </Right>
+        </Right>}
       </ListItem>
       {acquirements.length === 0 && (
         <ListItem>
