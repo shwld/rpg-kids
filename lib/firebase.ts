@@ -28,4 +28,12 @@ export const uploadToFireStorage = async (imageUri: string, path: string) => {
   return ref.put(blob, metadata)
 }
 
+export const getIdToken = async () => {
+  const currentUser = firebase.auth().currentUser
+  if (!currentUser) { return null }
+  const idToken = await currentUser.getIdToken(true)
+
+  return idToken
+}
+
 export default firebase
