@@ -1,9 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/storage'
+import env from './env'
 
-const firebaseConfig = require('../firebase-credentials.json')
-
+const firebaseConfig = env.firebaseConfig
 firebase.initializeApp(firebaseConfig)
 
 export const authenticate = () => {
