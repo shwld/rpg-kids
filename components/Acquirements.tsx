@@ -10,6 +10,7 @@ import {
   Body,
 } from "native-base"
 import getAge from '../lib/utils/getAge'
+import styles from '../styles';
 
 interface Acquirement {
   id: string
@@ -36,6 +37,14 @@ export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
           <Icon name="arrow-forward" />
         </Right>
       </ListItem>
+      {acquirements.length === 0 && (
+        <ListItem>
+          <Body style={styles.stretch}>
+            <Text note>まだ何もできないみたいだね</Text>
+            <Text note>できたことを登録しよう！</Text>
+          </Body>
+        </ListItem>
+      )}
       {acquirements.map(it => (
         <ListItem key={it.id} onPress={() => {goSkill(it.id)}}>
           <Body>

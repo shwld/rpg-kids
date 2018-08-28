@@ -71,9 +71,17 @@ export default (props: Props) => (
     fetchPolicy="cache-and-network"
   >
     {({data, refetch, networkStatus, loading}) => {
-      if (isEmpty(data) || !data || loading) {
-        return <AppLoading />
+      if (loading) { return <AppLoading /> }
+
+      if (isEmpty(data) || !data || data.character.acquirements.edges.length === 0) {
+        return (
+          <Body style={{justifyContent: 'center', alignItems: 'stretch'}}>
+            <Text note style={{textAlign: 'center'}}>まだ何もできないみたいだね</Text>
+            <Text note style={{textAlign: 'center'}}>できたことを登録しよう！</Text>
+          </Body>
+        )
       }
+
       return (
         <List>
           <FlatList
