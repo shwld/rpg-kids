@@ -1,9 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/storage'
+import env from './env'
 
-const firebaseConfig = require('../firebase-credentials.json')
-
+const firebaseConfig = env.firebaseConfig
 firebase.initializeApp(firebaseConfig)
 
 export const authenticate = () => {
@@ -26,6 +26,14 @@ export const uploadToFireStorage = async (imageUri: string, path: string) => {
   }
   const ref = firebase.storage().ref(path)
   return ref.put(blob, metadata)
+}
+
+export const getIdToken = async () => {
+  const currentUser = firebase.auth().currentUser
+  if (!currentUser) { return null }
+  const idToken = await currentUser.getIdToken(true)
+
+  return idToken
 }
 
 export default firebase

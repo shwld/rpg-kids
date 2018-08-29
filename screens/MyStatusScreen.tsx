@@ -3,6 +3,9 @@ import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import {
   View,
+  Text,
+  Body,
+  Button,
 } from "native-base"
 import Status, { NEW_CHARACTER_ID } from '../components/Status'
 import Acquirements from '../components/Acquirements'
@@ -27,8 +30,14 @@ export default Graphql.SelectCharacter<Props>()(
         const character = Getter.getCurrentCharacter(data)
   
         if (!character) {
-          props.navigation.replace('AddCharacter')
-          return
+          return (
+            <Body style={{justifyContent: 'center', alignItems: 'stretch'}}>
+              <Text note style={{textAlign: 'center'}}>まずは子供の情報を登録しよう</Text>
+              <Button block onPress={() => props.navigation.navigate('AddCharacter')}>
+                <Text>子供を登録する</Text>
+              </Button>
+            </Body>
+          )
         }
   
         const acquirements: any[] = character.acquirements.edges.map(it => it.node)

@@ -77,6 +77,7 @@ export default class extends React.Component<Props, State> {
         </CardItem>
         <CardItem>
           <Body style={styles.stretch}>
+            <Text note>登録した内容は全員に公開されます。</Text>
             <Button block onPress={() => this.save()} >
               <Text>登録</Text>
             </Button>

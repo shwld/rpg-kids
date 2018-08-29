@@ -1,8 +1,7 @@
 import React from "react"
 import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
-import format from 'date-fns/format'
-import ja from 'date-fns/locale/ja'
+import formatFromDate from '../lib/utils/formatFromDate'
 import {
   List,
   Text,
@@ -57,7 +56,7 @@ const renderItem = ({ item, index }, character: { id: string, birthday: Date}, n
           </Body>
         </Left>
         <Right>
-          <Text note numberOfLines={1}>{format(item.acquiredAt, 'MMMDo', {locale: ja})}</Text>
+          <Text note numberOfLines={1}>{formatFromDate(item.acquiredAt, 'MMMDo')}</Text>
         </Right>
       </ListItem>
     </View>
@@ -71,9 +70,17 @@ export default (props: Props) => (
     fetchPolicy="cache-and-network"
   >
     {({data, refetch, networkStatus, loading}) => {
-      if (isEmpty(data) || !data || loading) {
-        return <AppLoading />
+      if (loading) { return <AppLoading /> }
+
+      if (isEmpty(data) || !data || data.character.acquirements.edges.length === 0) {
+        return (
+          <Body style={{justifyContent: 'center', alignItems: 'stretch'}}>
+            <Text onPress={() => props.navigation.pop()} note style={{textAlign: 'center'}}>まだ何もできないみたいだね</Text>
+            <Text onPress={() => props.navigation.pop()} note style={{textAlign: 'center'}}>できたことを登録しよう！</Text>
+          </Body>
+        )
       }
+
       return (
         <List>
           <FlatList

@@ -34,7 +34,6 @@ export default (props: Props) => (
           title="最近できるようになったこと"
           birthday={character.birthday}
           acquirements={acquirements}
-          goLogs={() => props.navigation.navigate('Log', { characterId: character.id })}
           goSkill={() => {}}
         />
       </View>

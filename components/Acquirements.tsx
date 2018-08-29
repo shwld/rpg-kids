@@ -10,6 +10,7 @@ import {
   Body,
 } from "native-base"
 import getAge from '../lib/utils/getAge'
+import styles from '../styles';
 
 interface Acquirement {
   id: string
@@ -21,21 +22,29 @@ interface Props {
   title: string,
   birthday: Date,
   acquirements: Acquirement[],
-  goLogs: () => any,
+  goLogs?: () => any,
   goSkill: (id: string) => any,
 }
 
 export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
   <Card style={{flex: 0}}>
     <List style={{ elevation: 3, backgroundColor: 'white' }}>
-      <ListItem header itemDivider onPress={() => {goLogs()}}>
+      <ListItem header itemDivider onPress={() => {goLogs ? goLogs() : () => {}}}>
         <Left>
           <Text>{title}</Text>
         </Left>
-        <Right>
+        {goLogs && <Right>
           <Icon name="arrow-forward" />
-        </Right>
+        </Right>}
       </ListItem>
+      {acquirements.length === 0 && (
+        <ListItem>
+          <Body style={styles.stretch}>
+            <Text note>まだ何もできないみたいだね</Text>
+            <Text note>できたことを登録しよう！</Text>
+          </Body>
+        </ListItem>
+      )}
       {acquirements.map(it => (
         <ListItem key={it.id} onPress={() => {goSkill(it.id)}}>
           <Body>

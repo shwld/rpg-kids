@@ -46,7 +46,7 @@ export default class extends React.Component<Props, State> {
       value: getDefaultValue(this.props, 'description'),
       validate: value => (value.trim() !== ''),
     },
-    imageUri: getDefaultValue(this.props, 'imageUri'),
+    imageUri: getDefaultValue(this.props, 'imageUrl'),
   }
 
   valid() {
@@ -97,6 +97,7 @@ export default class extends React.Component<Props, State> {
         </CardItem>
         <CardItem>
           <Body style={styles.stretch}>
+            <Text note>登録した内容は全員に公開されます。</Text>
             <Button block onPress={() => this.save()} >
               <Text>登録</Text>
             </Button>

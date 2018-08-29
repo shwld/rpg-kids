@@ -1,13 +1,8 @@
 import React from "react"
+import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
-import Container from '../components/Container'
 import { compose } from 'react-apollo'
 import { Graphql } from '../graphql/screens/WalkThrough'
-
-import {
-  Text,
-  Button,
-} from 'native-base'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -15,15 +10,19 @@ interface Props {
   signUp: () => { data: { signUp: { user: { id: string }} } }
 }
 
+class Screen extends React.Component<Props> {
+  async componentWillMount() {
+    const { signIn, signUp, navigation } = this.props
+    await signIn()
+    await signUp()
+    navigation.navigate('App')
+  }
+
+  render() {
+    return <AppLoading />
+  }
+}
 export default compose(
   Graphql.SignIn(),
   Graphql.SignUp(),
-)((props: Props) => (
-  <Container>
-    <Button block onPress={async () => {
-      await props.signIn()
-      await props.signUp()
-      props.navigation.navigate('App')
-    }}><Text>始める</Text></Button>
-  </Container>
-))
+)(Screen)

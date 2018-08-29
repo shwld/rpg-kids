@@ -9,9 +9,10 @@ import { ApolloProvider } from 'react-apollo'
 import { withClientState } from 'apollo-link-state'
 import resolvers from './resolvers'
 import defaults from './defaults'
-import { getIdToken } from '../lib/auth'
+import { getIdToken } from '../lib/firebase'
+import env from '../lib/env'
 
-const httpLink = createHttpLink({ uri: 'https://role-playing-g.herokuapp.com/graphql' })
+const httpLink = createHttpLink({ uri: env.graphqlUrl })
 const authLink = setContext(async (_, { headers }) => {
   const token = await getIdToken()
   if (!token) { return { headers } }

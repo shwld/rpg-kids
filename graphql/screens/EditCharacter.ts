@@ -66,6 +66,7 @@ const getCharacterQuery = gql`
       name
       birthday
       description
+      imageUrl
     }
   }
 `
