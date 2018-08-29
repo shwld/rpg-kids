@@ -11,7 +11,7 @@ interface Props {
 }
 
 class Screen extends React.Component<Props> {
-  async componentDidMount() {
+  async componentWillMount() {
     const { signIn, signUp, navigation } = this.props
     await signIn()
     await signUp()
