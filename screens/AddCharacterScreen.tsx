@@ -11,22 +11,25 @@ import { Query, Graphql } from '../graphql/screens/AddCharacter'
 interface Props {
   navigation: NavigationScreenProp<any, any>
   addCharacter(payload: { variables: {name, birthday, description}, update: any })
-  updateImageUrl(payload: { variables: {id, imageUrl}, update: any })
+  editCharacter(payload: { variables: {id, imageUrl}, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
   selectCharacter(payload: { variables: {characterId: string}})
 }
 
-const updateCache = (store, result) => {
+const updateCache = (store, result, getCharacter) => {
   const data = store.readQuery({ query: Query.GetUser })
   data.user.characters.edges = [
-    { node: result.data.addCharacter.character, __typename: 'CharacterEdge' },
+    { node: getCharacter(result), __typename: 'CharacterEdge' },
     ...data.user.characters.edges
   ]
   store.writeQuery({ query: Query.GetUser, data })
 }
 
+const onAddCharacter = (store, result) => updateCache(store, result, result => result.data.addCharacter.character)
+const onEditCharacter = (store, result) => updateCache(store, result, result => result.data.editCharacter.character)
+
 const save = async (props: Props, data: formData) => {
-  const { navigation, addCharacter, updateImageUrl, setInProgress, selectCharacter } = props
+  const { navigation, addCharacter, editCharacter, setInProgress, selectCharacter } = props
   setInProgress({variables: { inProgress: true }})
   try {
     const { name, birthday, description, imageUri } = data
@@ -36,18 +39,18 @@ const save = async (props: Props, data: formData) => {
         birthday: birthday.value,
         description: description.value,
       },
-      update: updateCache,
+      update: onAddCharacter,
     })
     const characterId = result.data.addCharacter.character.id
     const imagePath = profileImagePath(characterId)
     if (imageUri) {
       await uploadToFireStorage(imageUri, imagePath)
-      await updateImageUrl({
+      await editCharacter({
         variables: {
           id: characterId,
           imageUrl: generatePublicMediaUrl(imagePath),
         },
-        update: updateCache,
+        update: onEditCharacter,
       })
     }
     await selectCharacter({variables: { characterId }})
@@ -61,7 +64,7 @@ const save = async (props: Props, data: formData) => {
 
 export default compose(
   Graphql.AddCharacter(),
-  Graphql.UpdateImageUrl(),
+  Graphql.EditCharacter(),
   Graphql.SetInProgress(),
   Graphql.SelectCharacter(),
 )((props: Props) => (

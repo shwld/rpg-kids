@@ -2,33 +2,11 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { SetInProgress, SelectCharacter } from './shared/mutations'
 import { Query as MyStatusQuery } from './MyStatus'
+import { Mutation as EditCharacterMutation } from './EditCharacter'
 
 const addCharacterMutation = gql`
   mutation addCharacter($name:String = "", $birthday:DateTime = "2000/1/1", $description:String = "") {
     addCharacter(name: $name, birthday: $birthday, description: $description) {
-      character {
-        id
-        name
-        birthday
-        description
-        acquirements(first: 5) {
-          edges {
-            node {
-              id
-              name
-              acquiredAt
-            }
-          }
-        }
-      }
-      errors
-    }
-  }
-`
-
-const updateImageUrlMutation = gql`
-  mutation editCharacter($id:ID!, $imageUrl:String = null) {
-    editCharacter(id: $id, imageUrl: $imageUrl) {
       character {
         id
         name
@@ -56,15 +34,15 @@ export const Query = {
 
 export const Mutation = {
   AddCharacter: addCharacterMutation,
-  UpdateImageUrl: updateImageUrlMutation,
+  EditCharacter: EditCharacterMutation.EditCharacter,
 }
 
 export const Graphql = {
   AddCharacter<T>() {
     return graphql<T>(Mutation.AddCharacter, { name: 'addCharacter'})
   },
-  UpdateImageUrl<T>() {
-    return graphql<T>(Mutation.UpdateImageUrl, { name: 'updateImageUrl'})
+  EditCharacter<T>() {
+    return graphql<T>(Mutation.EditCharacter, { name: 'editCharacter'})
   },
   SetInProgress,
   SelectCharacter,
