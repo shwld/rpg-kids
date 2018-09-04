@@ -4,7 +4,7 @@ import { UserState } from '../types'
 
 const SignInMutation = gql`
   mutation SignIn {
-    signIn @client
+    signInAnonymously @client
   }
 `
 
@@ -20,7 +20,7 @@ const SignUpMutation = gql`
 
 export interface SignInResult {
   data: {
-    signIn: boolean
+    signInAnonymously: boolean
   }
 }
 
@@ -33,13 +33,13 @@ export interface SignUpResult {
 }
 
 export interface Response {
-  signIn(): Promise<SignInResult>
+  signInAnonymously(): Promise<SignInResult>
   signUp(): Promise<SignUpResult>
 }
 
 export const Graphql = {
-  SignIn<T>(){
-    return graphql<T, boolean, {}, ChildDataProps<{}, {user: UserState}, {}>>(SignInMutation, { name: 'signIn'})
+  SignInAnonymously<T>(){
+    return graphql<T, boolean, {}, ChildDataProps<{}, {user: UserState}, {}>>(SignInMutation, { name: 'signInAnonymously'})
   },
   SignUp<T>(){
     return graphql<T, {user: UserState}, {}, ChildDataProps<{}, {user: UserState}, {}>>(SignUpMutation, { name: 'signUp'})
