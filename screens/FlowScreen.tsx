@@ -51,6 +51,7 @@ export default ({navigation}: Props) => (
   <Component.GetAcquirements
     query={Query.GetAcquirements}
     fetchPolicy="cache-and-network"
+    pollInterval={15000}
   >
     {({data, refetch, networkStatus, loading}) => {
       if (isEmpty(data) || !data || loading) {

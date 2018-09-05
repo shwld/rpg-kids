@@ -8,7 +8,7 @@ const SignInMutation = gql`
   }
 `
 
-const SignUpMutation = gql`
+const CreateUserMutation = gql`
   mutation SignUp {
     signUp {
       user {
@@ -41,7 +41,7 @@ export const Graphql = {
   SignInAnonymously<T>(){
     return graphql<T, boolean, {}, ChildDataProps<{}, {user: UserState}, {}>>(SignInMutation, { name: 'signInAnonymously'})
   },
-  SignUp<T>(){
-    return graphql<T, {user: UserState}, {}, ChildDataProps<{}, {user: UserState}, {}>>(SignUpMutation, { name: 'signUp'})
+  CreateUser<T>(){
+    return graphql<T, {user: UserState}, {}, ChildDataProps<{}, {user: UserState}, {}>>(CreateUserMutation, { name: 'createUser'})
   },
 }

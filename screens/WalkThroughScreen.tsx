@@ -7,14 +7,14 @@ import { Graphql } from '../graphql/screens/WalkThrough'
 interface Props {
   navigation: NavigationScreenProp<any, any>
   signInAnonymously: () => Promise<boolean>
-  signUp: () => { data: { signUp: { user: { id: string }} } }
+  createUser: () => { data: { signUp: { user: { id: string }} } }
 }
 
 class Screen extends React.Component<Props> {
   async componentWillMount() {
-    const { signInAnonymously, signUp, navigation } = this.props
+    const { signInAnonymously, createUser, navigation } = this.props
     await signInAnonymously()
-    await signUp()
+    await createUser()
     navigation.navigate('App')
   }
 
@@ -24,5 +24,5 @@ class Screen extends React.Component<Props> {
 }
 export default compose(
   Graphql.SignInAnonymously(),
-  Graphql.SignUp(),
+  Graphql.CreateUser(),
 )(Screen)
