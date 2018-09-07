@@ -45,14 +45,14 @@ export default compose(
       width: viewportWidth,
       height: viewportHeight,
       justifyContent: 'flex-end',
-      alignItems: 'flex-end',
+      alignItems: 'center',
   }}>
     <Text
-      style={{alignSelf: 'center', marginBottom: 20}}
+      style={{marginBottom: 20}}
       onPress={() => WebBrowser.openBrowserAsync('https://shwld.net/seicho/terms-of-service/')}
     >利用規約</Text>
     <Button
-      style={{alignSelf: 'center', marginBottom: 50}}
+      style={{marginBottom: 50, alignSelf: 'center'}}
       onPress={() => start(props)}
     >
       <Text>利用規約に同意してはじめる</Text>
