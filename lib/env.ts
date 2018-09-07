@@ -3,11 +3,11 @@ import { Constants } from 'expo'
 const ENV = {
   staging: {
     graphqlUrl: 'https://role-playing-g-staging.herokuapp.com/graphql',
-    firebaseConfig: require('../firebase-credentials-staging.json'),
+    ...require('../env-staging.json'),
   },
   prod: {
     graphqlUrl: 'https://role-playing-g.herokuapp.com/graphql',
-    firebaseConfig: require('../firebase-credentials.json'),
+    ...require('../env-prod.json'),
   }
 }
 

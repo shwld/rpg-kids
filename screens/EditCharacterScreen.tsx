@@ -11,6 +11,8 @@ import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import { profileImagePath } from '../lib/utils/imageHelper'
 import { Component, Query, Graphql } from '../graphql/screens/EditCharacter'
+import { trackEvent } from '../lib/analytics'
+
 
 interface Props {
   characterId: string
@@ -22,6 +24,7 @@ interface Props {
 }
 
 const save = async (props: Props, values: formData) => {
+  trackEvent('EditCharacter: save')
   const characterId = getParam(props, 'characterId')
   const { navigation, editCharacter, setInProgress, selectCharacter } = props
   setInProgress({variables: { inProgress: true }})
@@ -58,6 +61,7 @@ const save = async (props: Props, values: formData) => {
 }
 
 const remove = async (props: Props) => {
+  trackEvent('EditCharacter: remove')
   const characterId = getParam(props, 'characterId')
   const { navigation, removeCharacter, setInProgress } = props
   setInProgress({variables: { inProgress: true }})

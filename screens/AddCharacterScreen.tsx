@@ -7,6 +7,7 @@ import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
 import { profileImagePath } from '../lib/utils/imageHelper'
 import { Query, Graphql } from '../graphql/screens/AddCharacter'
+import { trackEvent } from '../lib/analytics'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -29,6 +30,7 @@ const onAddCharacter = (store, result) => updateCache(store, result, result => r
 const onEditCharacter = (store, result) => updateCache(store, result, result => result.data.editCharacter.character)
 
 const save = async (props: Props, data: formData) => {
+  trackEvent('AddCharacter: save')
   const { navigation, addCharacter, editCharacter, setInProgress, selectCharacter } = props
   setInProgress({variables: { inProgress: true }})
   try {

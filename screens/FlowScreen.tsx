@@ -7,6 +7,7 @@ import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
 import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query } from '../graphql/screens/Flow'
+import { trackEvent } from '../lib/analytics'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -15,6 +16,7 @@ interface Props {
 const onEndReached = (data) => {
   const { pageInfo: { endCursor, hasNextPage } } = data.acquirements
   if (!hasNextPage) { return }
+  trackEvent('Flow: onEndReached')
   data.fetchMore({
     query: Query.GetAcquirements,
     variables: { ...data.variables, cursor: endCursor },
@@ -39,9 +41,7 @@ const renderItem = ({ item, index }, navigation) => {
   return (
     <AcquirementCard
       acquirement={item}
-      onCharacterClick={() => {
-        navigation.navigate('Status', {characterId: item.character.id})
-      }}
+      onCharacterClick={() => navigation.navigate('Status', {characterId: item.character.id})}
       onAcquirementClick={() => {}}
     />
   )
