@@ -44,7 +44,6 @@ const block = async (props: Props, acquirementId: string, refetch: Function) => 
   trackEvent('Flow: blockAcquirement')
 
   const perform = async () => {
-    console.log(props)
     const { navigation, blockAcquirement, setInProgress } = props
     setInProgress({variables: { inProgress: true }})
     try {

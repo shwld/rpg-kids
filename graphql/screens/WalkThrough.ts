@@ -1,6 +1,7 @@
 import gql from 'graphql-tag'
 import { graphql, ChildDataProps } from 'react-apollo'
 import { UserState } from '../types'
+import { SetInProgress } from './shared/mutations'
 
 const SignInMutation = gql`
   mutation SignIn {
@@ -44,4 +45,5 @@ export const Graphql = {
   CreateUser<T>(){
     return graphql<T, {user: UserState}, {}, ChildDataProps<{}, {user: UserState}, {}>>(CreateUserMutation, { name: 'createUser'})
   },
+  SetInProgress,
 }
