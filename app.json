@@ -20,6 +20,13 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps"
+        }
+      ]
+    },
     "ios": {
       "bundleIdentifier": "net.shwld.rpgkids",
       "buildNumber": "0.0.1",

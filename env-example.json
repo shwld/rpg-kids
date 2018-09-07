@@ -9,5 +9,8 @@
   },
   "amplitudeConfig": {
     "apiKey": ""
+  },
+  "sentyConfig": {
+    "dsn": ""
   }
 }
