@@ -7,6 +7,7 @@ import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
 import { Graphql } from '../graphql/screens/AcquireSkill'
+import { trackEvent } from '../lib/analytics'
 
 interface Props {
   characterId: string
@@ -17,6 +18,7 @@ interface Props {
 
 
 const save = async (props: Props, data: formData) => {
+  trackEvent('AcquireSkill: save')
   const { navigation, acquireSkill, setInProgress } = props
   const characterId = getParam({navigation}, 'characterId')
   setInProgress({variables: { inProgress: true }})

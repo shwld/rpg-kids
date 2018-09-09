@@ -9,6 +9,7 @@ import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
 import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query, Graphql, Getter } from '../graphql/screens/EditAcquirement'
+import { trackEvent } from '../lib/analytics'
 
 
 interface Props {
@@ -28,6 +29,7 @@ const updateAcquirement = (store, character, updatedAcquirement) => {
 }
 
 const save = async (props: Props, data: formData) => {
+  trackEvent('EditAcquirement: save')
   const { navigation, editAcquirement, setInProgress } = props
   const characterId = getParam({navigation}, 'characterId')
   const acquirementId = getParam({navigation}, 'acquirementId')
@@ -61,6 +63,7 @@ const save = async (props: Props, data: formData) => {
 }
 
 const remove = async (props: Props) => {
+  trackEvent('EditAcquirement: remove')
   const { navigation, removeAcquirement, setInProgress } = props
   const characterId = getParam({navigation}, 'characterId')
   const acquirementId = getParam({navigation}, 'acquirementId')

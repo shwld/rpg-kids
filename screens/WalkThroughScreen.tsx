@@ -1,28 +1,61 @@
 import React from "react"
-import { AppLoading } from 'expo'
+import { WebBrowser } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import { compose } from 'react-apollo'
 import { Graphql } from '../graphql/screens/WalkThrough'
+import { ImageBackground, Dimensions } from 'react-native'
+import { Text, Button } from 'native-base'
+import { trackEvent } from '../lib/analytics'
+
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
-  signIn: () => Promise<boolean>
-  signUp: () => { data: { signUp: { user: { id: string }} } }
+  signInAnonymously: () => Promise<boolean>
+  createUser: () => { data: { signUp: { user: { id: string }} } }
+  setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
-class Screen extends React.Component<Props> {
-  async componentWillMount() {
-    const { signIn, signUp, navigation } = this.props
-    await signIn()
-    await signUp()
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window')
+
+const start = async (props: Props) => {
+  trackEvent('WalkThrough: start')
+  const { signInAnonymously, createUser, setInProgress, navigation } = props
+  setInProgress({variables: { inProgress: true }})
+  try {
+    await signInAnonymously()
+    await createUser()
+  } catch (e) {
+    throw e
+  } finally {
+    setInProgress({variables: { inProgress: false }})
     navigation.navigate('App')
   }
-
-  render() {
-    return <AppLoading />
-  }
 }
+
 export default compose(
-  Graphql.SignIn(),
-  Graphql.SignUp(),
-)(Screen)
+  Graphql.SignInAnonymously(),
+  Graphql.CreateUser(),
+  Graphql.SetInProgress(),
+)(props => (
+  <ImageBackground
+    source={require('../assets/splash.png')}
+    resizeMode='stretch'
+    style={{
+      flex: 1,
+      width: viewportWidth,
+      height: viewportHeight,
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+  }}>
+    <Text
+      style={{marginBottom: 20}}
+      onPress={() => WebBrowser.openBrowserAsync('https://shwld.net/seicho/terms-of-service/')}
+    >利用規約</Text>
+    <Button
+      style={{marginBottom: 50, alignSelf: 'center'}}
+      onPress={() => start(props)}
+    >
+      <Text>利用規約に同意してはじめる</Text>
+    </Button>
+  </ImageBackground>
+))

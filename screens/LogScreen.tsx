@@ -17,6 +17,7 @@ import getAge from '../lib/utils/getAge'
 import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import { Component, Query } from '../graphql/screens/Log'
+import { trackEvent } from '../lib/analytics'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -25,6 +26,7 @@ interface Props {
 const onEndReached = (data) => {
   const { pageInfo: { endCursor, hasNextPage } } = data.character.acquirements
   if (!hasNextPage) { return }
+  trackEvent('Log: onEndReached')
   data.fetchMore({
     query: Query.GetCharacter,
     variables: { ...data.variables, cursor: endCursor },

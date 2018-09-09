@@ -1,0 +1,16 @@
+{
+  "firebaseConfig": {
+    "apiKey": "",
+    "authDomain": "",
+    "databaseURL": "",
+    "projectId": "",
+    "storageBucket": "",
+    "messagingSenderId": ""
+  },
+  "amplitudeConfig": {
+    "apiKey": ""
+  },
+  "sentyConfig": {
+    "dsn": ""
+  }
+}

@@ -6,6 +6,7 @@ import { StyleProvider, Root } from 'native-base'
 import getTheme from './native-base-theme/components'
 import platform from './native-base-theme/variables/platform'
 import OverlayIndicator from './containers/OverlayIndicator'
+import './lib/sentry'
 
 import Apollo  from './graphql/Apollo'
 
