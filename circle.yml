@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node:8
+    branches:
+      only:
+        - master
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            npm install exp
+      - deploy:
+          name: Push to expo.io
+          command: |
+            ./node_modules/.bin/exp login -u ${EXPO_ACCOUNT} -p ${EXPO_PASSWORD}
