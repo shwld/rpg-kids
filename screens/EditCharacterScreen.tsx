@@ -11,14 +11,15 @@ import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import { profileImagePath } from '../lib/utils/imageHelper'
 import { Component, Query, Graphql } from '../graphql/screens/EditCharacter'
+import { Query as FlowQuery } from '../graphql/screens/Flow'
 import { trackEvent } from '../lib/analytics'
 
 
 interface Props {
   characterId: string
   navigation: NavigationScreenProp<any, any>
-  editCharacter(payload: { variables: {id, name, birthday, description, imageUrl}, update: any })
-  removeCharacter(payload: { variables: {id: string}, update: any })
+  editCharacter(payload: { variables: {id, name, birthday, description, imageUrl} , update: any})
+  removeCharacter(payload: { variables: {id: string}, refetchQueries: any, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
   selectCharacter(payload: { variables: {characterId: string}})
 }
@@ -68,6 +69,10 @@ const remove = async (props: Props) => {
   try {
     await removeCharacter({
       variables: { id: characterId },
+      refetchQueries: [{
+        query: FlowQuery.GetAcquirements,
+        variables: { repoName: 'apollographql/apollo-client' },
+      }],
       update: (store, result) => {
         const data = store.readQuery({ query: Query.GetUser })
         data.user = result.data.removeCharacter.user

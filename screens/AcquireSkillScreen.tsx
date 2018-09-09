@@ -4,6 +4,7 @@ import styles from '../styles'
 import { Content } from "native-base"
 import { compose } from 'react-apollo'
 import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
+import { Query as FlowQuery } from '../graphql/screens/Flow'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
 import { Graphql } from '../graphql/screens/AcquireSkill'
@@ -12,7 +13,7 @@ import { trackEvent } from '../lib/analytics'
 interface Props {
   characterId: string
   navigation: NavigationScreenProp<any, any>
-  acquireSkill(payload: { variables: {characterId: string, name: string, acquiredAt: Date}, update: any })
+  acquireSkill(payload: { variables: {characterId: string, name: string, acquiredAt: Date}, refetchQueries: any, update: any })
   setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
@@ -30,6 +31,10 @@ const save = async (props: Props, data: formData) => {
         name: name.value,
         acquiredAt: acquiredAt.value,
       },
+      refetchQueries: [{
+        query: FlowQuery.GetAcquirements,
+        variables: { repoName: 'apollographql/apollo-client' },
+      }],
       update: (store, result) => {
         const data = store.readQuery({ query: MyStatusQuery.GetUser })
         const character = data.user.characters.edges.map(it => it.node).find(it => it.id === characterId)
