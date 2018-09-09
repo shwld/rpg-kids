@@ -3,6 +3,9 @@ jobs:
   build:
     docker:
       - image: node:8
+    # branches:
+      # only:
+      #   - master
     steps:
       - checkout
       - run:
@@ -13,4 +16,5 @@ jobs:
           name: Push to expo.io
           command: |
             ./node_modules/.bin/exp login -u ${EXPO_ACCOUNT} -p ${EXPO_PASSWORD}
-            ./node_modules/.bin/exp publish
+            # FIXME Get env-prod.json
+            ./node_modules/.bin/exp publish --release-channel prod
