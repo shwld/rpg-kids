@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  deploy:
     docker:
       - image: node:8
     steps:
@@ -13,3 +13,4 @@ jobs:
           name: Push to expo.io
           command: |
             ./node_modules/.bin/exp login -u ${EXPO_ACCOUNT} -p ${EXPO_PASSWORD}
+            ./node_modules/.bin/exp publish
