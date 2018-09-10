@@ -9,6 +9,7 @@
     "version": "0.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "rpgkids",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
