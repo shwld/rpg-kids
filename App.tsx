@@ -1,4 +1,5 @@
 import React from 'react'
+import { StatusBar } from 'react-native'
 import { Font, AppLoading } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
 import AuthSwitch from './navigator/AuthSwitch'
@@ -21,6 +22,7 @@ class App extends React.Component {
     }
     return (
       <Apollo>
+        <StatusBar barStyle="dark-content" />
         <OverlayIndicator />
         <StyleProvider style={getTheme(platform)}>
           <Root>
