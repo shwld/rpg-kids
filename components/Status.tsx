@@ -56,7 +56,7 @@ export default ({character, selectableCharacters, goGetSkill, goSettings, onChan
         <Text>{character.description}</Text>
       </Body>
       {goGetSkill && <Button bordered onPress={() => goGetSkill()}>
-        <Text>これできた</Text>
+        <Text>これできた登録</Text>
       </Button>}
     </CardItem>
   </Card>

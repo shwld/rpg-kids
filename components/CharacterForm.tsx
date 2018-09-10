@@ -6,6 +6,7 @@ import {
   Card,
   CardItem,
   Body,
+  Icon,
 } from 'native-base'
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
@@ -46,7 +47,7 @@ export default class extends React.Component<Props, State> {
       value: getDefaultValue(this.props, 'description'),
       validate: value => (value.trim() !== ''),
     },
-    imageUri: getDefaultValue(this.props, 'imageUrl'),
+    imageUri: getDefaultValue(this.props, 'imageUrl', null),
   }
 
   valid() {
@@ -70,11 +71,18 @@ export default class extends React.Component<Props, State> {
   render() {
     return (
       <Card>
-        <CardItem button onPress={() => imagePicker(uri => this.setState({imageUri: uri}))} >
-          <CharacterIcon
-            uri={this.state.imageUri}
-            style={{marginRight: 20}}
-          />
+        <CardItem
+          button
+          onPress={() => imagePicker(uri => this.setState({imageUri: uri}))}
+        >
+          <Body style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#ddd', padding: 20}}>
+            {!this.state.imageUri && (
+              <Icon name='camera' />
+            )}
+            {this.state.imageUri && (
+              <CharacterIcon uri={this.state.imageUri} />
+            )}
+          </Body>
         </CardItem>
         <CardItem>
           <Body style={styles.stretch}>

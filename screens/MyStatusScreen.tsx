@@ -2,7 +2,7 @@ import React from "react"
 import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import {
-  View,
+  Content,
   Text,
   Body,
   Button,
@@ -43,7 +43,7 @@ export default Graphql.SelectCharacter<Props>()(
         const acquirements: any[] = character.acquirements.edges.map(it => it.node)
   
         return (
-          <View>
+          <Content>
             <Status
               character={character}
               selectableCharacters={characters}
@@ -64,7 +64,7 @@ export default Graphql.SelectCharacter<Props>()(
               goLogs={() => props.navigation.navigate('Log', { characterId: character.id })}
               goSkill={id => props.navigation.navigate('EditAcquirement', { acquirementId: id, characterId: character.id})}
             ></Acquirements>
-          </View>
+          </Content>
         )
       }}
     </Component.GetUser>
