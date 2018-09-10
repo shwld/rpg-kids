@@ -2,7 +2,7 @@ import React from "react"
 import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import {
-  View,
+  Content,
 } from "native-base"
 import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
@@ -28,15 +28,17 @@ export default (props: Props) => (
       const character = data.character
       const acquirements = character.acquirements.edges.map(it => it.node)
 
-      return <View>
-        <Status character={character} />
-        <Acquirements
-          title="最近できるようになったこと"
-          birthday={character.birthday}
-          acquirements={acquirements}
-          goSkill={() => {}}
-        />
-      </View>
+      return (
+        <Content>
+          <Status character={character} />
+          <Acquirements
+            title="最近できるようになったこと"
+            birthday={character.birthday}
+            acquirements={acquirements}
+            goSkill={() => {}}
+          />
+        </Content>
+      )
     }}
   </Component.GetCharacter>
 )
