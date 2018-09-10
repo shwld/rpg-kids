@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  publish:
     docker:
       - image: node:8
     steps:
@@ -17,3 +17,12 @@ jobs:
             openssl aes-256-cbc -k $DECRYPT_KEY -d -in .circleci/env-staging.json.encrypted -out env-staging.json
             openssl aes-256-cbc -k $DECRYPT_KEY -d -in .circleci/env-prod.json.encrypted -out env-prod.json
             ./node_modules/.bin/exp publish --release-channel prod
+workflows:
+  version: 2
+  publish:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              only:
+                - master
