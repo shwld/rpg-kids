@@ -4,8 +4,8 @@ jobs:
     docker:
       - image: node:8
     branches:
-      only:
-        - master
+        only:
+          - master
     steps:
       - checkout
       - run:
