@@ -9,18 +9,22 @@ import {
   Left,
   Right,
   ActionSheet,
+  Grid,
+  Col,
 } from "native-base"
 import CharacterIcon from './CharacterIcon'
 import getAge from '../lib/utils/getAge'
+import styles from '../styles'
+import formatFromDate from '../lib/utils/formatFromDate'
 
 interface Props {
   acquirement: {
     name: string
-    postedAt: string
+    acquiredAt: Date
     character: {
       id: string
       name: string
-      birthday: string
+      birthday: Date
       imageUrl: string
     }
   }
@@ -54,24 +58,26 @@ const blockOrReport = (name: string, onBlockClick) => {
 export default ({ acquirement, onCharacterClick, onAcquirementClick, onBlockClick }: Props) => (
   <Card>
     <CardItem button onPress={() => onCharacterClick()}>
-      <Left>
-        <CharacterIcon uri={acquirement.character.imageUrl} style={{marginRight: 20}} />
-        <Body style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
-          <Text>{acquirement.character.name}</Text>
-          <Text note numberOfLines={1}>{getAge(acquirement.character.birthday, acquirement.postedAt)}ころ</Text>
-        </Body>
-      </Left>
-      {(onBlockClick) && <Right>
-        <Icon name='ios-more' onPress={() => blockOrReport(acquirement.character.name, onBlockClick)}></Icon>
-      </Right>}
-   </CardItem>
-    <CardItem>
-      <Body style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-        <Button primary rounded small onPress={() => onAcquirementClick()}>
-          <Text>{acquirement.name}</Text>
-        </Button>
-        <Text style={{marginLeft: 10}}>できた！</Text>
+      <CharacterIcon uri={acquirement.character.imageUrl} style={{marginRight: 20}} />
+      <Body style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
+        <Text style={styles.w100}>{acquirement.character.name}</Text>
+        <Text note numberOfLines={1} style={styles.w100}>{getAge(acquirement.character.birthday, acquirement.acquiredAt)}ころ</Text>
       </Body>
+    </CardItem>
+    <CardItem>
+      <Grid>
+        <Col style={{width: '90%'}}>
+          <Button primary rounded small onPress={() => onAcquirementClick()}>
+            <Text>{acquirement.name}</Text>
+          </Button>
+        </Col>
+        {(onBlockClick) && <Col style={{width: '10%'}}>
+          <Icon
+            name='ios-more' onPress={() => blockOrReport(acquirement.character.name, onBlockClick)}
+            style={{marginRight: 10, color: 'gray', textAlign: 'right'}}
+          ></Icon>
+        </Col>}
+      </Grid>
     </CardItem>
     {/* <CardItem style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
       <Icon name="heart" style={{ color: '#ED4A6A' }} />
