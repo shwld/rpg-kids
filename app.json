@@ -31,7 +31,8 @@
       }
     },
     "android": {
-      "package": "net.shwld.rpgkids"
+      "package": "net.shwld.rpgkids",
+      "versionCode": 2
     },
     "packagerOpts": {
       "sourceExts": ["ts", "tsx"],
