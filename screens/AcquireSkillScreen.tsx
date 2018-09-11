@@ -1,6 +1,5 @@
 import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
-import styles from '../styles'
 import { Content } from "native-base"
 import { compose } from 'react-apollo'
 import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
@@ -58,7 +57,7 @@ export default compose(
   Graphql.AcquireSkill(),
   Graphql.SetInProgress(),
 )((props: Props) => (
-  <Content contentContainerStyle={styles.stretch}>
+  <Content>
     <AcquirementForm save={(data: formData) => save(props, data)} />
   </Content>
 ))

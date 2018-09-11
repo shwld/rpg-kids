@@ -88,7 +88,7 @@ const remove = async (props: Props) => {
 }
 
 const Screen = (props: Props) => (
-  <Content contentContainerStyle={styles.stretch}>
+  <Content>
     <Component.GetCharacter
       query={Query.GetCharacter}
       variables={{id: getParam(props, 'characterId')}}

@@ -6,9 +6,10 @@
     "privacy": "unlisted",
     "sdkVersion": "28.0.0",
     "platforms": ["ios", "android"],
-    "version": "0.0.5",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "rpgkids",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -30,7 +31,8 @@
       }
     },
     "android": {
-      "package": "net.shwld.rpgkids"
+      "package": "net.shwld.rpgkids",
+      "versionCode": 2
     },
     "packagerOpts": {
       "sourceExts": ["ts", "tsx"],

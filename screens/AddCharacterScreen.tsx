@@ -1,7 +1,6 @@
 import React from 'react'
 import { NavigationScreenProp } from 'react-navigation'
 import { compose } from 'react-apollo'
-import styles from '../styles'
 import { Content } from 'native-base'
 import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
@@ -70,7 +69,7 @@ export default compose(
   Graphql.SetInProgress(),
   Graphql.SelectCharacter(),
 )((props: Props) => (
-  <Content contentContainerStyle={styles.stretch}>
+  <Content>
     <CharacterForm save={(data: formData) => save(props, data)} />
   </Content>
 ))

@@ -7,7 +7,6 @@ import {
   Text,
   ListItem,
   Body,
-  View,
   Left,
   Right,
 } from "native-base"
@@ -49,19 +48,17 @@ const onEndReached = (data) => {
 
 const renderItem = ({ item, index }, character: { id: string, birthday: Date}, navigation: NavigationScreenProp<any, any>) => {
   return (
-    <View>
-      <ListItem onPress={() => navigation.navigate('EditAcquirement', { acquirementId: item.id, characterId: character.id})}>
-        <Left>
-          <Body>
-            <Text>{item.name}</Text>
-            <Text note numberOfLines={1}>{getAge(character.birthday, item.acquiredAt)}ころ</Text>
-          </Body>
-        </Left>
-        <Right>
-          <Text note numberOfLines={1}>{formatFromDate(item.acquiredAt, 'MMMDo')}</Text>
-        </Right>
-      </ListItem>
-    </View>
+    <ListItem onPress={() => navigation.navigate('EditAcquirement', { acquirementId: item.id, characterId: character.id})}>
+      <Left>
+        <Body>
+          <Text>{item.name}</Text>
+          <Text note numberOfLines={1}>{getAge(character.birthday, item.acquiredAt)}ころ</Text>
+        </Body>
+      </Left>
+      <Right>
+        <Text note numberOfLines={1}>{formatFromDate(item.acquiredAt, 'MMMDo')}</Text>
+      </Right>
+    </ListItem>
   )
 }
 
