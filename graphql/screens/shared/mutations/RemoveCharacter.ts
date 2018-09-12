@@ -1,5 +1,7 @@
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
+import { Query as MyStatusQuery } from '../../MyStatus'
+import { Query as FlowQuery } from '../../Flow'
 
 
 const removeCharacterMutation = gql`
@@ -33,7 +35,18 @@ const removeCharacterMutation = gql`
   }
 `
 
+export const mutateCallbacks = () => ({
+  refetchQueries: [{
+    query: FlowQuery.GetAcquirements,
+    variables: { repoName: 'apollographql/apollo-client' },
+  }],
+  update: (store, result) => {
+    const data = store.readQuery({ query: MyStatusQuery.GetUser })
+    data.user = result.data.removeCharacter.user
+    store.writeQuery({ query: MyStatusQuery.GetUser, data })
+  },
+})
 
-export const RemoveCharacter = <T>() => {
+export default <T>() => {
   return graphql<T>(removeCharacterMutation, { name: 'removeCharacter' })
 }

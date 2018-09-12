@@ -2,11 +2,9 @@ import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
 import { Content } from "native-base"
 import { compose } from 'react-apollo'
-import { Query as MyStatusQuery } from '../graphql/screens/MyStatus'
-import { Query as FlowQuery } from '../graphql/screens/Flow'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
-import { Graphql } from '../graphql/screens/AcquireSkill'
+import { Graphql, MutateCallbacks } from '../graphql/screens/AcquireSkill'
 import { trackEvent } from '../lib/analytics'
 
 interface Props {
@@ -30,20 +28,7 @@ const save = async (props: Props, data: formData) => {
         name: name.value,
         acquiredAt: acquiredAt.value,
       },
-      refetchQueries: [{
-        query: FlowQuery.GetAcquirements,
-        variables: { repoName: 'apollographql/apollo-client' },
-      }],
-      update: (store, result) => {
-        const data = store.readQuery({ query: MyStatusQuery.GetUser })
-        const character = data.user.characters.edges.map(it => it.node).find(it => it.id === characterId)
-        if (!character) { return }
-        character.acquirements.edges = [
-          { node: result.data.acquireSkill.acquirement, __typename: 'AcquirementEdge' },
-          ...character.acquirements.edges
-        ]
-        store.writeQuery({ query: MyStatusQuery.GetUser, data })
-      },
+      ...MutateCallbacks.AcquireSkill(characterId),
     })
     navigation.pop()
   } catch (e) {

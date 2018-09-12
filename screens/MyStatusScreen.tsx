@@ -11,8 +11,7 @@ import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
 import isEmpty from '../lib/utils/isEmpty'
 import { compose } from 'react-apollo'
-import { Query, Component, Getter, Graphql } from '../graphql/screens/MyStatus'
-import { Query as FlowQuery } from '../graphql/screens/Flow'
+import { Query, Component, Getter, Graphql, MutateCallbacks } from '../graphql/screens/MyStatus'
 import { trackEvent } from '../lib/analytics'
 
 
@@ -30,15 +29,7 @@ const remove = async (props: Props, characterId: string) => {
   try {
     await removeCharacter({
       variables: { id: characterId },
-      refetchQueries: [{
-        query: FlowQuery.GetAcquirements,
-        variables: { repoName: 'apollographql/apollo-client' },
-      }],
-      update: (store, result) => {
-        const data = store.readQuery({ query: Query.GetUser })
-        data.user = result.data.removeCharacter.user
-        store.writeQuery({ query: Query.GetUser, data })
-      },
+      ...MutateCallbacks.RemoveCharacter(),
     })
     navigation.pop()
   } catch (e) {

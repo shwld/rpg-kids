@@ -1,6 +1,10 @@
 import SetInProgress from './shared/mutations/SetInProgress'
-import AcquireSkill from './shared/mutations/AcquireSkill'
+import AcquireSkill, { mutateCallbacks } from './shared/mutations/AcquireSkill'
 
+
+export const MutateCallbacks = {
+  AcquireSkill: mutateCallbacks,
+}
 
 export const Graphql = {
   AcquireSkill,

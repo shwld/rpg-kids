@@ -28,4 +28,3 @@ const editCharacterMutation = gql`
 export default <T>() => {
   return graphql<T>(editCharacterMutation, { name: 'editCharacter' })
 }
-

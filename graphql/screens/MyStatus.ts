@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { User, State, Character } from '../types'
 import SelectCharacter from './shared/mutations/SelectCharacter'
 import SetInProgress from './shared/mutations/SetInProgress'
-import { RemoveCharacter } from './shared/mutations/RemoveCharacter'
+import RemoveCharacter, { mutateCallbacks } from './shared/mutations/RemoveCharacter'
 
 const getUserQuery = gql`
   query GetUser {
@@ -70,6 +70,10 @@ export const Getter = {
     }
     return character || characters[0]
   }
+}
+
+export const MutateCallbacks = {
+  RemoveCharacter: mutateCallbacks,
 }
 
 export const Graphql = {

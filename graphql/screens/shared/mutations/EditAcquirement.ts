@@ -15,6 +15,9 @@ const editAcquirementMutation = gql`
   }
 `
 
+export const mutateCallbacks = () => ({
+})
+
 export default <T>() => {
   return graphql<T>(editAcquirementMutation, { name: 'editAcquirement' })
 }

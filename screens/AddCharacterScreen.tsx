@@ -5,28 +5,17 @@ import { Content } from 'native-base'
 import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
 import { profileImagePath } from '../lib/utils/imageHelper'
-import { Query, Graphql } from '../graphql/screens/AddCharacter'
+import { Graphql, MutateCallbacks } from '../graphql/screens/AddCharacter'
 import { trackEvent } from '../lib/analytics'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
   addCharacter(payload: { variables: {name, birthday, description}, update: any })
-  editCharacter(payload: { variables: {id, imageUrl}, update: any })
+  editCharacter(payload: { variables: {id, imageUrl} })
   setInProgress(payload: { variables: {inProgress: boolean}})
   selectCharacter(payload: { variables: {characterId: string}})
 }
 
-const updateCache = (store, result, getCharacter) => {
-  const data = store.readQuery({ query: Query.GetUser })
-  data.user.characters.edges = [
-    { node: getCharacter(result), __typename: 'CharacterEdge' },
-    ...data.user.characters.edges
-  ]
-  store.writeQuery({ query: Query.GetUser, data })
-}
-
-const onAddCharacter = (store, result) => updateCache(store, result, result => result.data.addCharacter.character)
-const onEditCharacter = (store, result) => updateCache(store, result, result => result.data.editCharacter.character)
 
 const save = async (props: Props, data: formData) => {
   trackEvent('AddCharacter: save')
@@ -40,7 +29,7 @@ const save = async (props: Props, data: formData) => {
         birthday: birthday.value,
         description: description.value,
       },
-      update: onAddCharacter,
+      ...MutateCallbacks.AddCharacter(),
     })
     const characterId = result.data.addCharacter.character.id
     const imagePath = profileImagePath(characterId)
@@ -51,7 +40,6 @@ const save = async (props: Props, data: formData) => {
           id: characterId,
           imageUrl: generatePublicMediaUrl(imagePath),
         },
-        update: onEditCharacter,
       })
     }
     await selectCharacter({variables: { characterId }})
