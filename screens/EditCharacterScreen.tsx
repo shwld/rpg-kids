@@ -129,7 +129,6 @@ const Screen = (props: Props) => (
 
 export default compose(
   Graphql.EditCharacter(),
-  Graphql.RemoveCharacter(),
   Graphql.SetInProgress(),
   Graphql.SelectCharacter(),
 )(Screen)
