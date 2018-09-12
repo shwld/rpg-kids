@@ -1,23 +1,8 @@
-import gql from 'graphql-tag'
-import { graphql, ChildDataProps } from 'react-apollo'
 import { UserState } from '../types'
-import { SetInProgress } from './shared/mutations'
+import SetInProgress from './shared/mutations/SetInProgress'
+import SignInAnonymously from './shared/mutations/SignInAnonymously'
+import CreateUser from './shared/mutations/CreateUser'
 
-const SignInMutation = gql`
-  mutation SignIn {
-    signInAnonymously @client
-  }
-`
-
-const CreateUserMutation = gql`
-  mutation SignUp {
-    signUp {
-      user {
-        id
-      }
-    }
-  }
-`
 
 export interface SignInResult {
   data: {
@@ -39,11 +24,7 @@ export interface Response {
 }
 
 export const Graphql = {
-  SignInAnonymously<T>(){
-    return graphql<T, boolean, {}, ChildDataProps<{}, {user: UserState}, {}>>(SignInMutation, { name: 'signInAnonymously'})
-  },
-  CreateUser<T>(){
-    return graphql<T, {user: UserState}, {}, ChildDataProps<{}, {user: UserState}, {}>>(CreateUserMutation, { name: 'createUser'})
-  },
+  SignInAnonymously,
+  CreateUser,
   SetInProgress,
 }

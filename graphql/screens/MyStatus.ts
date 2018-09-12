@@ -1,7 +1,9 @@
 import { Query as ApolloQuery } from 'react-apollo'
 import gql from 'graphql-tag'
 import { User, State, Character } from '../types'
-import { SelectCharacter } from './shared/mutations'
+import SelectCharacter from './shared/mutations/SelectCharacter'
+import SetInProgress from './shared/mutations/SetInProgress'
+import { RemoveCharacter } from './shared/mutations/RemoveCharacter'
 
 const getUserQuery = gql`
   query GetUser {
@@ -72,4 +74,6 @@ export const Getter = {
 
 export const Graphql = {
   SelectCharacter,
+  SetInProgress,
+  RemoveCharacter,
 }
