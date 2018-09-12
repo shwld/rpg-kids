@@ -27,7 +27,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "投稿やプロフィールに写真をアップロードするためにカメラを利用します",
-        "NSPhotoLibraryUsageDescription": "投稿やプロフィールに写真をアップロードするためにフォトライブラリを利用します"
+        "NSPhotoLibraryUsageDescription": "投稿やプロフィールに写真をアップロードするためにフォトライブラリを利用します",
+        "LSApplicationQueriesSchemes": ["rpgkids", "line", "twitter", "facebook"]
       }
     },
     "android": {

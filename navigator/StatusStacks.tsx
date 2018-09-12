@@ -6,6 +6,7 @@ import AddCharacter from '../screens/AddCharacterScreen'
 import EditCharacter from '../screens/EditCharacterScreen'
 import AcquireSkill from '../screens/AcquireSkillScreen'
 import EditAcquirement from '../screens/EditAcquirementScreen'
+import Invite from '../screens/InviteScreen'
 import { headerStyle } from '../styles'
 
 
@@ -52,4 +53,11 @@ export default createStackNavigator({
       ...headerStyle,
     },
   },
+  Invite: {
+    screen: Invite,
+    navigationOptions: {
+      headerTitle: '親を招待する',
+      ...headerStyle,
+    },
+  }
 })

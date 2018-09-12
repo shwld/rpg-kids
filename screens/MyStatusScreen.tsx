@@ -71,7 +71,7 @@ const Screen = (props: Props) => (
             options={{
               editCharacter: () => props.navigation.navigate('EditCharacter', {characterId: character.id}),
               removeCharacter: () => remove(props, character.id),
-              invite: () => {},
+              invite: () => props.navigation.navigate('Invite', {character: character}),
             }}
             changeCharacter={characterId => props.selectCharacter({variables: {characterId}})}
             addCharacter={() => props.navigation.navigate('AddCharacter')}
