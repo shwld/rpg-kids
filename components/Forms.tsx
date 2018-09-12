@@ -7,6 +7,7 @@ import {
 } from 'native-base'
 import formatFromDate from '../lib/utils/formatFromDate'
 import subYears from 'date-fns/sub_years'
+import { Platform } from 'react-native'
 
 export interface InputString {
   value: string
@@ -22,17 +23,16 @@ interface TextInputProps {
 
 export class TextInput extends React.Component<TextInputProps> {
   /**
-   * react native0.54.2以降でTextInputでonChangeTextを使うと日本語変換ができなくなる
+   * iOSかつreact native0.54.2以降でTextInputでonChangeTextを使うと日本語変換ができなくなる
    * http://watanabeyu.blogspot.com/2018/04/react-native0542textinputonchangetext.html
    * @param nextProps 
    * @param nextState 
    */
   shouldComponentUpdate(nextProps: TextInputProps){
     // input valueが変更された場合はコンポーネントを更新させない
-    if(this.props.item.value !== nextProps.item.value){
-      return false
-    }
-    return true
+    if (Platform.OS !== 'ios') { return true }
+
+    return this.props.item.value === nextProps.item.value
   }
 
   render() {

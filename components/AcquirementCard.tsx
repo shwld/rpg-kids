@@ -6,8 +6,6 @@ import {
   CardItem,
   Button,
   Icon,
-  Left,
-  Right,
   ActionSheet,
   Grid,
   Col,
@@ -15,7 +13,6 @@ import {
 import CharacterIcon from './CharacterIcon'
 import getAge from '../lib/utils/getAge'
 import styles from '../styles'
-import formatFromDate from '../lib/utils/formatFromDate'
 
 interface Props {
   acquirement: {
