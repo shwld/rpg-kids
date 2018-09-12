@@ -7,7 +7,7 @@ import {
   Icon,
   Button,
   Picker,
-} from "native-base"
+} from 'native-base'
 import getAge from '../lib/utils/getAge'
 import CharacterIcon from '../components/CharacterIcon'
 import { Character } from '../graphql/types'
@@ -17,13 +17,14 @@ interface Props {
   character: Character,
   selectableCharacters?: Character[],
   onChangeCharacter?: (id: string) => any,
+  onAddCharacter?: () => any,
   goGetSkill?: () => any,
   goSettings?: () => any,
 }
 
-export const NEW_CHARACTER_ID = '__new'
+const NEW_CHARACTER_ID = '__new'
 
-export default ({character, selectableCharacters, goGetSkill, goSettings, onChangeCharacter = () => {}}: Props) => (
+export default ({character, selectableCharacters, goGetSkill, goSettings, onChangeCharacter = () => {}, onAddCharacter = () => {}}: Props) => (
   <Card style={{flex: 0}}>
     <CardItem style={{justifyContent: 'center', alignItems: 'center'}}>
       <CharacterIcon
@@ -37,7 +38,10 @@ export default ({character, selectableCharacters, goGetSkill, goSettings, onChan
           iosIcon={<Icon name="ios-arrow-down-outline" />}
           style={{ width: undefined }}
           selectedValue={character.id}
-          onValueChange={(v) => onChangeCharacter(v)}
+          onValueChange={(id) => {
+            if (id === NEW_CHARACTER_ID) { return onAddCharacter() }
+            onChangeCharacter(id)
+          }}
         >
           {selectableCharacters.map((c) => (
             <Picker.Item key={c.id} label={c.name} value={c.id} />

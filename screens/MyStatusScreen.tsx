@@ -6,8 +6,8 @@ import {
   Text,
   Body,
   Button,
-} from "native-base"
-import Status, { NEW_CHARACTER_ID } from '../components/Status'
+} from 'native-base'
+import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
 import isEmpty from '../lib/utils/isEmpty'
 import { Query, Component, Getter, Graphql } from '../graphql/screens/MyStatus'
@@ -49,13 +49,8 @@ export default Graphql.SelectCharacter<Props>()(
               selectableCharacters={characters}
               goGetSkill={() => props.navigation.navigate('AcquireSkill', {characterId: character.id})}
               goSettings={() => props.navigation.navigate('EditCharacter', {characterId: character.id})}
-              onChangeCharacter={async characterId => {
-                if (characterId === NEW_CHARACTER_ID) {
-                  props.navigation.navigate('AddCharacter')
-                  return
-                }
-                await props.selectCharacter({variables: {characterId}})
-              }}
+              onChangeCharacter={characterId => props.selectCharacter({variables: {characterId}})}
+              onAddCharacter={() => props.navigation.navigate('AddCharacter')}
             ></Status>
             <Acquirements
               title="最近できるようになったこと"
