@@ -9,7 +9,7 @@ import {
   Body,
   Left,
   Right,
-} from "native-base"
+} from 'native-base'
 import { FlatList } from 'react-native'
 import { NetworkStatus } from 'apollo-client'
 import getAge from '../lib/utils/getAge'

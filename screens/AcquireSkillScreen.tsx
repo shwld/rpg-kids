@@ -1,6 +1,6 @@
 import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
-import { Content } from "native-base"
+import { Content } from 'native-base'
 import { compose } from 'react-apollo'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
