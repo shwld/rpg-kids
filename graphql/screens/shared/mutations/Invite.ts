@@ -11,7 +11,7 @@ const inviteMutation = gql`
       }
       errors
     }
-}
+  }
 `
 
 export default <T>() => {
