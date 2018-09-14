@@ -2,7 +2,7 @@ import React from "react"
 import { WebBrowser, AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import { compose } from 'react-apollo'
-import { Query, Component, Graphql, MutateCallbacks } from '../graphql/screens/AcceptInvitation'
+import { Query, Component, Graphql } from '../graphql/screens/AcceptInvitation'
 import { ImageBackground, Dimensions } from 'react-native'
 import { Text, Button, View, Toast } from 'native-base'
 import { trackEvent } from '../lib/analytics'
@@ -21,13 +21,14 @@ interface Props {
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window')
 
-const start = async (props: Props) => {
+const start = async (props: Props, id: string) => {
   trackEvent('InvitationAccept: start')
-  const { signInAnonymously, createUser, setInProgress, navigation } = props
+  const { signInAnonymously, createUser, setInProgress, acceptInvititation, navigation } = props
   setInProgress({variables: { inProgress: true }})
   try {
     await signInAnonymously()
     await createUser()
+    await acceptInvititation({variables: {id}})
   } catch (e) {
     throw e
   } finally {
@@ -73,6 +74,7 @@ export default compose(
       if (isEmpty(data) || !data || loading) {
         return <AppLoading />
       }
+      const id = getParam(props, 'id')
       return (
         <ImageBackground
           source={require('../assets/splash.png')}
@@ -87,7 +89,7 @@ export default compose(
           {data.state.user.isSignedIn && <View>
             <Button
               style={{marginBottom: 50, alignSelf: 'center'}}
-              onPress={() => accept(props, getParam(props, 'id'))}
+              onPress={() => accept(props, id)}
             >
               <Text>招待を承認する</Text>
             </Button>
@@ -99,7 +101,7 @@ export default compose(
             >利用規約</Text>
             <Button
               style={{marginBottom: 50, alignSelf: 'center'}}
-              onPress={() => start(props)}
+              onPress={() => start(props, id)}
             >
               <Text>利用規約に同意してはじめる</Text>
             </Button>

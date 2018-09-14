@@ -28,7 +28,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "投稿やプロフィールに写真をアップロードするためにカメラを利用します",
         "NSPhotoLibraryUsageDescription": "投稿やプロフィールに写真をアップロードするためにフォトライブラリを利用します",
-        "LSApplicationQueriesSchemes": ["rpgkids", "line", "twitter", "facebook"]
+        "LSApplicationQueriesSchemes": ["line", "twitter", "fb"]
       }
     },
     "android": {
