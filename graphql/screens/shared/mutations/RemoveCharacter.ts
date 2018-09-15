@@ -38,7 +38,6 @@ const removeCharacterMutation = gql`
 export const mutateCallbacks = () => ({
   refetchQueries: [{
     query: FlowQuery.GetAcquirements,
-    variables: { repoName: 'apollographql/apollo-client' },
   }],
   update: (store, result) => {
     const data = store.readQuery({ query: MyStatusQuery.GetUser })

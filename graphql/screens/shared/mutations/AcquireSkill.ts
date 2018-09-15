@@ -19,7 +19,6 @@ const acquireSkillMutation = gql`
 export const mutateCallbacks = (characterId: string) => ({
   refetchQueries: [{
     query: FlowQuery.GetAcquirements,
-    variables: { repoName: 'apollographql/apollo-client' },
   }],
   update: (store, result) => {
     const data = store.readQuery({ query: MyStatusQuery.GetUser })
