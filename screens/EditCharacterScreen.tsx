@@ -36,7 +36,7 @@ const save = async (props: Props, values: formData) => {
         name: name.value,
         birthday: formatFromDate(birthday.value, 'YYYY/MM/DD'),
         description: description.value,
-        imageUrl: imageUri ? generatePublicMediaUrl(imagePath) : null,
+        imageUrl: imageUri ? generatePublicMediaUrl(imagePath, new Date()) : null,
       },
       update: (store, result) => {
         selectCharacter({ variables: { characterId }})

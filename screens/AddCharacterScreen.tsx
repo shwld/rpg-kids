@@ -40,7 +40,7 @@ const save = async (props: Props, data: formData) => {
       await editCharacter({
         variables: {
           id: characterId,
-          imageUrl: generatePublicMediaUrl(imagePath),
+          imageUrl: generatePublicMediaUrl(imagePath, new Date()),
         },
       })
     }
