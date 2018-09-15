@@ -16,9 +16,8 @@ const removeAcquirementMutation = gql`
 
 export const mutateCallbacks = (characterId: string, acquirementId: string) => ({
   refetchQueries: [{
-  query: FlowQuery.GetAcquirements,
-  variables: { repoName: 'apollographql/apollo-client' },
-  }],
+    query: FlowQuery.GetAcquirements },
+  ],
   update: (store) => {
     let data = store.readQuery({ query: EditAcquirementQuery.GetUser })
     const character = EditAcquirementGetter.GetCharacter(data, characterId)
