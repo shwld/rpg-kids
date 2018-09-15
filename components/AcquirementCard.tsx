@@ -4,7 +4,6 @@ import {
   Text,
   Card,
   CardItem,
-  Button,
   Icon,
   ActionSheet,
   Grid,
@@ -13,6 +12,8 @@ import {
 import CharacterIcon from './CharacterIcon'
 import getAge from '../lib/utils/getAge'
 import styles from '../styles'
+import theme from '../native-base-theme/variables/platform'
+
 
 interface Props {
   acquirement: {
@@ -64,9 +65,10 @@ export default ({ acquirement, onCharacterClick, onAcquirementClick, onBlockClic
     <CardItem>
       <Grid>
         <Col style={{width: '90%'}}>
-          <Button primary rounded small onPress={() => onAcquirementClick()}>
-            <Text>{acquirement.name}</Text>
-          </Button>
+          <Text onPress={() => onAcquirementClick()}>
+            <Icon name="ios-checkmark-circle-outline" style={{color: theme.brandPrimary, fontSize: theme.noteFontSize}} />
+            <Text style={{color: theme.brandPrimary, fontSize: theme.noteFontSize}}> {acquirement.name}</Text>
+          </Text>
         </Col>
         {(onBlockClick) && <Col style={{width: '10%'}}>
           <Icon
