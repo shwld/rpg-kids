@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native'
+import theme from '../native-base-theme/variables/platform'
+
 
 export default StyleSheet.create({
   w100: {
@@ -11,13 +13,13 @@ export default StyleSheet.create({
 
 
 export const headerStyle = {
-  headerTintColor: '#5E4141',
+  headerTintColor: theme.titleFontColor,
 }
 
 export const footerStyle = {
-  activeTintColor: '#FFF',
-  inactiveTintColor: '#CCC',
+  activeTintColor: theme.tabBarActiveTextColor,
+  inactiveTintColor: theme.tabBarTextColor,
   style: {
-    backgroundColor: '#C76B63',
+    backgroundColor: theme.footerDefaultBg,
   },
 }

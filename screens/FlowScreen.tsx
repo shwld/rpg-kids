@@ -3,7 +3,7 @@ import { AppLoading } from 'expo'
 import AcquirementCard from '../components/AcquirementCard'
 import { Alert, FlatList } from 'react-native'
 import { compose } from 'react-apollo'
-import { List, Toast } from "native-base"
+import { List, Toast } from 'native-base'
 import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
 import isEmpty from '../lib/utils/isEmpty'

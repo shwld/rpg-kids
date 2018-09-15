@@ -8,8 +8,7 @@ import { compose } from 'react-apollo'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
 import isEmpty from '../lib/utils/isEmpty'
-import { Component, Query, Graphql, Getter } from '../graphql/screens/EditAcquirement'
-import { Query as FlowQuery } from '../graphql/screens/Flow'
+import { Component, Query, Graphql, MutateCallbacks } from '../graphql/screens/EditAcquirement'
 import { trackEvent } from '../lib/analytics'
 
 
@@ -57,19 +56,7 @@ const remove = async (props: Props) => {
         id: acquirementId,
         characterId,
       },
-      refetchQueries: [{
-        query: FlowQuery.GetAcquirements,
-        variables: { repoName: 'apollographql/apollo-client' },
-      }],
-      update: (store) => {
-        let data = store.readQuery({ query: Query.GetUser })
-        const character = Getter.GetCharacter(data, characterId)
-        if (character) {
-          let acquirementsEdges = character.acquirements.edges.filter(it => it.node.id !== acquirementId)
-          character.acquirements.edges = acquirementsEdges
-          store.writeQuery({ query: Query.GetUser, data })
-        }
-      },
+      ...MutateCallbacks.RemoveAcquirement(characterId, acquirementId),
     })
     navigation.replace('MyStatus')
   } catch (e) {

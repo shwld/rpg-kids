@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppLoading } from 'expo'
+import { AppLoading, Linking } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import { Graphql } from '../graphql/screens/Entry'
 import firebase from '../lib/firebase'
@@ -17,10 +17,10 @@ class Entry extends React.Component<Props> {
     const { data: { authenticate } } = await this.props.authenticate()
     this.setTrackingUserId()
     trackEvent('Application launched')
-    const to = authenticate ? 'App' : 'SignUp'
+    const to = authenticate ? 'App' : 'WalkThrough'
     navigation.navigate(to)
   }
- 
+
   render() {
     return <AppLoading />
   }
@@ -31,6 +31,7 @@ class Entry extends React.Component<Props> {
       setUserId(currentUser.uid)
     }
   }
+
 }
 
 export default Graphql.Authenticate<Props>()(Entry)

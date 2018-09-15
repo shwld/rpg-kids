@@ -3,6 +3,7 @@ import { createSwitchNavigator } from 'react-navigation'
 import RootTabs from './RootTabs'
 import EntryScreen from '../screens/EntryScreen'
 import WalkThroughScreen from '../screens/WalkThroughScreen'
+import AcceptInvitationScreen from '../screens/AcceptInvitationScreen'
 import { trackEvent } from '../lib/analytics'
 
 const getRoute = (navigationState) => {
@@ -18,7 +19,8 @@ const Navigator = createSwitchNavigator(
   {
     Entry: EntryScreen,
     App: RootTabs,
-    SignUp: WalkThroughScreen,
+    WalkThrough: WalkThroughScreen,
+    AcceptInvitation: AcceptInvitationScreen,
   },
   {
     initialRouteName: 'Entry',

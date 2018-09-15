@@ -6,50 +6,59 @@ import AddCharacter from '../screens/AddCharacterScreen'
 import EditCharacter from '../screens/EditCharacterScreen'
 import AcquireSkill from '../screens/AcquireSkillScreen'
 import EditAcquirement from '../screens/EditAcquirementScreen'
+import Invite from '../screens/InviteScreen'
 import { headerStyle } from '../styles'
+import HandleDeepLink from '../higherOrderComponents/HandleDeepLink'
 
 
 export default createStackNavigator({
   MyStatus: {
-    screen: MyStatus,
+    screen: HandleDeepLink(MyStatus),
     navigationOptions: {
       headerTitle: '情報・記録',
       ...headerStyle,
     },
   },
   AddCharacter: {
-    screen: AddCharacter,
+    screen: HandleDeepLink(AddCharacter),
     navigationOptions: {
       headerTitle: '子供を追加',
       ...headerStyle,
     },
   },
   EditCharacter: {
-    screen: EditCharacter,
+    screen: HandleDeepLink(EditCharacter),
     navigationOptions: {
       headerTitle: '子供の情報を編集',
       ...headerStyle,
     },
   },
   Log: {
-    screen: Log,
+    screen: HandleDeepLink(Log),
     navigationOptions: {
       headerTitle: '成長ログ',
       ...headerStyle,
     },
   },
   AcquireSkill: {
-    screen: AcquireSkill,
+    screen: HandleDeepLink(AcquireSkill),
     navigationOptions: {
       headerTitle: 'これできた を登録',
       ...headerStyle,
     },
   },
   EditAcquirement: {
-    screen: EditAcquirement,
+    screen: HandleDeepLink(EditAcquirement),
     navigationOptions: {
       headerTitle: 'これできた を編集',
       ...headerStyle,
     },
   },
+  Invite: {
+    screen: HandleDeepLink(Invite),
+    navigationOptions: {
+      headerTitle: '親を招待する',
+      ...headerStyle,
+    },
+  }
 })

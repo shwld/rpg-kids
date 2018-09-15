@@ -1,23 +1,12 @@
-import gql from 'graphql-tag'
-import { graphql } from 'react-apollo'
-import { SetInProgress } from './shared/mutations'
+import SetInProgress from './shared/mutations/SetInProgress'
+import AcquireSkill, { mutateCallbacks } from './shared/mutations/AcquireSkill'
 
-const acquireSkillMutation = gql`
-  mutation AcquireSkill($characterId: ID!, $name:String!, $acquiredAt:DateTime!) {
-    acquireSkill(characterId: $characterId, name: $name, acquiredAt: $acquiredAt) {
-      acquirement {
-        id
-        name
-        acquiredAt
-      }
-      errors
-    }
-  }
-`
+
+export const MutateCallbacks = {
+  AcquireSkill: mutateCallbacks,
+}
 
 export const Graphql = {
-  AcquireSkill<T>() {
-    return graphql<T>(acquireSkillMutation, { name: 'acquireSkill' })
-  },
+  AcquireSkill,
   SetInProgress,
 }

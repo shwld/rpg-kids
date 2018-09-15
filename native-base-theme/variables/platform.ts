@@ -108,7 +108,7 @@ export default {
   brandSuccess: "#5cb85c",
   brandDanger: "#d9534f",
   brandWarning: "#f0ad4e",
-  brandDark: "#000",
+  brandDark: "#333",
   brandLight: "#f4f4f4",
 
   //Container
@@ -134,15 +134,15 @@ export default {
 
   // Footer
   footerHeight: 55,
-  footerDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  footerDefaultBg: '#C76B63',
   footerPaddingBottom: 0,
 
   // FooterTab
-  tabBarTextColor: platform === "ios" ? "#6b6b6b" : "#b3c7f9",
+  tabBarTextColor: '#ccc',
   tabBarTextSize: platform === "ios" ? 14 : 11,
   activeTab: platform === "ios" ? "#C76B63" : "#fff",
   sTabBarActiveTextColor: "#C76B63",
-  tabBarActiveTextColor: platform === "ios" ? "#C76B63" : "#fff",
+  tabBarActiveTextColor: '#fff',
   tabActiveBgColor: platform === "ios" ? "#cde1f9" : "#3F51B5",
 
   // Header
@@ -250,7 +250,7 @@ export default {
   titleFontSize: platform === "ios" ? 17 : 19,
   subTitleFontSize: platform === "ios" ? 11 : 14,
   subtitleColor: platform === "ios" ? "#8e8e93" : "#FFF",
-  titleFontColor: platform === "ios" ? "#000" : "#FFF",
+  titleFontColor: platform === "ios" ? "#A74B43" : "#FFF",
 
   // Other
   borderRadiusBase: platform === "ios" ? 5 : 2,

@@ -9,7 +9,7 @@ import {
   ActionSheet,
   Grid,
   Col,
-} from "native-base"
+} from 'native-base'
 import CharacterIcon from './CharacterIcon'
 import getAge from '../lib/utils/getAge'
 import styles from '../styles'

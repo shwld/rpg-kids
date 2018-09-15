@@ -6,7 +6,7 @@ import {
   Body,
   Button,
   Text,
-} from "native-base"
+} from 'native-base'
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import toDate from '../lib/utils/toDate'
 
