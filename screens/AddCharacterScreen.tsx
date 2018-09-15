@@ -7,6 +7,8 @@ import CharacterForm, { State as formData } from '../components/CharacterForm'
 import { profileImagePath } from '../lib/utils/imageHelper'
 import { Graphql, MutateCallbacks } from '../graphql/screens/AddCharacter'
 import { trackEvent } from '../lib/analytics'
+import formatFromDate from '../lib/utils/formatFromDate'
+
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -26,7 +28,7 @@ const save = async (props: Props, data: formData) => {
     const result = await addCharacter({
       variables: {
         name: name.value,
-        birthday: birthday.value,
+        birthday: formatFromDate(birthday.value, 'YYYY/MM/DD'),
         description: description.value,
       },
       ...MutateCallbacks.AddCharacter(),

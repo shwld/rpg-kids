@@ -10,6 +10,7 @@ import getParam from '../lib/utils/getParam'
 import { profileImagePath } from '../lib/utils/imageHelper'
 import { Component, Query, Graphql } from '../graphql/screens/EditCharacter'
 import { trackEvent } from '../lib/analytics'
+import formatFromDate from '../lib/utils/formatFromDate'
 
 
 interface Props {
@@ -33,7 +34,7 @@ const save = async (props: Props, values: formData) => {
       variables: {
         id: characterId,
         name: name.value,
-        birthday: birthday.value,
+        birthday: formatFromDate(birthday.value, 'YYYY/MM/DD'),
         description: description.value,
         imageUrl: imageUri ? generatePublicMediaUrl(imagePath) : null,
       },
