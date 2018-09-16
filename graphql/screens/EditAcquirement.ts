@@ -2,7 +2,6 @@ import gql from 'graphql-tag'
 import { Query as ApolloQuery } from 'react-apollo'
 import { Character } from '../types'
 import { Query as MyStatusQuery, Getter as MyStatusGetter } from './MyStatus'
-import SetInProgress from './shared/mutations/SetInProgress'
 import EditAcquirement, { mutateCallbacks as EditAcquirementMutateCallbacks } from './shared/mutations/EditAcquirement'
 import RemoveAcquirement, { mutateCallbacks as RemoveAcquirementMutateCallbacks } from './shared/mutations/RemoveAcquirement'
 
@@ -53,5 +52,4 @@ export const MutateCallbacks = {
 export const Graphql = {
   EditAcquirement,
   RemoveAcquirement,
-  SetInProgress,
 }

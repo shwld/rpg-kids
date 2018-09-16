@@ -17,53 +17,38 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
   editAcquirement(payload: { variables: {id: string, characterId: string, name: string, acquiredAt: Date} })
   removeAcquirement(payload: { variables: {id: string, characterId: string}, refetchQueries: any, update: any })
-  setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
 const save = async (props: Props, data: formData) => {
   trackEvent('EditAcquirement: save')
-  const { navigation, editAcquirement, setInProgress } = props
+  const { navigation, editAcquirement } = props
   const characterId = getParam({navigation}, 'characterId')
   const acquirementId = getParam({navigation}, 'acquirementId')
-  setInProgress({variables: { inProgress: true }})
-  try {
-    const { name, acquiredAt } = data
-    await editAcquirement({
-      variables: {
-        id: acquirementId,
-        characterId,
-        name: name.value,
-        acquiredAt: acquiredAt.value,
-      },
-    })
-    navigation.replace('MyStatus')
-  } catch (e) {
-    throw e
-  } finally {
-    setInProgress({variables: { inProgress: false }})
-  }
+  const { name, acquiredAt } = data
+  await editAcquirement({
+    variables: {
+      id: acquirementId,
+      characterId,
+      name: name.value,
+      acquiredAt: acquiredAt.value,
+    },
+  })
+  navigation.replace('MyStatus')
 }
 
 const remove = async (props: Props) => {
   trackEvent('EditAcquirement: remove')
-  const { navigation, removeAcquirement, setInProgress } = props
+  const { navigation, removeAcquirement } = props
   const characterId = getParam({navigation}, 'characterId')
   const acquirementId = getParam({navigation}, 'acquirementId')
-  setInProgress({variables: { inProgress: true }})
-  try {
-    await removeAcquirement({
-      variables: {
-        id: acquirementId,
-        characterId,
-      },
-      ...MutateCallbacks.RemoveAcquirement(characterId, acquirementId),
-    })
-    navigation.replace('MyStatus')
-  } catch (e) {
-    throw e
-  } finally {
-    setInProgress({variables: { inProgress: false }})
-  }
+  await removeAcquirement({
+    variables: {
+      id: acquirementId,
+      characterId,
+    },
+    ...MutateCallbacks.RemoveAcquirement(characterId, acquirementId),
+  })
+  navigation.replace('MyStatus')
 }
 
 const Screen = (props: Props) => (
@@ -111,5 +96,4 @@ const Screen = (props: Props) => (
 export default compose(
   Graphql.EditAcquirement(),
   Graphql.RemoveAcquirement(),
-  Graphql.SetInProgress(),
 )(Screen)

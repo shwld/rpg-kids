@@ -35,23 +35,6 @@ export default {
     cache.writeQuery(signInQuery(isSignedIn))
     return isSignedIn
   },
-  setInProgress: async (_obj, {inProgress}: {inProgress: boolean}, { cache }: { cache }) => {
-    const query = gql`
-      query getState @client {
-        state {
-          inProgress
-        }
-      }
-    `
-    const data = {
-      state: {
-        __typename: 'State',
-        inProgress,
-      }
-    }
-    cache.writeQuery({ query, data })
-    return true
-  },
   selectCharacter: async (_obj, {characterId}: {characterId: string}, { cache }: { cache }) => {
     const query = gql`
       query getState @client {

@@ -12,30 +12,21 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
   signInAnonymously: () => Promise<boolean>
   createUser: () => { data: { signUp: { user: { id: string }} } }
-  setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window')
 
 const start = async (props: Props) => {
   trackEvent('WalkThrough: start')
-  const { signInAnonymously, createUser, setInProgress, navigation } = props
-  setInProgress({variables: { inProgress: true }})
-  try {
-    await signInAnonymously()
-    await createUser()
-  } catch (e) {
-    throw e
-  } finally {
-    setInProgress({variables: { inProgress: false }})
-    navigation.navigate('App')
-  }
+  const { signInAnonymously, createUser, navigation } = props
+  await signInAnonymously()
+  await createUser()
+  navigation.navigate('App')
 }
 
 export default compose(
   Graphql.SignInAnonymously(),
   Graphql.CreateUser(),
-  Graphql.SetInProgress(),
 )(props => (
   <ImageBackground
     source={require('../assets/splash.png')}

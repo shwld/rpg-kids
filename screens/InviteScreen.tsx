@@ -21,7 +21,6 @@ interface Props {
   characterId: string
   navigation: NavigationScreenProp<any, any>
   invite(payload: { variables: {characterId: string} })
-  setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
 export default Graphql.Invite<Props>()(

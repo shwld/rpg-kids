@@ -1,7 +1,6 @@
 import { Query as ApolloQuery } from 'react-apollo'
 import gql from 'graphql-tag'
 import { RelayConnection, Acquirement } from '../types'
-import SetInProgress from './shared/mutations/SetInProgress'
 import BlockAcquirement from './shared/mutations/BlockAcquirement'
 
 
@@ -47,5 +46,4 @@ export const Component = {
 
 export const Graphql = {
   BlockAcquirement,
-  SetInProgress,
 }

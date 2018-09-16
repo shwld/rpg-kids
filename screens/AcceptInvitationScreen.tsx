@@ -14,7 +14,6 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
   signInAnonymously: () => Promise<boolean>
   createUser: () => { data: { signUp: { user: { id: string }} } }
-  setInProgress(payload: { variables: {inProgress: boolean}})
   acceptInvititation(payload: { variables: {id: string}})
   selectCharacter(payload: { variables: {characterId: string}})
 }
@@ -23,49 +22,34 @@ const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window'
 
 const start = async (props: Props, id: string) => {
   trackEvent('InvitationAccept: start')
-  const { signInAnonymously, createUser, setInProgress, acceptInvititation, navigation } = props
-  setInProgress({variables: { inProgress: true }})
-  try {
-    await signInAnonymously()
-    await createUser()
-    await acceptInvititation({variables: {id}})
-  } catch (e) {
-    throw e
-  } finally {
-    setInProgress({variables: { inProgress: false }})
-    navigation.navigate('App')
-  }
+  const { signInAnonymously, createUser, acceptInvititation, navigation } = props
+  await signInAnonymously()
+  await createUser()
+  await acceptInvititation({variables: {id}})
+  navigation.navigate('App')
 }
 
 const accept = async (props: Props, id: string) => {
   trackEvent('InvitationAccept: accept')
-  const { setInProgress, acceptInvititation, selectCharacter,  navigation } = props
+  const { acceptInvititation, selectCharacter,  navigation } = props
 
-  setInProgress({variables: { inProgress: true }})
-  try {
-    const result = await acceptInvititation({variables: {id}})
-    if (result.data.acceptInvitation.invitation) {
-      await selectCharacter({variables: {characterId: result.data.acceptInvitation.invitation.characterId}})
-    } else {
-      Toast.show({
-        text: '招待が見つからないか期限切れです',
-        buttonText: 'OK',
-        duration: 3000,
-        position: 'top',
-      })
-    }
-  } catch (e) {
-    throw e
-  } finally {
-    setInProgress({variables: { inProgress: false }})
-    navigation.navigate('MyStatus')
+  const result = await acceptInvititation({variables: {id}})
+  if (result.data.acceptInvitation.invitation) {
+    await selectCharacter({variables: {characterId: result.data.acceptInvitation.invitation.characterId}})
+  } else {
+    Toast.show({
+      text: '招待が見つからないか期限切れです',
+      buttonText: 'OK',
+      duration: 3000,
+      position: 'top',
+    })
   }
+  navigation.navigate('MyStatus')
 }
 
 export default compose(
   Graphql.SignInAnonymously(),
   Graphql.CreateUser(),
-  Graphql.SetInProgress(),
   Graphql.AcceptInvititation(),
   Graphql.SelectCharacter(),
 )(props => (

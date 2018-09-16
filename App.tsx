@@ -6,7 +6,6 @@ import AuthSwitch from './navigator/AuthSwitch'
 import { StyleProvider, Root } from 'native-base'
 import getTheme from './native-base-theme/components'
 import platform from './native-base-theme/variables/platform'
-import OverlayIndicator from './containers/OverlayIndicator'
 import './lib/sentry'
 
 import Apollo  from './graphql/Apollo'
@@ -23,7 +22,6 @@ class App extends React.Component {
     return (
       <Apollo>
         <StatusBar barStyle="dark-content" />
-        <OverlayIndicator />
         <StyleProvider style={getTheme(platform)}>
           <Root>
             <AuthSwitch />
