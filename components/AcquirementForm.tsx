@@ -19,6 +19,7 @@ interface Props {
 }
 
 export interface State {
+  inProgress: boolean
   name: InputString
   acquiredAt: InputDate
 }
@@ -32,6 +33,7 @@ const getDefaultValue = (props: Props, propName: string, defaultValue: any = '')
 
 export default class extends React.Component<Props, State> {
   state: State = {
+    inProgress: false,
     name: {
       value: getDefaultValue(this.props, 'name'),
       validate: value => (value.trim() !== ''),
@@ -53,9 +55,14 @@ export default class extends React.Component<Props, State> {
     return results.every(x => x)
   }
 
-  save() {
+  async save() {
     if (!this.valid()) { return }
-    this.props.save(this.state)
+    this.setState({inProgress: true})
+    try {
+      await this.props.save(this.state)
+    } finally {
+      this.setState({inProgress: false})
+    }
   }
 
   render() {
@@ -78,8 +85,8 @@ export default class extends React.Component<Props, State> {
         <CardItem>
           <Body style={styles.stretch}>
             <Text note>登録した内容は全員に公開されます。</Text>
-            <Button block onPress={() => this.save()} >
-              <Text>登録</Text>
+            <Button block disabled={this.state.inProgress} onPress={() => this.save()} >
+              <Text>{this.state.inProgress ? '登録しています...' : '登録'}</Text>
             </Button>
           </Body>
         </CardItem>
