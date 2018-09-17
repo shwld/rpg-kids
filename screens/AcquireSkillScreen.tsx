@@ -35,7 +35,7 @@ export default compose(
   <Content>
     <AcquirementForm
       save={(data: formData) => save(props, data)}
-      handleSaveComplate={() => props.navigation.pop()}
+      handleSaveComplate={() => props.navigation.popToTop()}
     />
   </Content>
 ))

@@ -52,7 +52,7 @@ export default compose(
   <Content>
     <CharacterForm
       save={(data: formData) => save(props, data)}
-      handleSaveComplate={() => props.navigation.replace('MyStatus')}
+      handleSaveComplate={() => props.navigation.popToTop()}
     />
   </Content>
 ))
