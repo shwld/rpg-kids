@@ -13,6 +13,7 @@ import CharacterIcon from './CharacterIcon'
 import getAge from '../lib/utils/getAge'
 import styles from '../styles'
 import theme from '../native-base-theme/variables/platform'
+import Lottie from './Lottie'
 
 
 interface Props {
@@ -66,7 +67,7 @@ export default ({ acquirement, character, onCharacterClick, onAcquirementClick, 
       <Grid>
         <Col style={{width: '90%'}}>
           <Text onPress={() => onAcquirementClick()}>
-            <Icon name="ios-checkmark-circle-outline" style={{color: theme.brandPrimary, fontSize: theme.noteFontSize}} />
+            <Lottie source={require('../assets/lottie/check_animation.json')} size={theme.noteFontSize} />
             <Text style={{color: theme.brandPrimary, fontSize: theme.noteFontSize}}> {acquirement.name}</Text>
           </Text>
         </Col>
