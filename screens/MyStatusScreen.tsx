@@ -28,7 +28,7 @@ const remove = async (props: Props, characterId: string) => {
     variables: { id: characterId },
     ...MutateCallbacks.RemoveCharacter(),
   })
-  navigation.pop()
+  navigation.popToTop()
 }
 
 const Screen = (props: Props) => (
