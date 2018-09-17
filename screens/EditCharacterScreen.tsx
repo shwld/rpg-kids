@@ -24,7 +24,7 @@ interface Props {
 const save = async (props: Props, values: formData) => {
   trackEvent('EditCharacter: save')
   const characterId = getParam(props, 'characterId')
-  const { navigation, editCharacter, selectCharacter } = props
+  const { editCharacter, selectCharacter } = props
   const { name, birthday, description, imageUri } = values
   const imagePath = profileImagePath(characterId)
   await editCharacter({
@@ -42,7 +42,6 @@ const save = async (props: Props, values: formData) => {
   if (imageUri) {
     await uploadToFireStorage(imageUri, imagePath)
   }
-  navigation.pop()
 }
 
 const Screen = (props: Props) => (
@@ -59,6 +58,7 @@ const Screen = (props: Props) => (
         return (
           <CharacterForm
             save={(values: formData) => save(props, values)}
+            handleSaveComplate={() => props.navigation.pop()}
             defaultValues={data.character}
           />
         )

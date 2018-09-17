@@ -20,7 +20,7 @@ interface Props {
 
 const save = async (props: Props, data: formData) => {
   trackEvent('AddCharacter: save')
-  const { navigation, addCharacter, editCharacter, selectCharacter } = props
+  const { addCharacter, editCharacter, selectCharacter } = props
   const { name, birthday, description, imageUri } = data
   const result = await addCharacter({
     variables: {
@@ -42,7 +42,6 @@ const save = async (props: Props, data: formData) => {
     })
   }
   await selectCharacter({variables: { characterId }})
-  navigation.replace('MyStatus')
 }
 
 export default compose(
@@ -51,6 +50,9 @@ export default compose(
   Graphql.SelectCharacter(),
 )((props: Props) => (
   <Content>
-    <CharacterForm save={(data: formData) => save(props, data)} />
+    <CharacterForm
+      save={(data: formData) => save(props, data)}
+      handleSaveComplate={() => props.navigation.replace('MyStatus')}
+    />
   </Content>
 ))

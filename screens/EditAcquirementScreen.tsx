@@ -33,7 +33,6 @@ const save = async (props: Props, data: formData) => {
       acquiredAt: acquiredAt.value,
     },
   })
-  navigation.replace('MyStatus')
 }
 
 const remove = async (props: Props) => {
@@ -48,7 +47,6 @@ const remove = async (props: Props) => {
     },
     ...MutateCallbacks.RemoveAcquirement(characterId, acquirementId),
   })
-  navigation.replace('MyStatus')
 }
 
 const Screen = (props: Props) => (
@@ -68,6 +66,7 @@ const Screen = (props: Props) => (
         return (
           <AcquirementForm
             save={(data: formData) => save(props, data)}
+            handleSaveComplate={() => props.navigation.replace('MyStatus')}
             defaultValues={data.character.acquirement}
           >
             <CardItem>

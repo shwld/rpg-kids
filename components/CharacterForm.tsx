@@ -7,6 +7,7 @@ import {
   CardItem,
   Body,
   Icon,
+  Toast,
 } from 'native-base'
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
@@ -17,6 +18,7 @@ import { Character } from '../graphql/types'
 interface Props {
   defaultValues?: Character
   save(data: State): void
+  handleSaveComplate(): void
 }
 
 const getDefaultValue = (props: Props, propName: string, defaultValue: any = '') => {
@@ -66,13 +68,30 @@ export default class extends React.Component<Props, State> {
   }
 
   async save() {
-    if (!this.valid()) { return }
+    if (!this.valid()) {
+      Toast.show({
+        text: '入力内容に誤りがあります',
+        buttonText: 'OK',
+        duration: 3000,
+        position: 'top',
+        type: 'warning',
+      })
+      return
+    }
     this.setState({inProgress: true})
     try {
       await this.props.save(this.state)
     } finally {
       this.setState({inProgress: false})
     }
+    Toast.show({
+      text: '登録しました',
+      buttonText: 'OK',
+      duration: 3000,
+      position: 'top',
+      type: 'success',
+    })
+    this.props.handleSaveComplate()
   }
 
   render() {
@@ -88,6 +107,9 @@ export default class extends React.Component<Props, State> {
             )}
             {this.state.imageUri && (
               <CharacterIcon uri={this.state.imageUri} />
+            )}
+            {(this.props.defaultValues && this.props.defaultValues.imageUrl) && (
+              <Text note style={{marginTop: 20}}>画像の変更は、保存後画面への反映までに時間がかかることがありますのでご注意ください</Text>
             )}
           </Body>
         </CardItem>

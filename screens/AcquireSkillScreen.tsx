@@ -27,13 +27,15 @@ const save = async (props: Props, data: formData) => {
     },
     ...MutateCallbacks.AcquireSkill(characterId),
   })
-  navigation.pop()
 }
 
 export default compose(
   Graphql.AcquireSkill(),
 )((props: Props) => (
   <Content>
-    <AcquirementForm save={(data: formData) => save(props, data)} />
+    <AcquirementForm
+      save={(data: formData) => save(props, data)}
+      handleSaveComplate={() => props.navigation.pop()}
+    />
   </Content>
 ))
