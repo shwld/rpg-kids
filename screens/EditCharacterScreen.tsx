@@ -18,38 +18,29 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
   editCharacter(payload: { variables: {id, name, birthday, description, imageUrl} , update: any})
   removeCharacter(payload: { variables: {id: string}, refetchQueries: any, update: any })
-  setInProgress(payload: { variables: {inProgress: boolean}})
   selectCharacter(payload: { variables: {characterId: string}})
 }
 
 const save = async (props: Props, values: formData) => {
   trackEvent('EditCharacter: save')
   const characterId = getParam(props, 'characterId')
-  const { navigation, editCharacter, setInProgress, selectCharacter } = props
-  setInProgress({variables: { inProgress: true }})
-  try {
-    const { name, birthday, description, imageUri } = values
-    const imagePath = profileImagePath(characterId)
-    await editCharacter({
-      variables: {
-        id: characterId,
-        name: name.value,
-        birthday: formatFromDate(birthday.value, 'YYYY/MM/DD'),
-        description: description.value,
-        imageUrl: imageUri ? generatePublicMediaUrl(imagePath, new Date()) : null,
-      },
-      update: (store, result) => {
-        selectCharacter({ variables: { characterId }})
-      },
-    })
-    if (imageUri) {
-      await uploadToFireStorage(imageUri, imagePath)
-    }
-    navigation.pop()
-  } catch (e) {
-    throw e
-  } finally {
-    setInProgress({variables: { inProgress: false }})
+  const { editCharacter, selectCharacter } = props
+  const { name, birthday, description, imageUri } = values
+  const imagePath = profileImagePath(characterId)
+  await editCharacter({
+    variables: {
+      id: characterId,
+      name: name.value,
+      birthday: formatFromDate(birthday.value, 'YYYY/MM/DD'),
+      description: description.value,
+      imageUrl: imageUri ? generatePublicMediaUrl(imagePath, new Date()) : null,
+    },
+    update: (store, result) => {
+      selectCharacter({ variables: { characterId }})
+    },
+  })
+  if (imageUri) {
+    await uploadToFireStorage(imageUri, imagePath)
   }
 }
 
@@ -67,6 +58,7 @@ const Screen = (props: Props) => (
         return (
           <CharacterForm
             save={(values: formData) => save(props, values)}
+            handleSaveComplate={() => props.navigation.pop()}
             defaultValues={data.character}
           />
         )
@@ -78,6 +70,5 @@ const Screen = (props: Props) => (
 
 export default compose(
   Graphql.EditCharacter(),
-  Graphql.SetInProgress(),
   Graphql.SelectCharacter(),
 )(Screen)

@@ -38,7 +38,7 @@ const selectAction = (options: OptionActions) => {
       options: [
         { text: '編集する', icon: 'ios-cog', iconColor: theme.brandDark },
         { text: '親を招待する', icon: 'ios-share-alt', iconColor: theme.brandDark },
-        { text: '削除する', icon: 'ios-remove-circle', iconColor: theme.brandPrimary },
+        { text: '削除する', icon: 'ios-remove-circle', iconColor: theme.brandDanger },
         { text: 'キャンセル', icon: 'ios-close', iconColor: theme.brandDark }
       ],
       cancelButtonIndex: 3,

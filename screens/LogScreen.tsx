@@ -48,7 +48,7 @@ const onEndReached = (data) => {
 
 const renderItem = ({ item, index }, character: { id: string, birthday: Date}, navigation: NavigationScreenProp<any, any>) => {
   return (
-    <ListItem onPress={() => navigation.navigate('EditAcquirement', { acquirementId: item.id, characterId: character.id})}>
+    <ListItem onPress={() => navigation.navigate('MyAcquirement', { acquirementId: item.id, characterId: character.id})}>
       <Left>
         <Body>
           <Text>{item.name}</Text>

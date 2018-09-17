@@ -31,7 +31,6 @@ export interface Acquirement {
 }
 
 export interface State {
-  inProgress: boolean
   selectedCharacterId: string
   user: UserState
 }

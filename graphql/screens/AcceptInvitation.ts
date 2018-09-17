@@ -1,7 +1,6 @@
 import { Query as ApolloQuery } from 'react-apollo'
 import gql from 'graphql-tag'
 import { State } from '../types'
-import SetInProgress from './shared/mutations/SetInProgress'
 import SignInAnonymously from './shared/mutations/SignInAnonymously'
 import SelectCharacter from './shared/mutations/SelectCharacter'
 import CreateUser from './shared/mutations/CreateUser'
@@ -36,7 +35,6 @@ export const Component = {
 export const Graphql = {
   SignInAnonymously,
   CreateUser,
-  SetInProgress,
   AcceptInvititation,
   SelectCharacter,
 }

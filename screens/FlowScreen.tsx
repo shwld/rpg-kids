@@ -13,7 +13,6 @@ import { trackEvent } from '../lib/analytics'
 interface Props {
   navigation: NavigationScreenProp<any, any>
   blockAcquirement(payload: { variables: {acquirementId: string}, update: any})
-  setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
 const onEndReached = (data) => {
@@ -44,21 +43,14 @@ const block = async (props: Props, acquirementId: string, refetch: Function) => 
   trackEvent('Flow: blockAcquirement')
 
   const perform = async () => {
-    const { navigation, blockAcquirement, setInProgress } = props
-    setInProgress({variables: { inProgress: true }})
-    try {
-      await blockAcquirement({
-        variables: {
-          acquirementId,
-        },
-        update: (store, result) => refetch(),
-      })
-      navigation.pop()
-    } catch (e) {
-      throw e
-    } finally {
-      setInProgress({variables: { inProgress: false }})
-    }
+    const { navigation, blockAcquirement } = props
+    await blockAcquirement({
+      variables: {
+        acquirementId,
+      },
+      update: (store, result) => refetch(),
+    })
+    navigation.pop()
     Toast.show({
       text: 'ブロックしました',
       buttonText: 'OK',
@@ -81,6 +73,7 @@ const renderItem = ({ item, index }, props: Props, refetch: Function) => {
   return (
     <AcquirementCard
       acquirement={item}
+      character={item.character}
       onCharacterClick={() => navigation.navigate('Status', {characterId: item.character.id})}
       onAcquirementClick={() => {}}
       onBlockClick={() => block(props, item.id, refetch)}
@@ -90,7 +83,6 @@ const renderItem = ({ item, index }, props: Props, refetch: Function) => {
 
 export default compose(
   Graphql.BlockAcquirement<Props>(),
-  Graphql.SetInProgress(),
 )(props => (
   <Component.GetAcquirements
     query={Query.GetAcquirements}

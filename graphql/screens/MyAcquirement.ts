@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 import { Query as ApolloQuery } from 'react-apollo'
 import { Character } from '../types'
 import { Query as MyStatusQuery, Getter as MyStatusGetter } from './MyStatus'
-import EditAcquirement, { mutateCallbacks as EditAcquirementMutateCallbacks } from './shared/mutations/EditAcquirement'
+import RemoveAcquirement, { mutateCallbacks as RemoveAcquirementMutateCallbacks } from './shared/mutations/RemoveAcquirement'
 
 
 interface GetAcquirementResponse {
@@ -19,6 +19,7 @@ const getAcquirementQuery = gql`
       name
       birthday
       description
+      imageUrl
       acquirement(id: $id) {
         id
         name
@@ -44,9 +45,9 @@ export const Component = {
 }
 
 export const MutateCallbacks = {
-  EditAcquirement: EditAcquirementMutateCallbacks,
+  RemoveAcquirement: RemoveAcquirementMutateCallbacks,
 }
 
 export const Graphql = {
-  EditAcquirement,
+  RemoveAcquirement,
 }

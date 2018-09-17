@@ -19,24 +19,16 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
   selectCharacter(payload: { variables: {characterId: string}})
   removeCharacter(payload: { variables: {id: string}, refetchQueries: any, update: any })
-  setInProgress(payload: { variables: {inProgress: boolean}})
 }
 
 const remove = async (props: Props, characterId: string) => {
   trackEvent('EditCharacter: remove')
-  const { navigation, removeCharacter, setInProgress } = props
-  setInProgress({variables: { inProgress: true }})
-  try {
-    await removeCharacter({
-      variables: { id: characterId },
-      ...MutateCallbacks.RemoveCharacter(),
-    })
-    navigation.pop()
-  } catch (e) {
-    throw e
-  } finally {
-    setInProgress({variables: { inProgress: false }})
-  }
+  const { navigation, removeCharacter } = props
+  await removeCharacter({
+    variables: { id: characterId },
+    ...MutateCallbacks.RemoveCharacter(),
+  })
+  navigation.pop()
 }
 
 const Screen = (props: Props) => (
@@ -81,7 +73,7 @@ const Screen = (props: Props) => (
             birthday={character.birthday}
             acquirements={acquirements}
             goLogs={() => props.navigation.navigate('Log', { characterId: character.id })}
-            goSkill={id => props.navigation.navigate('EditAcquirement', { acquirementId: id, characterId: character.id})}
+            goSkill={id => props.navigation.navigate('MyAcquirement', { acquirementId: id, characterId: character.id})}
           ></Acquirements>
         </Content>
       )
@@ -91,6 +83,5 @@ const Screen = (props: Props) => (
 
 export default compose(
   Graphql.RemoveCharacter(),
-  Graphql.SetInProgress(),
   Graphql.SelectCharacter(),
 )(Screen)
