@@ -36,8 +36,8 @@ const blockOrReport = (name: string, onBlockClick) => {
   ActionSheet.show(
     {
       options: [
-        { text: 'ブロックする', icon: 'ios-remove-circle', iconColor: '#f42ced' },
-        { text: 'キャンセル', icon: 'close', iconColor: '#25de5b' }
+        { text: 'ブロックする', icon: 'ios-remove-circle', iconColor: theme.brandWarning },
+        { text: 'キャンセル', icon: 'close', iconColor: theme.brandDark }
       ],
       cancelButtonIndex: 1,
       title: `${name}さんのできた！を`,

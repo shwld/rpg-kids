@@ -1,6 +1,7 @@
 import { ImagePicker, Permissions } from 'expo'
 import permit from './permit'
 import { ActionSheet } from 'native-base'
+import theme from '../../native-base-theme/variables/platform'
 
 const takePhoto = async () => {
   const canCamera = await permit(Permissions.CAMERA)
@@ -32,9 +33,9 @@ export default (callback: (uri: string) => any) => {
   ActionSheet.show(
     {
       options: [
-        { text: 'カメラ', icon: 'camera', iconColor: '#2c8ef4' },
-        { text: 'カメラロール', icon: 'file', iconColor: '#f42ced' },
-        { text: 'キャンセル', icon: 'close', iconColor: '#25de5b' }
+        { text: 'カメラ', icon: 'camera', iconColor: theme.brandDark },
+        { text: 'カメラロール', icon: 'file', iconColor: theme.brandDark },
+        { text: 'キャンセル', icon: 'close', iconColor: theme.brandDark }
       ],
       cancelButtonIndex: 2,
       title: '写真をアップロード',
