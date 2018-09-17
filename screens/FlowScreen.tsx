@@ -73,6 +73,7 @@ const renderItem = ({ item, index }, props: Props, refetch: Function) => {
   return (
     <AcquirementCard
       acquirement={item}
+      character={item.character}
       onCharacterClick={() => navigation.navigate('Status', {characterId: item.character.id})}
       onAcquirementClick={() => {}}
       onBlockClick={() => block(props, item.id, refetch)}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import MyStatus from '../screens/MyStatusScreen'
+import MyAcquirement from '../screens/MyAcquirementScreen'
 import Log from '../screens/LogScreen'
 import AddCharacter from '../screens/AddCharacterScreen'
 import EditCharacter from '../screens/EditCharacterScreen'
@@ -16,6 +17,13 @@ export default createStackNavigator({
     screen: HandleDeepLink(MyStatus),
     navigationOptions: {
       headerTitle: '情報・記録',
+      ...headerStyle,
+    },
+  },
+  MyAcquirement: {
+    screen: HandleDeepLink(MyAcquirement),
+    navigationOptions: {
+      headerTitle: 'これできた',
       ...headerStyle,
     },
   },
