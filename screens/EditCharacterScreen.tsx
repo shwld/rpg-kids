@@ -58,7 +58,7 @@ const Screen = (props: Props) => (
         return (
           <CharacterForm
             save={(values: formData) => save(props, values)}
-            handleSaveComplate={() => props.navigation.pop()}
+            handleSaveComplate={() => props.navigation.popToTop()}
             defaultValues={data.character}
           />
         )
