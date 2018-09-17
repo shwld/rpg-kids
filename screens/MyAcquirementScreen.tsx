@@ -52,7 +52,7 @@ class Screen extends React.Component<Props> {
     } finally {
       this.setState({inProgress: false})
     }
-    navigation.replace('MyStatus')
+    navigation.popToTop()
   }
 
   render() {
