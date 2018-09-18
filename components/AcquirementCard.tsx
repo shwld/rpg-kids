@@ -1,4 +1,5 @@
 import React from 'react'
+import { TouchableOpacity } from 'react-native'
 import {
   Body,
   Text,
@@ -66,10 +67,10 @@ export default ({ acquirement, character, onCharacterClick, onAcquirementClick, 
     <CardItem>
       <Grid>
         <Col style={{width: '90%'}}>
-          <Text onPress={() => onAcquirementClick()}>
+          <TouchableOpacity onPress={() => onAcquirementClick()} style={styles.inline}>
             <Lottie source={require('../assets/lottie/check_animation.json')} size={theme.noteFontSize} />
             <Text style={{color: theme.brandPrimary, fontSize: theme.noteFontSize}}> {acquirement.name}</Text>
-          </Text>
+          </TouchableOpacity>
         </Col>
         {(onBlockClick) && <Col style={{width: '10%'}}>
           <Icon
