@@ -58,6 +58,11 @@ ${this.state.url}
       Linking.openURL(url)
     }
 
+    makeInvitationSubject(name: string) {
+      const subject = `[みんなの成長]${name}に招待されました`
+      return encodeURIComponent(subject)
+    }
+
     render() {
       const name = this.state.character ? this.state.character.name : ''
       return (
@@ -70,11 +75,14 @@ ${this.state.url}
               <Text note>招待することで、{name}の成長を一緒に登録することができます</Text>
             </CardItem>
             <CardItem>
+              <Text note>（SMS、メールが開いたら宛先を設定してそのまま送信してください）</Text>
+            </CardItem>
+            <CardItem>
               <Button block primary style={styles.w100}>
                 <Icon name="ios-chatbubbles" />
                 <Text onPress={() => {
                   trackEvent('Invite: sms')
-                  this.open(this.makeInvitationText('sms:&body=', name))
+                  this.open(this.makeInvitationText('sms:?body=', name))
                 }}>SMSで招待する</Text>
               </Button>
             </CardItem>
@@ -83,7 +91,7 @@ ${this.state.url}
                 <Icon name="ios-mail" />
                 <Text onPress={() => {
                   trackEvent('Invite: mailto')
-                  this.open(this.makeInvitationText('mailto:?body=', name))
+                  this.open(this.makeInvitationText(`mailto:?subject=${this.makeInvitationSubject(name)}&body=`, name))
                 }}>メールで招待する</Text>
               </Button>
             </CardItem>
