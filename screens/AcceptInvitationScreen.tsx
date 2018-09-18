@@ -34,7 +34,7 @@ const accept = async (props: Props, id: string) => {
   const { acceptInvititation, selectCharacter,  navigation } = props
 
   const result = await acceptInvititation({variables: {id}})
-  if (result.data.acceptInvitation.invitation) {
+  if (!result.error && result.data.acceptInvitation.invitation) {
     await selectCharacter({variables: {characterId: result.data.acceptInvitation.invitation.characterId}})
   } else {
     Toast.show({
