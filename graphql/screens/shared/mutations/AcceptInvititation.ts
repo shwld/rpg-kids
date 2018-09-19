@@ -4,6 +4,9 @@ import { graphql } from 'react-apollo'
 const acceptInviteMutation = gql`
   mutation AcceptInvitation($id:ID!) {
     acceptInvitation(id: $id) {
+      invitation {
+        characterId
+      }
       errors
     }
 }

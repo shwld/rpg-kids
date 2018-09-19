@@ -38,7 +38,7 @@ const accept = async (props: Props, id: string) => {
   const { acceptInvititation, selectCharacter,  navigation } = props
 
   const result = await acceptInvititation({variables: {id}})
-  if (!result.data.acceptInvitation.errors && result.data.acceptInvitation.invitation) {
+  if (result.data.acceptInvitation.errors.length === 0 && result.data.acceptInvitation.invitation) {
     await selectCharacter({variables: {characterId: result.data.acceptInvitation.invitation.characterId}})
     Toast.show({
       text: '承認しました',
@@ -48,9 +48,8 @@ const accept = async (props: Props, id: string) => {
       type: 'success',
     })
   } else {
-    const text = result.data.acceptInvitation.errors.length > 0 ? result.data.acceptInvitation.errors[0] : '招待が見つからないか期限切れです'
     Toast.show({
-      text,
+      text: result.data.acceptInvitation.errors[0],
       buttonText: 'OK',
       duration: 3000,
       position: 'top',
