@@ -34,6 +34,7 @@ const remove = async (props: Props, characterId: string) => {
     buttonText: 'OK',
     duration: 3000,
     position: 'top',
+    type: 'success',
   })
   navigation.popToTop()
 }

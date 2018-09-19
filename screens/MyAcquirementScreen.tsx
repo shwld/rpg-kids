@@ -58,6 +58,7 @@ class Screen extends React.Component<Props> {
       buttonText: 'OK',
       duration: 3000,
       position: 'top',
+      type: 'success',
     })
     navigation.popToTop()
   }
