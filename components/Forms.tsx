@@ -72,7 +72,7 @@ export const DateInput = (props: DateInputProps) => (
       timeZoneOffsetInMinutes={undefined}
       modalTransparent={false}
       animationType={"fade"}
-      androidMode={"default"}
+      androidMode={"spinner"}
       placeHolderText={formatFromDate(props.item.value, 'YYYY年MMMDo') || '選択する'}
       textStyle={{ color: '#333' }}
       placeHolderTextStyle={{ color: '#d3d3d3' }}
