@@ -18,6 +18,10 @@ interface Props {
   selectCharacter(payload: { variables: {characterId: string}})
 }
 
+interface State {
+  inProgress: boolean
+}
+
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window')
 
 const start = async (props: Props, id: string) => {
@@ -34,17 +38,80 @@ const accept = async (props: Props, id: string) => {
   const { acceptInvititation, selectCharacter,  navigation } = props
 
   const result = await acceptInvititation({variables: {id}})
-  if (!result.error && result.data.acceptInvitation.invitation) {
+  if (!result.data.acceptInvitation.errors && result.data.acceptInvitation.invitation) {
     await selectCharacter({variables: {characterId: result.data.acceptInvitation.invitation.characterId}})
-  } else {
     Toast.show({
-      text: '招待が見つからないか期限切れです',
+      text: '承認しました',
       buttonText: 'OK',
       duration: 3000,
       position: 'top',
+      type: 'success',
+    })
+  } else {
+    const text = result.data.acceptInvitation.errors.length > 0 ? result.data.acceptInvitation.errors[0] : '招待が見つからないか期限切れです'
+    Toast.show({
+      text,
+      buttonText: 'OK',
+      duration: 3000,
+      position: 'top',
+      type: 'warning',
     })
   }
   navigation.navigate('MyStatus')
+}
+
+class Screen extends React.Component<Props, State> {
+  state: State = {
+    inProgress: false,
+  }
+
+  render() {
+    return (
+      <Component.GetSignInState query={Query.GetSignInState}>
+        {({data, loading}) => {
+          if (isEmpty(data) || !data || loading) {
+            return <AppLoading />
+          }
+          const id = getParam(this.props, 'id')
+          return (
+            <ImageBackground
+              source={require('../assets/splash.png')}
+              resizeMode='stretch'
+              style={{
+                flex: 1,
+                width: viewportWidth,
+                height: viewportHeight,
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+            }}>
+              {data.state.user.isSignedIn && <View>
+                <Button
+                  disabled={this.state.inProgress}
+                  style={{marginBottom: 50, alignSelf: 'center'}}
+                  onPress={() => accept(this.props, id)}
+                >
+                  <Text>{this.state.inProgress ? '招待を承認しています...' : '招待を承認する'}</Text>
+                </Button>
+              </View>}
+              {!data.state.user.isSignedIn && <View>
+                <Text
+                  style={{marginBottom: 20, alignSelf: 'center'}}
+                  onPress={() => WebBrowser.openBrowserAsync('https://shwld.net/seicho/terms-of-service/')}
+                >利用規約</Text>
+                <Button
+                  disabled={this.state.inProgress}
+                  style={{marginBottom: 50, alignSelf: 'center'}}
+                  onPress={() => start(this.props, id)}
+                >
+                  <Text>{this.state.inProgress ? 'もうすぐはじまります...' : '利用規約に同意してはじめる'}</Text>
+                </Button>
+              </View>}
+            </ImageBackground>
+          )
+        }}
+      </Component.GetSignInState>
+    )
+  }
 }
 
 export default compose(
@@ -52,46 +119,4 @@ export default compose(
   Graphql.CreateUser(),
   Graphql.AcceptInvititation(),
   Graphql.SelectCharacter(),
-)(props => (
-  <Component.GetSignInState query={Query.GetSignInState}>
-    {({data, loading}) => {
-      if (isEmpty(data) || !data || loading) {
-        return <AppLoading />
-      }
-      const id = getParam(props, 'id')
-      return (
-        <ImageBackground
-          source={require('../assets/splash.png')}
-          resizeMode='stretch'
-          style={{
-            flex: 1,
-            width: viewportWidth,
-            height: viewportHeight,
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-        }}>
-          {data.state.user.isSignedIn && <View>
-            <Button
-              style={{marginBottom: 50, alignSelf: 'center'}}
-              onPress={() => accept(props, id)}
-            >
-              <Text>招待を承認する</Text>
-            </Button>
-          </View>}
-          {!data.state.user.isSignedIn && <View>
-            <Text
-              style={{marginBottom: 20, alignSelf: 'center'}}
-              onPress={() => WebBrowser.openBrowserAsync('https://shwld.net/seicho/terms-of-service/')}
-            >利用規約</Text>
-            <Button
-              style={{marginBottom: 50, alignSelf: 'center'}}
-              onPress={() => start(props, id)}
-            >
-              <Text>利用規約に同意してはじめる</Text>
-            </Button>
-          </View>}
-        </ImageBackground>
-      )
-    }}
-  </Component.GetSignInState>
-))
+)(Screen)

@@ -6,6 +6,7 @@ import {
   Text,
   Body,
   Button,
+  Toast,
 } from 'native-base'
 import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
@@ -27,6 +28,12 @@ const remove = async (props: Props, characterId: string) => {
   await removeCharacter({
     variables: { id: characterId },
     ...MutateCallbacks.RemoveCharacter(),
+  })
+  Toast.show({
+    text: '削除しました',
+    buttonText: 'OK',
+    duration: 3000,
+    position: 'top',
   })
   navigation.popToTop()
 }

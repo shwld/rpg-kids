@@ -11,6 +11,7 @@ import {
   Button,
   Text,
   View,
+  Toast,
 } from 'native-base'
 import { compose } from 'react-apollo'
 import getParam from '../lib/utils/getParam'
@@ -52,6 +53,12 @@ class Screen extends React.Component<Props> {
     } finally {
       this.setState({inProgress: false})
     }
+    Toast.show({
+      text: '削除しました',
+      buttonText: 'OK',
+      duration: 3000,
+      position: 'top',
+    })
     navigation.popToTop()
   }
 
