@@ -59,6 +59,7 @@ interface DateInputProps {
   label: string
   onChange(item: InputDate)
   item: InputDate
+  androidMode?: 'spinner'|'calendar'
 }
 
 export const DateInput = (props: DateInputProps) => (
@@ -72,7 +73,7 @@ export const DateInput = (props: DateInputProps) => (
       timeZoneOffsetInMinutes={undefined}
       modalTransparent={false}
       animationType={"fade"}
-      androidMode={"spinner"}
+      androidMode={props.androidMode || 'spinner'}
       placeHolderText={formatFromDate(props.item.value, 'YYYY年MMMDo') || '選択する'}
       textStyle={{ color: '#333' }}
       placeHolderTextStyle={{ color: '#d3d3d3' }}
