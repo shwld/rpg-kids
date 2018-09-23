@@ -4,7 +4,6 @@ import { compose } from 'react-apollo'
 import { Content } from 'native-base'
 import { uploadToFireStorage, generatePublicMediaUrl } from '../lib/firebase'
 import CharacterForm, { State as formData } from '../components/CharacterForm'
-import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import { profileImagePath } from '../lib/utils/imageHelper'
 import { Component, Query, Graphql } from '../graphql/screens/EditCharacter'
@@ -56,9 +55,7 @@ const Screen = (props: Props) => (
         if (error || !data) {
           return <Error navigation={props.navigation} />
         }
-        if (isEmpty(data) || loading) {
-          return <Loading />
-        }
+        if (loading) { return <Loading /> }
         return (
           <CharacterForm
             save={(values: formData) => save(props, values)}

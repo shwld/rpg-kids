@@ -12,7 +12,6 @@ import {
 import { FlatList } from 'react-native'
 import { NetworkStatus } from 'apollo-client'
 import getAge from '../lib/utils/getAge'
-import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import { Component, Query } from '../graphql/screens/Log'
 import { trackEvent } from '../lib/analytics'
@@ -74,11 +73,9 @@ export default (props: Props) => (
       if (error || !data) {
         return <Error navigation={props.navigation} />
       }
-      if (isEmpty(data) || loading) {
-        return <Loading />
-      }
+      if (loading) { return <Loading /> }
 
-      if (isEmpty(data) || !data || data.character.acquirements.edges.length === 0) {
+      if (data.character.acquirements.edges.length === 0) {
         return (
           <Body style={{justifyContent: 'center', alignItems: 'stretch'}}>
             <Text onPress={() => props.navigation.pop()} note style={{textAlign: 'center'}}>まだ何もできないみたいだね</Text>

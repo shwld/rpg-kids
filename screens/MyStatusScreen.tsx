@@ -1,5 +1,4 @@
 import React from "react"
-import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import {
   Content,
@@ -10,7 +9,6 @@ import {
 } from 'native-base'
 import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
-import isEmpty from '../lib/utils/isEmpty'
 import { compose } from 'react-apollo'
 import { Query, Component, Getter, Graphql, MutateCallbacks } from '../graphql/screens/MyStatus'
 import { trackEvent } from '../lib/analytics'
@@ -47,9 +45,7 @@ const Screen = (props: Props) => (
       if (error || !data) {
         return <Error navigation={props.navigation} />
       }
-      if (isEmpty(data) || loading) {
-        return <Loading />
-      }
+      if (loading) { return <Loading /> }
 
       const characters = data.user.characters.edges.map(it => it.node)
       const character = Getter.getCurrentCharacter(data)

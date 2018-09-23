@@ -14,7 +14,6 @@ import {
 } from 'native-base'
 import { compose } from 'react-apollo'
 import getParam from '../lib/utils/getParam'
-import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query, Graphql, MutateCallbacks } from '../graphql/screens/MyAcquirement'
 import { trackEvent } from '../lib/analytics'
 import AcquirementCard from '../components/AcquirementCard'
@@ -83,9 +82,7 @@ class Screen extends React.Component<Props> {
             if (error || !data) {
               return <Error navigation={navigation} />
             }
-            if (isEmpty(data) || loading) {
-              return <Loading />
-            }
+            if (loading) { return <Loading /> }
             return (
               <View>
                 <AcquirementCard

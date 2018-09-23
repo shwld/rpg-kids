@@ -5,7 +5,6 @@ import { compose } from 'react-apollo'
 import { List, Toast } from 'native-base'
 import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
-import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query, Graphql } from '../graphql/screens/Flow'
 import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
@@ -94,9 +93,7 @@ export default compose(
       if (error || !data) {
         return <Error navigation={props.navigation} />
       }
-      if (isEmpty(data) || loading) {
-        return <Loading />
-      }
+      if (loading) { return <Loading /> }
 
       return (
         <List>

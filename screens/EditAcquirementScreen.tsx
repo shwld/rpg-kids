@@ -4,7 +4,6 @@ import { Content } from 'native-base'
 import { compose } from 'react-apollo'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
-import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query, Graphql } from '../graphql/screens/EditAcquirement'
 import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
@@ -47,9 +46,7 @@ const Screen = (props: Props) => (
         if (error || !data) {
           return <Error navigation={props.navigation} />
         }
-        if (isEmpty(data) || loading) {
-          return <Loading />
-        }
+        if (loading) { return <Loading /> }
         return (
           <AcquirementForm
             save={(data: formData) => save(props, data)}

@@ -1,12 +1,11 @@
 import React from "react"
-import { WebBrowser, AppLoading } from 'expo'
+import { WebBrowser } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import { compose } from 'react-apollo'
 import { Query, Component, Graphql } from '../graphql/screens/AcceptInvitation'
 import { ImageBackground, Dimensions } from 'react-native'
 import { Text, Button, View, Toast } from 'native-base'
 import { trackEvent } from '../lib/analytics'
-import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
@@ -73,9 +72,7 @@ class Screen extends React.Component<Props, State> {
           if (error || !data) {
             return <Error navigation={this.props.navigation} />
           }
-          if (isEmpty(data) || loading) {
-            return <Loading />
-          }
+          if (loading) { return <Loading /> }
           const id = getParam(this.props, 'id')
           return (
             <ImageBackground
