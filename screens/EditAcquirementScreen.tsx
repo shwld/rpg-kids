@@ -1,13 +1,13 @@
 import React from "react"
-import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import { Content } from 'native-base'
 import { compose } from 'react-apollo'
 import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
-import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query, Graphql } from '../graphql/screens/EditAcquirement'
 import { trackEvent } from '../lib/analytics'
+import Loading from '../components/Loading'
+import Error from '../components/Error'
 
 
 interface Props {
@@ -42,10 +42,11 @@ const Screen = (props: Props) => (
       }}
       fetchPolicy="cache-and-network"
     >
-      {({data, loading}) => {
-        if (isEmpty(data) || !data || loading) {
-          return <AppLoading />
+      {({data, loading, error}) => {
+        if (error || !data) {
+          return <Error navigation={props.navigation} />
         }
+        if (loading) { return <Loading /> }
         return (
           <AcquirementForm
             save={(data: formData) => save(props, data)}

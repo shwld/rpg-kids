@@ -1,9 +1,11 @@
 import React from 'react'
-import { AppLoading, Linking } from 'expo'
+import { Linking } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import { Graphql } from '../graphql/screens/Entry'
 import firebase from '../lib/firebase'
 import { setUserId, trackEvent } from '../lib/analytics'
+import Loading from '../components/Loading'
+
 
 interface Props {
   authenticate(): { data: { authenticate: boolean} }
@@ -32,7 +34,7 @@ class Entry extends React.Component<Props> {
   }
 
   render() {
-    return <AppLoading />
+    return <Loading />
   }
 
   setTrackingUserId() {

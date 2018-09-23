@@ -1,5 +1,4 @@
 import React from "react"
-import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import {
   Content,
@@ -7,8 +6,10 @@ import {
 import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
 import getParam from '../lib/utils/getParam'
-import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query } from '../graphql/screens/Status'
+import Loading from '../components/Loading'
+import Error from '../components/Error'
+
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -20,10 +21,11 @@ export default (props: Props) => (
     variables={{id: getParam(props, 'characterId')}}
     fetchPolicy="cache-and-network"
   >
-    {({data, loading}) => {
-      if (isEmpty(data) || !data || loading) {
-        return <AppLoading />
+    {({data, loading, error}) => {
+      if (error || !data) {
+        return <Error navigation={props.navigation} />
       }
+      if (loading) { return <Loading /> }
 
       const character = data.character
       const acquirements = character.acquirements.edges.map(it => it.node)

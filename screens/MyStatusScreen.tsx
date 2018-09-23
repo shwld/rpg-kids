@@ -1,5 +1,4 @@
 import React from "react"
-import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import {
   Content,
@@ -10,10 +9,11 @@ import {
 } from 'native-base'
 import Status from '../components/Status'
 import Acquirements from '../components/Acquirements'
-import isEmpty from '../lib/utils/isEmpty'
 import { compose } from 'react-apollo'
 import { Query, Component, Getter, Graphql, MutateCallbacks } from '../graphql/screens/MyStatus'
 import { trackEvent } from '../lib/analytics'
+import Loading from '../components/Loading'
+import Error from '../components/Error'
 
 
 interface Props {
@@ -41,10 +41,11 @@ const remove = async (props: Props, characterId: string) => {
 
 const Screen = (props: Props) => (
   <Component.GetUser query={Query.GetUser} fetchPolicy="cache-and-network">
-    {({data, loading}) => {
-      if (isEmpty(data) || !data || loading) {
-        return <AppLoading />
+    {({data, loading, error}) => {
+      if (error || !data) {
+        return <Error navigation={props.navigation} />
       }
+      if (loading) { return <Loading /> }
 
       const characters = data.user.characters.edges.map(it => it.node)
       const character = Getter.getCurrentCharacter(data)

@@ -1,14 +1,15 @@
 import React from "react"
-import { AppLoading } from 'expo'
 import AcquirementCard from '../components/AcquirementCard'
 import { Alert, FlatList } from 'react-native'
 import { compose } from 'react-apollo'
 import { List, Toast } from 'native-base'
 import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
-import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query, Graphql } from '../graphql/screens/Flow'
 import { trackEvent } from '../lib/analytics'
+import Loading from '../components/Loading'
+import Error from '../components/Error'
+
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -83,15 +84,16 @@ const renderItem = ({ item, index }, props: Props, refetch: Function) => {
 
 export default compose(
   Graphql.BlockAcquirement<Props>(),
-)(props => (
+)((props: Props) => (
   <Component.GetAcquirements
     query={Query.GetAcquirements}
     fetchPolicy="cache-and-network"
   >
-    {({data, refetch, networkStatus, loading}) => {
-      if (isEmpty(data) || !data || loading) {
-        return <AppLoading />
+    {({data, refetch, networkStatus, loading, error}) => {
+      if (error || !data) {
+        return <Error navigation={props.navigation} />
       }
+      if (loading) { return <Loading /> }
 
       return (
         <List>
