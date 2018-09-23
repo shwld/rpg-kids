@@ -1,5 +1,4 @@
 import React from "react"
-import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import formatFromDate from '../lib/utils/formatFromDate'
 import {
@@ -17,6 +16,9 @@ import isEmpty from '../lib/utils/isEmpty'
 import getParam from '../lib/utils/getParam'
 import { Component, Query } from '../graphql/screens/Log'
 import { trackEvent } from '../lib/analytics'
+import Loading from '../components/Loading'
+import Error from '../components/Error'
+
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -68,8 +70,13 @@ export default (props: Props) => (
     variables={{id: getParam(props, 'characterId'), cursor: null}}
     fetchPolicy="cache-and-network"
   >
-    {({data, refetch, networkStatus, loading}) => {
-      if (loading) { return <AppLoading /> }
+    {({data, refetch, networkStatus, loading, error}) => {
+      if (error || !data) {
+        return <Error navigation={props.navigation} />
+      }
+      if (isEmpty(data) || loading) {
+        return <Loading />
+      }
 
       if (isEmpty(data) || !data || data.character.acquirements.edges.length === 0) {
         return (

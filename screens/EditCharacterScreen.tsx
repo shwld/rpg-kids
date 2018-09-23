@@ -1,5 +1,4 @@
 import React from 'react'
-import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import { compose } from 'react-apollo'
 import { Content } from 'native-base'
@@ -11,6 +10,8 @@ import { profileImagePath } from '../lib/utils/imageHelper'
 import { Component, Query, Graphql } from '../graphql/screens/EditCharacter'
 import { trackEvent } from '../lib/analytics'
 import formatFromDate from '../lib/utils/formatFromDate'
+import Loading from '../components/Loading'
+import Error from '../components/Error'
 
 
 interface Props {
@@ -51,9 +52,12 @@ const Screen = (props: Props) => (
       variables={{id: getParam(props, 'characterId')}}
       fetchPolicy="cache-and-network"
     >
-      {({data, loading}) => {
-        if (isEmpty(data) || !data || loading) {
-          return <AppLoading />
+      {({data, loading, error}) => {
+        if (error || !data) {
+          return <Error navigation={props.navigation} />
+        }
+        if (isEmpty(data) || loading) {
+          return <Loading />
         }
         return (
           <CharacterForm

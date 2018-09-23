@@ -1,6 +1,5 @@
 import React from "react"
 import { Alert } from 'react-native'
-import { AppLoading } from 'expo'
 import { NavigationScreenProp } from 'react-navigation'
 import styles from '../styles'
 import {
@@ -19,6 +18,8 @@ import isEmpty from '../lib/utils/isEmpty'
 import { Component, Query, Graphql, MutateCallbacks } from '../graphql/screens/MyAcquirement'
 import { trackEvent } from '../lib/analytics'
 import AcquirementCard from '../components/AcquirementCard'
+import Loading from '../components/Loading'
+import Error from '../components/Error'
 
 
 interface Props {
@@ -78,9 +79,12 @@ class Screen extends React.Component<Props> {
           }}
           fetchPolicy="cache-and-network"
         >
-          {({data, loading}) => {
-            if (isEmpty(data) || !data || loading) {
-              return <AppLoading />
+          {({data, loading, error}) => {
+            if (error || !data) {
+              return <Error navigation={navigation} />
+            }
+            if (isEmpty(data) || loading) {
+              return <Loading />
             }
             return (
               <View>

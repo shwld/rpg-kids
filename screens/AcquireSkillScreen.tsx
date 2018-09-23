@@ -7,6 +7,7 @@ import AcquirementForm, { State as formData } from '../components/AcquirementFor
 import { Graphql, MutateCallbacks } from '../graphql/screens/AcquireSkill'
 import { trackEvent } from '../lib/analytics'
 
+
 interface Props {
   characterId: string
   navigation: NavigationScreenProp<any, any>
