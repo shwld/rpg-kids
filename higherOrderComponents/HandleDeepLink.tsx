@@ -8,6 +8,19 @@ interface Props {
 }
 
 export default Screen => class extends React.Component<Props> {
+  async componentWillMount() {
+    const initialUrl = await Linking.getInitialURL()
+    if (initialUrl !== Linking.makeUrl('')) {
+      const { path, queryParams } = Linking.parse(initialUrl)
+      trackEvent('InitialUrl has params', {path, queryParams})
+      switch (path) {
+        case ('invitation/accept'):
+          this.props.navigation.navigate('AcceptInvitation', queryParams)
+          return
+      }
+    }
+  }
+
   componentDidMount() {
     Linking.addEventListener('url', e => this.handleUrl(e.url))
   }
@@ -28,6 +41,6 @@ export default Screen => class extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url')
+    Linking.removeEventListener('url', e => this.handleUrl(e.url))
   }
 }
