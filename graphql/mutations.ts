@@ -30,6 +30,19 @@ export default {
     cache.writeQuery(signInQuery(true))
     return true
   },
+  createEmailAndPasswordCredential: async (_obj, {email, password}: {email: string, password: string}, { cache }: { cache }) => {
+    try {
+      const currentUser = firebase.auth().currentUser
+      if (!currentUser) { return false }
+      const credential = await firebase.auth.EmailAuthProvider.credential(email, password)
+      await currentUser.linkAndRetrieveDataWithCredential(credential)
+    } catch (e) {
+      console.warn(e)
+      return false
+    }
+    cache.writeQuery(signInQuery(true))
+    return true
+  },
   authenticate: async (_obj, _args, { cache }: { cache }) => {
     const isSignedIn: boolean = await authenticate()
     cache.writeQuery(signInQuery(isSignedIn))
