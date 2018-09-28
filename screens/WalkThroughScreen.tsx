@@ -27,7 +27,7 @@ const start = async (props: Props) => {
 export default compose(
   Graphql.SignInAnonymously(),
   Graphql.CreateUser(),
-)(props => (
+)((props: Props) => (
   <ImageBackground
     source={require('../assets/splash.png')}
     resizeMode='stretch'
@@ -43,10 +43,14 @@ export default compose(
       onPress={() => WebBrowser.openBrowserAsync('https://shwld.net/seicho/terms-of-service/')}
     >利用規約</Text>
     <Button
-      style={{marginBottom: 50, alignSelf: 'center'}}
+      style={{marginBottom: 20, alignSelf: 'center'}}
       onPress={() => start(props)}
     >
       <Text>利用規約に同意してはじめる</Text>
     </Button>
+    <Text
+      style={{marginBottom: 50}}
+      onPress={() => props.navigation.navigate('SignIn')}
+    >既にアカウントをお持ちの方はこちら</Text>
   </ImageBackground>
 ))
