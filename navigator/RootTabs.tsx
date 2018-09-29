@@ -2,6 +2,7 @@ import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation'
 import Flow from './FlowStacks'
 import MyStatus from './StatusStacks'
+import AcquireSkill from './AcquireSkillStacks'
 import Config from './ConfigStacks'
 import TabBarIcon from '../components/TabBarIcon'
 import { footerStyle } from '../styles'
@@ -20,9 +21,19 @@ export default createBottomTabNavigator({
   MyStatus: {
     screen: MyStatus,
     navigationOptions: {
-      tabBarLabel: '情報・記録',
+      tabBarLabel: '状態',
       tabBarIcon: (elem) => (
         TabBarIcon('happy', elem)
+      ),
+      tabBarOptions: footerStyle,
+    },
+  },
+  AcquireSkill: {
+    screen: AcquireSkill,
+    navigationOptions: {
+      tabBarLabel: '記録',
+      tabBarIcon: (elem) => (
+        TabBarIcon('add-circle', elem)
       ),
       tabBarOptions: footerStyle,
     },
