@@ -36,5 +36,7 @@ export interface State {
 }
 
 export interface UserState {
-  isSignedIn: false
+  isSignedIn: boolean
+  hasEmail: boolean
+  email: string
 }
