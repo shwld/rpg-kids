@@ -26,7 +26,6 @@ interface Props {
   selectableCharacters?: Character[],
   changeCharacter?: (id: string) => any,
   addCharacter?: () => any,
-  goGetSkill?: () => any,
   options?: OptionActions,
 }
 
@@ -69,7 +68,7 @@ const selectAction = (options: OptionActions) => {
   )
 }
 
-export default ({character, selectableCharacters, goGetSkill, addCharacter = () => {}, changeCharacter = () => {}, options}: Props) => (
+export default ({character, selectableCharacters, addCharacter = () => {}, changeCharacter = () => {}, options}: Props) => (
   <Card style={{flex: 0}}>
     <CardItem style={{justifyContent: 'center', alignItems: 'center'}}>
       <CharacterIcon
@@ -104,9 +103,6 @@ export default ({character, selectableCharacters, goGetSkill, addCharacter = () 
         <Text note>{getAge(character.birthday, new Date())}</Text>
         <Text>{character.description}</Text>
       </Body>
-      {goGetSkill && <Button bordered onPress={() => goGetSkill()}>
-        <Text>これできた登録</Text>
-      </Button>}
     </CardItem>
   </Card>
 )

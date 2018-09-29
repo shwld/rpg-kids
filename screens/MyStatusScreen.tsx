@@ -68,7 +68,6 @@ const Screen = (props: Props) => (
           <Status
             character={character}
             selectableCharacters={characters}
-            goGetSkill={() => props.navigation.navigate('AcquireSkill', {characterId: character.id})}
             options={{
               editCharacter: () => props.navigation.navigate('EditCharacter', {characterId: character.id}),
               removeCharacter: () => remove(props, character.id),
