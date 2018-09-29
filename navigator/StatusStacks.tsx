@@ -5,7 +5,6 @@ import MyAcquirement from '../screens/MyAcquirementScreen'
 import Log from '../screens/LogScreen'
 import AddCharacter from '../screens/AddCharacterScreen'
 import EditCharacter from '../screens/EditCharacterScreen'
-import AcquireSkill from '../screens/AcquireSkillScreen'
 import EditAcquirement from '../screens/EditAcquirementScreen'
 import Invite from '../screens/InviteScreen'
 import { headerStyle } from '../styles'
@@ -45,13 +44,6 @@ export default createStackNavigator({
     screen: HandleDeepLink(Log),
     navigationOptions: {
       headerTitle: '成長ログ',
-      ...headerStyle,
-    },
-  },
-  AcquireSkill: {
-    screen: HandleDeepLink(AcquireSkill),
-    navigationOptions: {
-      headerTitle: 'これできた を登録',
       ...headerStyle,
     },
   },
