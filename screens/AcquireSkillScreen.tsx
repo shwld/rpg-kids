@@ -31,8 +31,6 @@ export default compose(
 )((props: Props) => (
   <CharacterStatus
     navigation={props.navigation}
-    useOptions={false}
-    canAddCharacter={false}
     render={({character}) => (
       <AcquirementForm
         save={(data: formData) => save(props, data, character.id)}

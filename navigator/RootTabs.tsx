@@ -11,7 +11,7 @@ export default createBottomTabNavigator({
   Flow: {
     screen: Flow,
     navigationOptions: {
-      tabBarLabel: 'みんなの成長',
+      tabBarLabel: 'みんな',
       tabBarIcon: (elem) => (
         TabBarIcon('stats', elem)
       ),
@@ -41,7 +41,7 @@ export default createBottomTabNavigator({
   Config: {
     screen: Config,
     navigationOptions: {
-      tabBarLabel: 'オプション',
+      tabBarLabel: '設定',
       tabBarIcon: (elem) => (
         TabBarIcon('settings', elem)
       ),
