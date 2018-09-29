@@ -1,24 +1,20 @@
 import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
-import { Content } from 'native-base'
 import { compose } from 'react-apollo'
-import getParam from '../lib/utils/getParam'
 import AcquirementForm, { State as formData } from '../components/AcquirementForm'
 import { Graphql, MutateCallbacks } from '../graphql/screens/AcquireSkill'
 import { trackEvent } from '../lib/analytics'
+import CharacterStatus from '../containers/CharacterStatus'
 
 
 interface Props {
-  characterId: string
   navigation: NavigationScreenProp<any, any>
   acquireSkill(payload: { variables: {characterId: string, name: string, acquiredAt: Date}, refetchQueries: any, update: any })
 }
 
-
-const save = async (props: Props, data: formData) => {
+const save = async (props: Props, data: formData, characterId: string) => {
   trackEvent('AcquireSkill: save')
-  const { navigation, acquireSkill } = props
-  const characterId = getParam({navigation}, 'characterId')
+  const { acquireSkill } = props
   const { name, acquiredAt } = data
   await acquireSkill({
     variables: {
@@ -33,10 +29,15 @@ const save = async (props: Props, data: formData) => {
 export default compose(
   Graphql.AcquireSkill(),
 )((props: Props) => (
-  <Content>
-    <AcquirementForm
-      save={(data: formData) => save(props, data)}
-      handleSaveComplate={() => props.navigation.popToTop()}
-    />
-  </Content>
+  <CharacterStatus
+    navigation={props.navigation}
+    useOptions={false}
+    canAddCharacter={false}
+    render={({character}) => (
+      <AcquirementForm
+        save={(data: formData) => save(props, data, character.id)}
+        handleSaveComplate={() => props.navigation.popToTop()}
+      />
+    )}
+  />
 ))

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
-import { Query as MyStatusQuery } from '../../MyStatus'
+import { Query as StatusQuery } from '../../shared/CharacterStatus'
 import { Query as FlowQuery } from '../../Flow'
 
 
@@ -40,9 +40,9 @@ export const mutateCallbacks = () => ({
     query: FlowQuery.GetAcquirements,
   }],
   update: (store, result) => {
-    const data = store.readQuery({ query: MyStatusQuery.GetUser })
+    const data = store.readQuery({ query: StatusQuery.GetUser })
     data.user = result.data.removeCharacter.user
-    store.writeQuery({ query: MyStatusQuery.GetUser, data })
+    store.writeQuery({ query: StatusQuery.GetUser, data })
   },
 })
 

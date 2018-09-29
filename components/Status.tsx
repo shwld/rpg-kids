@@ -27,6 +27,7 @@ interface Props {
   changeCharacter?: (id: string) => any,
   addCharacter?: () => any,
   options?: OptionActions,
+  canAddCharacter?: boolean
 }
 
 const NEW_CHARACTER_ID = '__new'
@@ -68,7 +69,11 @@ const selectAction = (options: OptionActions) => {
   )
 }
 
-export default ({character, selectableCharacters, addCharacter = () => {}, changeCharacter = () => {}, options}: Props) => (
+const makeSelections = (characters: any[], canAddCharacter?: boolean) => (
+  characters.concat(canAddCharacter !== false ? [{name: '子供を追加', id: NEW_CHARACTER_ID}] : [])
+)
+
+export default ({character, selectableCharacters, addCharacter = () => {}, changeCharacter = () => {}, options, canAddCharacter}: Props) => (
   <Card style={{flex: 0}}>
     <CardItem style={{justifyContent: 'center', alignItems: 'center'}}>
       <CharacterIcon
@@ -85,12 +90,10 @@ export default ({character, selectableCharacters, addCharacter = () => {}, chang
           onValueChange={id => {
             if (id === NEW_CHARACTER_ID) { return addCharacter() }
             changeCharacter(id)
-          }}
-        >
-          {selectableCharacters.map((c) => (
+          }}>
+          {makeSelections(selectableCharacters, canAddCharacter).map((c) => (
             <Picker.Item key={c.id} label={c.name} value={c.id} />
           ))}
-          <Picker.Item label="子供を追加" value={NEW_CHARACTER_ID} />
         </Picker>
       )}
       {!selectableCharacters && (
@@ -98,11 +101,11 @@ export default ({character, selectableCharacters, addCharacter = () => {}, chang
       )}
       {options && <Icon name="settings" onPress={() => selectAction(options)} />}
     </CardItem>
-    <CardItem style={{justifyContent: 'space-around', alignItems: 'center'}}>
+    {options && <CardItem style={{justifyContent: 'space-around', alignItems: 'center'}}>
       <Body style={{flexDirection: 'column', justifyContent: 'space-around'}}>
         <Text note>{getAge(character.birthday, new Date())}</Text>
         <Text>{character.description}</Text>
       </Body>
-    </CardItem>
+    </CardItem>}
   </Card>
 )
