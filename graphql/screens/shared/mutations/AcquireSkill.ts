@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
-import { Query as MyStatusQuery } from '../../MyStatus'
+import { Query as StatusQuery } from '../../shared/CharacterStatus'
 import { Query as FlowQuery } from '../../Flow'
 
 const acquireSkillMutation = gql`
@@ -21,14 +21,14 @@ export const mutateCallbacks = (characterId: string) => ({
     query: FlowQuery.GetAcquirements,
   }],
   update: (store, result) => {
-    const data = store.readQuery({ query: MyStatusQuery.GetUser })
+    const data = store.readQuery({ query: StatusQuery.GetUser })
     const character = data.user.characters.edges.map(it => it.node).find(it => it.id === characterId)
     if (!character) { return }
     character.acquirements.edges = [
       { node: result.data.acquireSkill.acquirement, __typename: 'AcquirementEdge' },
       ...character.acquirements.edges
     ]
-    store.writeQuery({ query: MyStatusQuery.GetUser, data })
+    store.writeQuery({ query: StatusQuery.GetUser, data })
   },
 })
 

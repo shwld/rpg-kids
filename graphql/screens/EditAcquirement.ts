@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import { Query as ApolloQuery } from 'react-apollo'
 import { Character } from '../types'
-import { Query as MyStatusQuery, Getter as MyStatusGetter } from './MyStatus'
+import { Query as StatusQuery, Getter as StatusGetter } from './shared/CharacterStatus'
 import EditAcquirement, { mutateCallbacks as EditAcquirementMutateCallbacks } from './shared/mutations/EditAcquirement'
 
 
@@ -31,12 +31,12 @@ const getAcquirementQuery = gql`
 class GetAcquirement extends ApolloQuery<GetAcquirementResponse, GetAcquirementVariables> {}
 
 export const Query = {
-  GetUser: MyStatusQuery.GetUser,
+  GetUser: StatusQuery.GetUser,
   GetAcquirement: getAcquirementQuery,
 }
 
 export const Getter = {
-  GetCharacter: MyStatusGetter.getCharacter,
+  GetCharacter: StatusGetter.getCharacter,
 }
 
 export const Component = {
