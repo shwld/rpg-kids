@@ -4,6 +4,7 @@ import RootTabs from './RootTabs'
 import EntryScreen from '../screens/EntryScreen'
 import WalkThroughScreen from '../screens/WalkThroughScreen'
 import AcceptInvitationScreen from '../screens/AcceptInvitationScreen'
+import SignInScreen from '../screens/SignInScreen'
 import { trackEvent } from '../lib/analytics'
 
 const getRoute = (navigationState) => {
@@ -21,6 +22,7 @@ const Navigator = createSwitchNavigator(
     App: RootTabs,
     WalkThrough: WalkThroughScreen,
     AcceptInvitation: AcceptInvitationScreen,
+    SignIn: SignInScreen,
   },
   {
     initialRouteName: 'Entry',

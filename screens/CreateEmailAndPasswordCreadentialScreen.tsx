@@ -27,7 +27,7 @@ const create = async (props: Props, data: formData) => {
 
 const complete = async (props: Props) => {
   const { navigation } = props
-  navigation.navigate('App')
+  navigation.popToTop()
 }
 
 export default compose(

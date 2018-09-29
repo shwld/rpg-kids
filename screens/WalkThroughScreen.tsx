@@ -49,6 +49,7 @@ export default compose(
       <Text>利用規約に同意してはじめる</Text>
     </Button>
     <Text
+      note
       style={{marginBottom: 50}}
       onPress={() => props.navigation.navigate('SignIn')}
     >既にアカウントをお持ちの方はこちら</Text>

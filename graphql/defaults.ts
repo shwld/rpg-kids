@@ -3,8 +3,10 @@ export default {
     __typename: 'State',
     selectedCharacterId: '',
     user: {
-      isSignedIn: false,
       __typename: 'User',
+      isSignedIn: false,
+      hasEmail: false,
+      email: '',
     }
   }
 }

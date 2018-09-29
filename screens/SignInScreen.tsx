@@ -2,6 +2,7 @@ import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
 import { Content } from 'native-base'
 import { compose } from 'react-apollo'
+import { Text } from 'native-base'
 import { Graphql } from '../graphql/screens/SignIn'
 import { trackEvent } from '../lib/analytics'
 import EmailAndPasswordForm, { State as formData } from '../components/EmailAndPasswordForm'
@@ -37,6 +38,7 @@ export default compose(
   Graphql.CreateUser(),
 )(props => (
   <Content>
+    <Text style={{marginTop: 100, marginBottom: 20, textAlign: 'center'}}>ログインする</Text>
     <EmailAndPasswordForm
       submit={(data: formData) => signIn(props, data)}
       handleSubmitComplate={() => complete(props)}
