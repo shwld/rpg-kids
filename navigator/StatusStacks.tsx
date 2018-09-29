@@ -15,7 +15,7 @@ export default createStackNavigator({
   MyStatus: {
     screen: HandleDeepLink(MyStatus),
     navigationOptions: {
-      headerTitle: '情報・記録',
+      headerTitle: '子供の状態',
       ...headerStyle,
     },
   },
