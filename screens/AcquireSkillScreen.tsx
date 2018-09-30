@@ -37,5 +37,6 @@ export default compose(
         handleSaveComplate={() => props.navigation.popToTop()}
       />
     )}
+    hideDetails={true}
   />
 ))

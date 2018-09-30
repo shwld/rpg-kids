@@ -21,6 +21,7 @@ interface Props {
   removeCharacter(payload: { variables: {id: string}, refetchQueries: any, update: any })
   useOptions?: boolean
   canAddCharacter?: boolean
+  hideDetails?: boolean
 }
 
 const remove = async (props: Props, characterId: string) => {
@@ -69,6 +70,7 @@ const Screen = (props: Props) => (
             canAddCharacter={props.canAddCharacter !== false}
             changeCharacter={characterId => props.selectCharacter({variables: {characterId}})}
             addCharacter={() => props.navigation.navigate('AddCharacter')}
+            hideDetails={props.hideDetails}
           ></Status>
           {props.render({character, characters, acquirements})}
         </Content>
