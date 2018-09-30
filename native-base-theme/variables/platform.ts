@@ -103,7 +103,7 @@ export default {
   checkboxTickColor: "#fff",
 
   // Color
-  brandPrimary: platform === "ios" ? "#C76B63" : "#C76B63",
+  brandPrimary: "#C76B63",
   brandInfo: "#62B1F6",
   brandSuccess: "#A7D283",
   brandDanger: "#d9534f",
@@ -140,10 +140,10 @@ export default {
   // FooterTab
   tabBarTextColor: '#ccc',
   tabBarTextSize: platform === "ios" ? 14 : 11,
-  activeTab: platform === "ios" ? "#C76B63" : "#fff",
+  activeTab: "#fff",
   sTabBarActiveTextColor: "#C76B63",
   tabBarActiveTextColor: '#fff',
-  tabActiveBgColor: platform === "ios" ? "#cde1f9" : "#3F51B5",
+  tabActiveBgColor: "#cde1f9",
 
   // Header
   toolbarBtnColor: platform === "ios" ? "#C76B63" : "#fff",
@@ -227,11 +227,11 @@ export default {
   inverseSpinnerColor: "#1A191B",
 
   // Tab
-  tabDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
-  topTabBarTextColor: platform === "ios" ? "#6b6b6b" : "#b3c7f9",
+  tabDefaultBg: platform === "ios" ? "#F8F8F8" : "#C76B63",
+  topTabBarTextColor: platform === "ios" ? "#6b6b6b" : "#ccc",
   topTabBarActiveTextColor: platform === "ios" ? "#C76B63" : "#fff",
-  topTabBarBorderColor: platform === "ios" ? "#a7a6ab" : "#fff",
-  topTabBarActiveBorderColor: platform === "ios" ? "#C76B63" : "#fff",
+  topTabBarBorderColor: platform === "ios" ? "#a7a6ab" : "#a7a6ab",
+  topTabBarActiveBorderColor: platform === "ios" ? "#C76B63" : "#FFF",
 
   // Tabs
   tabBgColor: "#F8F8F8",
