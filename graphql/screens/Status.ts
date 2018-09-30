@@ -16,6 +16,7 @@ const getCharacterQuery = gql`
       birthday
       description
       imageUrl
+      acquirementsCount
       acquirements(first: 5) {
         edges {
           node {
