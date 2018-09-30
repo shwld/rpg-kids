@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default (props: Props) => (
-  <Tabs>
+  <Tabs locked={true}>
     <Tab heading={ <TabHeading><Text>みんな</Text></TabHeading>}>
       <Flow {...props} />
     </Tab>
