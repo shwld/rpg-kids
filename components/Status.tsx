@@ -6,7 +6,6 @@ import {
   Card,
   CardItem,
   Icon,
-  Button,
   Picker,
   ActionSheet,
 } from 'native-base'
@@ -28,6 +27,7 @@ interface Props {
   addCharacter?: () => any,
   options?: OptionActions,
   canAddCharacter?: boolean
+  hideDetails?: boolean
 }
 
 const NEW_CHARACTER_ID = '__new'
@@ -73,7 +73,7 @@ const makeSelections = (characters: any[], canAddCharacter?: boolean) => (
   characters.concat(canAddCharacter !== false ? [{name: '子供を追加', id: NEW_CHARACTER_ID}] : [])
 )
 
-export default ({character, selectableCharacters, addCharacter = () => {}, changeCharacter = () => {}, options, canAddCharacter}: Props) => (
+export default ({character, selectableCharacters, addCharacter = () => {}, changeCharacter = () => {}, options, canAddCharacter, hideDetails}: Props) => (
   <Card style={{flex: 0}}>
     <CardItem style={{justifyContent: 'center', alignItems: 'center'}}>
       <CharacterIcon
@@ -101,9 +101,9 @@ export default ({character, selectableCharacters, addCharacter = () => {}, chang
       )}
       {options && <Icon name="settings" onPress={() => selectAction(options)} />}
     </CardItem>
-    {options && <CardItem style={{justifyContent: 'space-around', alignItems: 'center'}}>
+    {!hideDetails && <CardItem style={{justifyContent: 'space-around', alignItems: 'center'}}>
       <Body style={{flexDirection: 'column', justifyContent: 'space-around'}}>
-        <Text note>{getAge(character.birthday, new Date())}</Text>
+        <Text note>{getAge(character.birthday, new Date())}  できること: {character.acquirementsCount}個</Text>
         <Text>{character.description}</Text>
       </Body>
     </CardItem>}

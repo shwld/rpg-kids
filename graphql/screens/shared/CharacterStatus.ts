@@ -17,6 +17,7 @@ query GetUser {
           birthday
           description
           imageUrl
+          acquirementsCount
           acquirements(first: 5) {
             edges {
               node {

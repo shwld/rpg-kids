@@ -21,6 +21,7 @@ export interface Character {
   description?: string
   imageUrl?: string
   acquirements: RelayConnection<Acquirement>
+  acquirementsCount: number
   acquirement: Acquirement
 }
 

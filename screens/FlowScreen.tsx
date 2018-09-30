@@ -58,7 +58,7 @@ const block = async (props: Props, acquirementId: string, refetch: Function) => 
       position: 'top',
     })
   }
-  
+
   Alert.alert(
     'ブロックします',
     'よろしいですか?',
@@ -91,7 +91,7 @@ export default compose(
   >
     {({data, refetch, networkStatus, loading, error}) => {
       if (error || !data) {
-        return <Error navigation={props.navigation} />
+        return <Error beforeAction={() => refetch({cursor: null})} navigation={props.navigation} />
       }
       if (loading) { return <Loading /> }
 

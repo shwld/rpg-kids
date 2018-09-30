@@ -8,9 +8,10 @@ import { NavigationScreenProp } from 'react-navigation'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
+  beforeAction?: () => Promise<Function>
 }
 
-export default (props: Props) => (
+export default ({beforeAction, navigation}: Props) => (
   <View style={StyleSheet.absoluteFill} >
     <Lottie
       source={require('../assets/lottie/trashbox.json')}
@@ -19,7 +20,10 @@ export default (props: Props) => (
     <Text note style={{textAlign: 'center'}}>申し訳ありません。何か問題が起こったようです。</Text>
     <Button
       block
-      onPress={() => props.navigation.navigate('App')}
+      onPress={async () => {
+        if (beforeAction) { await beforeAction() }
+        navigation.navigate('App')
+      }}
       style={{margin: 30}}
     >
       <Text>トップに戻る</Text>
