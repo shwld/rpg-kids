@@ -8,7 +8,7 @@ import { NavigationScreenProp } from 'react-navigation'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
-  beforeAction?: () => Promise<Function>
+  beforeAction?: () => Promise<any>
 }
 
 export default ({beforeAction, navigation}: Props) => (
