@@ -15,7 +15,7 @@ import { Character, Acquirement } from '../graphql/types'
 
 
 interface Props {
-  render: (payload: {character: Character, characters: Character[], acquirements: Acquirement[]}) => JSX.Element
+  render: (payload: {character: Character, characters: Character[], acquirements: Acquirement[], refetch: Function}) => JSX.Element
   navigation: NavigationScreenProp<any, any>
   selectCharacter(payload: { variables: {characterId: string}})
   removeCharacter(payload: { variables: {id: string}, refetchQueries: any, update: any })
@@ -43,7 +43,7 @@ const remove = async (props: Props, characterId: string) => {
 
 const Screen = (props: Props) => (
   <Component.GetUser query={Query.GetUser} fetchPolicy="cache-and-network">
-    {({data, loading, error}) => {
+    {({data, loading, error, refetch}) => {
       if (error || !data) {
         return <Error navigation={props.navigation} />
       }
@@ -72,7 +72,7 @@ const Screen = (props: Props) => (
             addCharacter={() => props.navigation.navigate('AddCharacter')}
             hideDetails={props.hideDetails}
           ></Status>
-          {props.render({character, characters, acquirements})}
+          {props.render({character, characters, acquirements, refetch})}
         </Content>
       )
     }}

@@ -31,10 +31,10 @@ export default compose(
 )((props: Props) => (
   <CharacterStatus
     navigation={props.navigation}
-    render={({character}) => (
+    render={({character, refetch}) => (
       <AcquirementForm
         save={(data: formData) => save(props, data, character.id)}
-        handleSaveComplate={() => props.navigation.popToTop()}
+        handleSaveComplate={() => refetch()}
       />
     )}
     hideDetails={true}
