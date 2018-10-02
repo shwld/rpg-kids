@@ -17,27 +17,29 @@ interface Props {
 }
 
 const onEndReached = (data) => {
-  const { pageInfo: { endCursor, hasNextPage } } = data.acquirements
-  if (!hasNextPage) { return }
-  trackEvent('Flow: onEndReached')
-  data.fetchMore({
-    query: Query.GetAcquirements,
-    variables: { ...data.variables, cursor: endCursor },
-    updateQuery: (previousResult, { fetchMoreResult }) => {
-      const newEdges = fetchMoreResult.acquirements.edges
-      const pageInfo = fetchMoreResult.acquirements.pageInfo
+  // FIXME: undefined is not a function (evaluating 'e.fetchMore')
 
-      if (!newEdges.length) { return previousResult }
+  // const { pageInfo: { endCursor, hasNextPage } } = data.acquirements
+  // if (!hasNextPage) { return }
+  // trackEvent('Flow: onEndReached')
+  // data.fetchMore({
+  //   query: Query.GetAcquirements,
+  //   variables: { ...data.variables, cursor: endCursor },
+  //   updateQuery: (previousResult, { fetchMoreResult }) => {
+  //     const newEdges = fetchMoreResult.acquirements.edges
+  //     const pageInfo = fetchMoreResult.acquirements.pageInfo
 
-      fetchMoreResult.acquirements = {
-        __typename: previousResult.acquirements.__typename,
-        edges: [...previousResult.acquirements.edges, ...newEdges],
-        pageInfo,
-      }
+  //     if (!newEdges.length) { return previousResult }
 
-      return fetchMoreResult
-    }
-  })
+  //     fetchMoreResult.acquirements = {
+  //       __typename: previousResult.acquirements.__typename,
+  //       edges: [...previousResult.acquirements.edges, ...newEdges],
+  //       pageInfo,
+  //     }
+
+  //     return fetchMoreResult
+  //   }
+  // })
 }
 
 const block = async (props: Props, acquirementId: string, refetch: Function) => {
