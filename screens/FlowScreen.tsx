@@ -2,13 +2,14 @@ import React from "react"
 import AcquirementCard from '../components/AcquirementCard'
 import { Alert, FlatList } from 'react-native'
 import { compose } from 'react-apollo'
-import { List, Toast } from 'native-base'
+import { List } from 'native-base'
 import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
 import { Component, Query, Graphql } from '../graphql/screens/Flow'
 import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
+import Toast from '../lib/Toast'
 
 
 interface Props {
@@ -54,11 +55,7 @@ const block = async (props: Props, acquirementId: string, refetch: Function) => 
       update: (store, result) => refetch(),
     })
     navigation.pop()
-    Toast.show({
-      text: 'ブロックしました',
-      buttonText: 'OK',
-      position: 'top',
-    })
+    Toast.success('ブロックしました')
   }
 
   Alert.alert(

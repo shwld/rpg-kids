@@ -3,9 +3,10 @@ import { NavigationScreenProp } from 'react-navigation'
 import { compose } from 'react-apollo'
 import { Graphql } from '../graphql/screens/AcceptInvitation'
 import { ImageBackground, Dimensions } from 'react-native'
-import { Text, Button, Toast } from 'native-base'
+import { Text, Button } from 'native-base'
 import { trackEvent } from '../lib/analytics'
 import getParam from '../lib/utils/getParam'
+import Toast from '../lib/Toast'
 
 
 interface Props {
@@ -28,13 +29,7 @@ const accept = async (props: Props, id: string) => {
   if (result.data.acceptInvitation.errors.length === 0 && result.data.acceptInvitation.invitation) {
     await selectCharacter({variables: {characterId: result.data.acceptInvitation.invitation.characterId}})
   } else {
-    Toast.show({
-      text: result.data.acceptInvitation.errors[0],
-      buttonText: 'OK',
-      duration: 3000,
-      position: 'top',
-      type: 'warning',
-    })
+    Toast.warning(result.data.acceptInvitation.errors[0])
   }
   navigation.navigate('MyStatus')
 }

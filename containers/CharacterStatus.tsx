@@ -2,7 +2,6 @@ import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
 import {
   Content,
-  Toast,
 } from 'native-base'
 import Status from '../components/Status'
 import EmptyChild from '../components/EmptyChild'
@@ -12,6 +11,7 @@ import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
 import { Character, Acquirement } from '../graphql/types'
+import Toast from '../lib/Toast'
 
 
 interface Props {
@@ -31,13 +31,7 @@ const remove = async (props: Props, characterId: string) => {
     variables: { id: characterId },
     ...MutateCallbacks.RemoveCharacter(),
   })
-  Toast.show({
-    text: '削除しました',
-    buttonText: 'OK',
-    duration: 3000,
-    position: 'top',
-    type: 'success',
-  })
+  Toast.success('削除しました')
   navigation.popToTop()
 }
 
