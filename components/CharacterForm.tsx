@@ -7,13 +7,13 @@ import {
   CardItem,
   Body,
   Icon,
-  Toast,
 } from 'native-base'
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
 import CharacterIcon from './CharacterIcon'
 import toDate from '../lib/utils/toDate'
 import { Character } from '../graphql/types'
+import Toast from '../lib/Toast'
 
 interface Props {
   defaultValues?: Character
@@ -69,13 +69,7 @@ export default class extends React.Component<Props, State> {
 
   async save() {
     if (!this.valid()) {
-      Toast.show({
-        text: '入力内容に誤りがあります',
-        buttonText: 'OK',
-        duration: 3000,
-        position: 'top',
-        type: 'warning',
-      })
+      Toast.warning('入力内容に誤りがあります')
       return
     }
     this.setState({inProgress: true})
@@ -84,13 +78,7 @@ export default class extends React.Component<Props, State> {
     } finally {
       this.setState({inProgress: false})
     }
-    Toast.show({
-      text: '登録しました',
-      buttonText: 'OK',
-      duration: 3000,
-      position: 'top',
-      type: 'success',
-    })
+    Toast.success('登録しました')
     this.props.handleSaveComplate()
   }
 
@@ -120,7 +108,7 @@ export default class extends React.Component<Props, State> {
               onChange={name => this.setState({name})}
               item={this.state.name}
             />
-            <DateInput 
+            <DateInput
               label='誕生日'
               onChange={birthday => this.setState({birthday})}
               item={this.state.birthday}

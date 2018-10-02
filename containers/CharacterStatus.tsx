@@ -2,7 +2,6 @@ import React from "react"
 import { NavigationScreenProp } from 'react-navigation'
 import {
   Content,
-  Toast,
 } from 'native-base'
 import Status from '../components/Status'
 import EmptyChild from '../components/EmptyChild'
@@ -12,10 +11,11 @@ import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
 import { Character, Acquirement } from '../graphql/types'
+import Toast from '../lib/Toast'
 
 
 interface Props {
-  render: (payload: {character: Character, characters: Character[], acquirements: Acquirement[]}) => JSX.Element
+  render: (payload: {character: Character, characters: Character[], acquirements: Acquirement[], refetch: Function}) => JSX.Element
   navigation: NavigationScreenProp<any, any>
   selectCharacter(payload: { variables: {characterId: string}})
   removeCharacter(payload: { variables: {id: string}, refetchQueries: any, update: any })
@@ -31,19 +31,13 @@ const remove = async (props: Props, characterId: string) => {
     variables: { id: characterId },
     ...MutateCallbacks.RemoveCharacter(),
   })
-  Toast.show({
-    text: '削除しました',
-    buttonText: 'OK',
-    duration: 3000,
-    position: 'top',
-    type: 'success',
-  })
+  Toast.success('削除しました')
   navigation.popToTop()
 }
 
 const Screen = (props: Props) => (
   <Component.GetUser query={Query.GetUser} fetchPolicy="cache-and-network">
-    {({data, loading, error}) => {
+    {({data, loading, error, refetch}) => {
       if (error || !data) {
         return <Error navigation={props.navigation} />
       }
@@ -72,7 +66,7 @@ const Screen = (props: Props) => (
             addCharacter={() => props.navigation.navigate('AddCharacter')}
             hideDetails={props.hideDetails}
           ></Status>
-          {props.render({character, characters, acquirements})}
+          {props.render({character, characters, acquirements, refetch})}
         </Content>
       )
     }}

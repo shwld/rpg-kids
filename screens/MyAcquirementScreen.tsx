@@ -10,7 +10,6 @@ import {
   Button,
   Text,
   View,
-  Toast,
 } from 'native-base'
 import { compose } from 'react-apollo'
 import getParam from '../lib/utils/getParam'
@@ -19,6 +18,7 @@ import { trackEvent } from '../lib/analytics'
 import AcquirementCard from '../components/AcquirementCard'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
+import Toast from '../lib/Toast'
 
 
 interface Props {
@@ -53,13 +53,7 @@ class Screen extends React.Component<Props> {
     } finally {
       this.setState({inProgress: false})
     }
-    Toast.show({
-      text: '削除しました',
-      buttonText: 'OK',
-      duration: 3000,
-      position: 'top',
-      type: 'success',
-    })
+    Toast.success('削除しました')
     navigation.popToTop()
   }
 

@@ -2,13 +2,14 @@ import React from "react"
 import AcquirementCard from '../components/AcquirementCard'
 import { Alert, FlatList } from 'react-native'
 import { compose } from 'react-apollo'
-import { List, Toast } from 'native-base'
+import { List } from 'native-base'
 import { NavigationScreenProp } from 'react-navigation'
 import { NetworkStatus } from 'apollo-client'
 import { Component, Query, Graphql } from '../graphql/screens/Flow'
 import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
+import Toast from '../lib/Toast'
 
 
 interface Props {
@@ -17,27 +18,29 @@ interface Props {
 }
 
 const onEndReached = (data) => {
-  const { pageInfo: { endCursor, hasNextPage } } = data.acquirements
-  if (!hasNextPage) { return }
-  trackEvent('Flow: onEndReached')
-  data.fetchMore({
-    query: Query.GetAcquirements,
-    variables: { ...data.variables, cursor: endCursor },
-    updateQuery: (previousResult, { fetchMoreResult }) => {
-      const newEdges = fetchMoreResult.acquirements.edges
-      const pageInfo = fetchMoreResult.acquirements.pageInfo
+  // FIXME: undefined is not a function (evaluating 'e.fetchMore')
 
-      if (!newEdges.length) { return previousResult }
+  // const { pageInfo: { endCursor, hasNextPage } } = data.acquirements
+  // if (!hasNextPage) { return }
+  // trackEvent('Flow: onEndReached')
+  // data.fetchMore({
+  //   query: Query.GetAcquirements,
+  //   variables: { ...data.variables, cursor: endCursor },
+  //   updateQuery: (previousResult, { fetchMoreResult }) => {
+  //     const newEdges = fetchMoreResult.acquirements.edges
+  //     const pageInfo = fetchMoreResult.acquirements.pageInfo
 
-      fetchMoreResult.acquirements = {
-        __typename: previousResult.acquirements.__typename,
-        edges: [...previousResult.acquirements.edges, ...newEdges],
-        pageInfo,
-      }
+  //     if (!newEdges.length) { return previousResult }
 
-      return fetchMoreResult
-    }
-  })
+  //     fetchMoreResult.acquirements = {
+  //       __typename: previousResult.acquirements.__typename,
+  //       edges: [...previousResult.acquirements.edges, ...newEdges],
+  //       pageInfo,
+  //     }
+
+  //     return fetchMoreResult
+  //   }
+  // })
 }
 
 const block = async (props: Props, acquirementId: string, refetch: Function) => {
@@ -52,11 +55,7 @@ const block = async (props: Props, acquirementId: string, refetch: Function) => 
       update: (store, result) => refetch(),
     })
     navigation.pop()
-    Toast.show({
-      text: 'ブロックしました',
-      buttonText: 'OK',
-      position: 'top',
-    })
+    Toast.success('ブロックしました')
   }
 
   Alert.alert(

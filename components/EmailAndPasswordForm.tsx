@@ -6,9 +6,9 @@ import {
   Body,
   Button,
   Text,
-  Toast,
 } from 'native-base'
 import { TextInput, InputString } from '../components/Forms'
+import Toast from '../lib/Toast'
 
 interface Props {
   defaultValues?: {
@@ -32,14 +32,6 @@ const getDefaultValue = (props: Props, propName: string, defaultValue: any = '')
   }
   return defaultValue
 }
-
-const showErrorToast = () => Toast.show({
-  text: 'Emailまたはパスワードに問題があります',
-  buttonText: 'OK',
-  duration: 3000,
-  position: 'top',
-  type: 'warning',
-})
 
 export default class extends React.Component<Props, State> {
   state: State = {
@@ -70,7 +62,7 @@ export default class extends React.Component<Props, State> {
     actionName = actionName || 'ログイン'
 
     if (!this.valid()) {
-      showErrorToast()
+      Toast.warning('Emailまたはパスワードに問題があります')
       return
     }
     this.setState({inProgress: true})
@@ -78,17 +70,11 @@ export default class extends React.Component<Props, State> {
       await this.props.submit(this.state)
       this.setState({inProgress: false})
     } catch(e) {
-      showErrorToast()
+      Toast.warning('Emailまたはパスワードに問題があります')
       this.setState({inProgress: false})
       return
     }
-    Toast.show({
-      text: `${actionName}しました`,
-      buttonText: 'OK',
-      duration: 3000,
-      position: 'top',
-      type: 'success',
-    })
+    Toast.success(`${actionName}しました`)
     this.props.handleSubmitComplate()
   }
 

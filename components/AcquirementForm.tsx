@@ -6,10 +6,10 @@ import {
   Body,
   Button,
   Text,
-  Toast,
 } from 'native-base'
 import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
 import toDate from '../lib/utils/toDate'
+import Toast from '../lib/Toast'
 
 interface Props {
   defaultValues?: {
@@ -59,13 +59,7 @@ export default class extends React.Component<Props, State> {
 
   async save() {
     if (!this.valid()) {
-      Toast.show({
-        text: '入力内容に誤りがあります',
-        buttonText: 'OK',
-        duration: 3000,
-        position: 'top',
-        type: 'warning',
-      })
+      Toast.warning('入力内容に誤りがあります')
       return
     }
     this.setState({inProgress: true})
@@ -74,13 +68,7 @@ export default class extends React.Component<Props, State> {
     } finally {
       this.setState({inProgress: false})
     }
-    Toast.show({
-      text: '登録しました',
-      buttonText: 'OK',
-      duration: 3000,
-      position: 'top',
-      type: 'success',
-    })
+    Toast.success('登録しました')
     this.props.handleSaveComplate()
   }
 
@@ -94,7 +82,7 @@ export default class extends React.Component<Props, State> {
               onChange={name => this.setState({name})}
               item={this.state.name}
             />
-            <DateInput 
+            <DateInput
               label='できた日'
               onChange={acquiredAt => this.setState({acquiredAt})}
               item={this.state.acquiredAt}
