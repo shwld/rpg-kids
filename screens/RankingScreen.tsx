@@ -14,11 +14,11 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
-const onEndReached = (data) => {
+const onEndReached = (data, fetchMore) => {
   const { pageInfo: { endCursor, hasNextPage } } = data.acquirementRankingsOfCharacter
   if (!hasNextPage) { return }
   trackEvent('Ranking: onEndReached')
-  data.fetchMore({
+  fetchMore({
     query: Query.GetCharacters,
     variables: { ...data.variables, cursor: endCursor },
     updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -51,7 +51,7 @@ export default (props: Props) => (
     query={Query.GetCharacters}
     fetchPolicy="cache-and-network"
   >
-    {({data, refetch, networkStatus, loading, error}) => {
+    {({data, refetch, networkStatus, loading, error, fetchMore}) => {
       if (error || !data) {
         return <Error beforeAction={() => refetch({cursor: null})} navigation={props.navigation} />
       }
@@ -62,7 +62,7 @@ export default (props: Props) => (
           <FlatList
             data={data.acquirementRankingsOfCharacter.edges.map(({node}) => ({key: node.id, ...node}))}
             onEndReachedThreshold={30}
-            onEndReached={() => onEndReached(data)}
+            onEndReached={() => onEndReached(data, fetchMore)}
             renderItem={(row) => renderItem(row, props, refetch)}
             refreshing={networkStatus === NetworkStatus.refetch}
             onRefresh={() => refetch({cursor: null})}

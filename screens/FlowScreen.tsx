@@ -17,30 +17,28 @@ interface Props {
   blockAcquirement(payload: { variables: {acquirementId: string}, update: any})
 }
 
-const onEndReached = (data) => {
-  // FIXME: undefined is not a function (evaluating 'e.fetchMore')
+const onEndReached = (data, fetchMore) => {
+  const { pageInfo: { endCursor, hasNextPage } } = data.acquirements
+  if (!hasNextPage) { return }
+  trackEvent('Flow: onEndReached')
+  fetchMore({
+    query: Query.GetAcquirements,
+    variables: { ...data.variables, cursor: endCursor },
+    updateQuery: (previousResult, { fetchMoreResult }) => {
+      const newEdges = fetchMoreResult.acquirements.edges
+      const pageInfo = fetchMoreResult.acquirements.pageInfo
 
-  // const { pageInfo: { endCursor, hasNextPage } } = data.acquirements
-  // if (!hasNextPage) { return }
-  // trackEvent('Flow: onEndReached')
-  // data.fetchMore({
-  //   query: Query.GetAcquirements,
-  //   variables: { ...data.variables, cursor: endCursor },
-  //   updateQuery: (previousResult, { fetchMoreResult }) => {
-  //     const newEdges = fetchMoreResult.acquirements.edges
-  //     const pageInfo = fetchMoreResult.acquirements.pageInfo
+      if (!newEdges.length) { return previousResult }
 
-  //     if (!newEdges.length) { return previousResult }
+      fetchMoreResult.acquirements = {
+        __typename: previousResult.acquirements.__typename,
+        edges: [...previousResult.acquirements.edges, ...newEdges],
+        pageInfo,
+      }
 
-  //     fetchMoreResult.acquirements = {
-  //       __typename: previousResult.acquirements.__typename,
-  //       edges: [...previousResult.acquirements.edges, ...newEdges],
-  //       pageInfo,
-  //     }
-
-  //     return fetchMoreResult
-  //   }
-  // })
+      return fetchMoreResult
+    }
+  })
 }
 
 const block = async (props: Props, acquirementId: string, refetch: Function) => {
@@ -88,7 +86,7 @@ export default compose(
     query={Query.GetAcquirements}
     fetchPolicy="cache-and-network"
   >
-    {({data, refetch, networkStatus, loading, error}) => {
+    {({data, refetch, networkStatus, loading, error, fetchMore}) => {
       if (error || !data) {
         return <Error beforeAction={() => refetch({cursor: null})} navigation={props.navigation} />
       }
@@ -99,7 +97,7 @@ export default compose(
           <FlatList
             data={data.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
             onEndReachedThreshold={30}
-            onEndReached={() => onEndReached(data)}
+            onEndReached={() => onEndReached(data, fetchMore)}
             renderItem={(row) => renderItem(row, props, refetch)}
             refreshing={networkStatus === NetworkStatus.refetch}
             onRefresh={() => refetch({cursor: null})}
