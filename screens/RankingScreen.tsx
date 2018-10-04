@@ -8,6 +8,7 @@ import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
 import CharacterCard from '../components/CharacterCard'
+import tryGet from '../lib/utils/tryGet'
 
 
 interface Props {
@@ -55,14 +56,15 @@ export default (props: Props) => (
       if (error || !data) {
         return <Error beforeAction={() => refetch({cursor: null})} navigation={props.navigation} />
       }
-      if (loading) { return <Loading /> }
 
+      let list = tryGet(() => data.acquirementRankingsOfCharacter.edges.map(({node}) => ({key: node.id, ...node})), null)
+      if (!list) { return <Loading /> }
       return (
         <List>
           <FlatList
-            data={data.acquirementRankingsOfCharacter.edges.map(({node}) => ({key: node.id, ...node}))}
+            data={list}
             onEndReachedThreshold={30}
-            onEndReached={() => onEndReached(data, fetchMore)}
+            onEndReached={() => !loading && onEndReached(data, fetchMore)}
             renderItem={(row) => renderItem(row, props, refetch)}
             refreshing={networkStatus === NetworkStatus.refetch}
             onRefresh={() => refetch({cursor: null})}

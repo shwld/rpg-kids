@@ -17,6 +17,7 @@ import { Component, Query } from '../graphql/screens/Log'
 import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
+import tryGet from '../lib/utils/tryGet'
 
 
 interface Props {
@@ -73,9 +74,11 @@ export default (props: Props) => (
       if (error || !data) {
         return <Error navigation={props.navigation} />
       }
-      if (loading) { return <Loading /> }
 
-      if (data.character.acquirements.edges.length === 0) {
+      let list = tryGet(() => data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node})), null)
+      if (!list) { return <Loading /> }
+
+      if (list.length === 0) {
         return (
           <Body style={{justifyContent: 'center', alignItems: 'stretch'}}>
             <Text onPress={() => props.navigation.pop()} note style={{textAlign: 'center'}}>まだ何もできないみたいだね</Text>
@@ -87,7 +90,7 @@ export default (props: Props) => (
       return (
         <List>
           <FlatList
-            data={data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
+            data={list}
             onEndReachedThreshold={30}
             onEndReached={() => onEndReached(data, fetchMore)}
             renderItem={(row) => renderItem(row, data.character, props.navigation)}
