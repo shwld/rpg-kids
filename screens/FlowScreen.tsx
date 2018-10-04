@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import AcquirementCard from '../components/AcquirementCard'
 import { Alert, FlatList } from 'react-native'
 import { compose } from 'react-apollo'
@@ -10,6 +10,7 @@ import { trackEvent } from '../lib/analytics'
 import Loading from '../components/Loading'
 import Error from '../components/Error'
 import Toast from '../lib/Toast'
+import tryGet from '../lib/utils/tryGet'
 
 
 interface Props {
@@ -90,14 +91,15 @@ export default compose(
       if (error || !data) {
         return <Error beforeAction={() => refetch({cursor: null})} navigation={props.navigation} />
       }
-      if (loading) { return <Loading /> }
 
+      let list = tryGet(() => data.acquirements.edges.map(({node}) => ({key: node.id, ...node})), null)
+      if (!list) { return <Loading /> }
       return (
         <List>
           <FlatList
-            data={data.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
-            onEndReachedThreshold={30}
-            onEndReached={() => onEndReached(data, fetchMore)}
+            data={list}
+            onEndReachedThreshold={0.5}
+            onEndReached={() => !loading && onEndReached(data, fetchMore)}
             renderItem={(row) => renderItem(row, props, refetch)}
             refreshing={networkStatus === NetworkStatus.refetch}
             onRefresh={() => refetch({cursor: null})}
