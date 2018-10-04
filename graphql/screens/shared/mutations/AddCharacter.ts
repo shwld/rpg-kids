@@ -27,14 +27,9 @@ const addCharacterMutation = gql`
 `
 
 export const mutateCallbacks = () => ({
-  update: (store, result) => {
-    const data = store.readQuery({ query: AddCharacterQuery.GetUser })
-    data.user.characters.edges = [
-      { node: result.data.addCharacter.character, __typename: 'CharacterEdge' },
-      ...data.user.characters.edges
-    ]
-    store.writeQuery({ query: AddCharacterQuery.GetUser, data })
-  },
+  refetchQueries: [{
+    query: AddCharacterQuery.GetUser,
+  }],
 })
 
 export default <T>() => {
