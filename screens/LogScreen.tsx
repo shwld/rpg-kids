@@ -23,11 +23,11 @@ interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
-const onEndReached = (data) => {
+const onEndReached = (data, fetchMore) => {
   const { pageInfo: { endCursor, hasNextPage } } = data.character.acquirements
   if (!hasNextPage) { return }
   trackEvent('Log: onEndReached')
-  data.fetchMore({
+  fetchMore({
     query: Query.GetCharacter,
     variables: { ...data.variables, cursor: endCursor },
     updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -69,7 +69,7 @@ export default (props: Props) => (
     variables={{id: getParam(props, 'characterId'), cursor: null}}
     fetchPolicy="cache-and-network"
   >
-    {({data, refetch, networkStatus, loading, error}) => {
+    {({data, refetch, networkStatus, loading, error, fetchMore}) => {
       if (error || !data) {
         return <Error navigation={props.navigation} />
       }
@@ -89,7 +89,7 @@ export default (props: Props) => (
           <FlatList
             data={data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node}))}
             onEndReachedThreshold={30}
-            onEndReached={() => onEndReached(data)}
+            onEndReached={() => onEndReached(data, fetchMore)}
             renderItem={(row) => renderItem(row, data.character, props.navigation)}
             refreshing={networkStatus === NetworkStatus.refetch}
             onRefresh={() => refetch({id: getParam(props, 'characterId'), cursor: null})}
