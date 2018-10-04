@@ -43,5 +43,10 @@ export default compose(
       submit={(data: formData) => signIn(props, data)}
       handleSubmitComplate={() => complete(props)}
     />
+    <Text
+      note
+      style={{marginTop: 50, textAlign: 'center'}}
+      onPress={() => props.navigation.navigate('WalkThrough')}
+    >戻る</Text>
   </Content>
 ))
