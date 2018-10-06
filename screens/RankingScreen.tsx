@@ -39,10 +39,9 @@ const onEndReached = (data, fetchMore) => {
   })
 }
 
-const renderItem = ({ item, index }, props: Props, refetch: Function) => (
+const renderItem = ({ item }, props: Props) => (
   <CharacterCard
     character={item}
-    rank={index+1}
     handlePress={() => props.navigation.navigate('Status', {characterId: item.id})}
   />
 )
@@ -65,7 +64,7 @@ export default (props: Props) => (
             data={list}
             onEndReachedThreshold={30}
             onEndReached={() => !loading && onEndReached(data, fetchMore)}
-            renderItem={(row) => renderItem(row, props, refetch)}
+            renderItem={(row) => renderItem(row, props)}
             refreshing={networkStatus === NetworkStatus.refetch}
             onRefresh={() => refetch({cursor: null})}
           />

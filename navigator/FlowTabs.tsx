@@ -16,10 +16,10 @@ interface Props {
 
 export default (props: Props) => (
   <Tabs locked={true}>
-    <Tab heading={ <TabHeading><Text>みんな</Text></TabHeading>}>
+    <Tab heading={ <TabHeading><Text>できたこと</Text></TabHeading>}>
       <Flow {...props} />
     </Tab>
-    <Tab heading={ <TabHeading><Text>ランキング</Text></TabHeading>}>
+    <Tab heading={ <TabHeading><Text>みんな</Text></TabHeading>}>
       <Ranking {...props} />
     </Tab>
   </Tabs>

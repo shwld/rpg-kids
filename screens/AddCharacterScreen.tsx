@@ -12,7 +12,7 @@ import formatFromDate from '../lib/utils/formatFromDate'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
-  addCharacter(payload: { variables: {name, birthday, description}, update: any })
+  addCharacter(payload: { variables: {name, birthday, description}, update?: any, refetchQueries?: any })
   editCharacter(payload: { variables: {id, imageUrl} })
   selectCharacter(payload: { variables: {characterId: string}})
 }
