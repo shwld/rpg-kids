@@ -45,7 +45,7 @@ export default compose(
     />
     <Text
       note
-      style={{marginTop: 50, textAlign: 'center'}}
+      style={{marginTop: 30, textAlign: 'center'}}
       onPress={() => props.navigation.navigate('WalkThrough')}
     >戻る</Text>
   </Content>
