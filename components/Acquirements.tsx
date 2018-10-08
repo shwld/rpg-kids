@@ -40,8 +40,8 @@ export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
       {acquirements.length === 0 && (
         <ListItem>
           <Body style={styles.stretch}>
-            <Text note>まだ何もできないみたいだね</Text>
-            <Text note>できたことを登録しよう！</Text>
+            <Text note>まだ何も記録されていないよ</Text>
+            <Text note>「記録」からできたことを登録しよう！</Text>
           </Body>
         </ListItem>
       )}

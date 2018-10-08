@@ -56,7 +56,7 @@ export default (props: Props) => (
         return <Error beforeAction={() => refetch({cursor: null})} navigation={props.navigation} />
       }
 
-      let list = tryGet(() => data.acquirementRankingsOfCharacter.edges.map(({node}) => ({key: node.id, ...node})), null)
+      let list = tryGet(() => data.acquirementRankingsOfCharacter.edges.map(({node}) => ({key: node.id, ...node})))
       if (!list) { return <Loading /> }
       return (
         <List>

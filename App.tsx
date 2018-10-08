@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform, StatusBar } from 'react-native'
+import { StatusBar } from 'react-native'
 import { Font, AppLoading } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
 import AuthSwitch from './navigator/AuthSwitch'
@@ -7,9 +7,9 @@ import { StyleProvider, Root } from 'native-base'
 import getTheme from './native-base-theme/components'
 import platform from './native-base-theme/variables/platform'
 import './lib/sentry'
+import isIOS from './lib/utils/isIOS'
 
 import Apollo  from './graphql/Apollo'
-const isIOS = Platform.OS === 'ios'
 
 
 class App extends React.Component {
