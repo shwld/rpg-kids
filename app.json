@@ -6,7 +6,7 @@
     "privacy": "unlisted",
     "sdkVersion": "28.0.0",
     "platforms": ["ios", "android"],
-    "version": "0.2.1",
+    "version": "0.2.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "rpgkids",
@@ -33,10 +33,15 @@
     },
     "android": {
       "package": "net.shwld.rpgkids",
-      "versionCode": 5,
+      "versionCode": 6,
       "permissions": [
         "CAMERA"
       ]
+    },
+    "androidStatusBarColor": "#C76B63",
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#C76B63"
     },
     "packagerOpts": {
       "sourceExts": ["ts", "tsx"],
