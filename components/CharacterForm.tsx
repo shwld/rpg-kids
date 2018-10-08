@@ -8,7 +8,8 @@ import {
   Body,
   Icon,
 } from 'native-base'
-import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
+import TextInput, { InputString } from '../components/forms/TextInput'
+import DateInput, { InputDate } from '../components/forms/DateInput'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
 import CharacterIcon from './CharacterIcon'
 import toDate from '../lib/utils/toDate'

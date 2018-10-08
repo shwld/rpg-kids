@@ -3,10 +3,7 @@ import {
   Item,
   Input,
   Label,
-  DatePicker,
 } from 'native-base'
-import formatFromDate from '../lib/utils/formatFromDate'
-import subYears from 'date-fns/sub_years'
 import { Platform } from 'react-native'
 
 export interface InputString {
@@ -26,12 +23,12 @@ interface TextInputProps {
   keyboardType?: 'default'|'email-address'|'numeric'|'phone-pad'|'ascii-capable'|'numbers-and-punctuation'|'url'|'number-pad'|'name-phone-pad'|'decimal-pad'|'twitter'|'web-search'|'visible-password'
 }
 
-export class TextInput extends React.Component<TextInputProps> {
+export default class extends React.Component<TextInputProps> {
   /**
    * iOSかつreact native0.54.2以降でTextInputでonChangeTextを使うと日本語変換ができなくなる
    * http://watanabeyu.blogspot.com/2018/04/react-native0542textinputonchangetext.html
-   * @param nextProps 
-   * @param nextState 
+   * @param nextProps
+   * @param nextState
    */
   shouldComponentUpdate(nextProps: TextInputProps){
     // input valueが変更された場合はコンポーネントを更新させない
@@ -66,37 +63,3 @@ export class TextInput extends React.Component<TextInputProps> {
     )
   }
 }
-
-export interface InputDate {
-  value: Date
-  validate(value: Date): boolean
-  isDirty?: boolean
-}
-
-interface DateInputProps {
-  label: string
-  onChange(item: InputDate)
-  item: InputDate
-  androidMode?: 'spinner'|'calendar'
-}
-
-export const DateInput = (props: DateInputProps) => (
-  <Item stackedLabel error={props.item.isDirty && !props.item.validate(props.item.value)}>
-    <Label>{props.label}</Label>
-    <DatePicker
-      defaultDate={props.item.value}
-      minimumDate={subYears(new Date(), 10)}
-      maximumDate={new Date()}
-      locale={'ja'}
-      timeZoneOffsetInMinutes={undefined}
-      modalTransparent={false}
-      animationType={"fade"}
-      androidMode={props.androidMode || 'spinner'}
-      placeHolderText={formatFromDate(props.item.value, 'YYYY年MMMDo') || '選択する'}
-      textStyle={{ color: '#333' }}
-      placeHolderTextStyle={{ color: '#d3d3d3' }}
-      onDateChange={value => props.onChange({ ...props.item, value, isDirty: true })}
-      formatChosenDate={date => formatFromDate(date, 'YYYY年MMMDo')}
-    />
-  </Item>
-)

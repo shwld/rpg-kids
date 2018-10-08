@@ -7,7 +7,8 @@ import {
   Button,
   Text,
 } from 'native-base'
-import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
+import TextInput, { InputString } from '../components/forms/TextInput'
+import DateInput, { InputDate } from '../components/forms/DateInput'
 import toDate from '../lib/utils/toDate'
 import Toast from '../lib/Toast'
 
