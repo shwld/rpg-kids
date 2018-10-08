@@ -8,12 +8,15 @@ import {
   Body,
   Icon,
 } from 'native-base'
-import { TextInput, DateInput, InputString, InputDate } from '../components/Forms'
+import TextInput, { InputString } from '../components/forms/TextInput'
+import DateInput, { InputDate } from '../components/forms/DateInput'
+import PickerInput, { InputSelection } from '../components/forms/PickerInput'
 import imagePicker from '../lib/nativeHelpers/imagePicker'
 import CharacterIcon from './CharacterIcon'
 import toDate from '../lib/utils/toDate'
 import { Character } from '../graphql/types'
 import Toast from '../lib/Toast'
+import SEXES from '../lib/constants/sexes'
 
 interface Props {
   defaultValues?: Character
@@ -34,6 +37,7 @@ export interface State {
   birthday: InputDate
   description: InputString
   imageUri: string
+  sex: InputSelection
 }
 
 export default class extends React.Component<Props, State> {
@@ -52,6 +56,10 @@ export default class extends React.Component<Props, State> {
       validate: value => (value.trim() !== ''),
     },
     imageUri: getDefaultValue(this.props, 'imageUrl', null),
+    sex: {
+      value: getDefaultValue(this.props, 'sex', 'not_known'),
+      validate: value => (value.trim() !== ''),
+    },
   }
 
   valid() {
@@ -117,6 +125,12 @@ export default class extends React.Component<Props, State> {
               label='ひとこと'
               onChange={description => this.setState({description})}
               item={this.state.description}
+            />
+            <PickerInput
+              label='性別'
+              onChange={sex => this.setState({sex})}
+              item={this.state.sex}
+              choice={SEXES}
             />
           </Body>
         </CardItem>

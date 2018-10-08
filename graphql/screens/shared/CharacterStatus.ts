@@ -16,6 +16,7 @@ query GetUser {
           name
           birthday
           description
+          sex
           imageUrl
           acquirementsCount
           acquirements(first: 5) {

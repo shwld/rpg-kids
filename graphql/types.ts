@@ -20,6 +20,7 @@ export interface Character {
   birthday: Date
   description?: string
   imageUrl?: string
+  sex?: string
   acquirements: RelayConnection<Acquirement>
   acquirementsCount: number
   acquirement: Acquirement

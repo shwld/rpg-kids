@@ -16,7 +16,7 @@ import Error from '../components/Error'
 interface Props {
   characterId: string
   navigation: NavigationScreenProp<any, any>
-  editCharacter(payload: { variables: {id, name, birthday, description, imageUrl} , update: any})
+  editCharacter(payload: { variables: {id, name, birthday, description, imageUrl, sex} , update: any})
   removeCharacter(payload: { variables: {id: string}, refetchQueries: any, update: any })
   selectCharacter(payload: { variables: {characterId: string}})
 }
@@ -25,7 +25,7 @@ const save = async (props: Props, values: formData) => {
   trackEvent('EditCharacter: save')
   const characterId = getParam(props, 'characterId')
   const { editCharacter, selectCharacter } = props
-  const { name, birthday, description, imageUri } = values
+  const { name, birthday, description, imageUri, sex } = values
   const imagePath = profileImagePath(characterId)
   await editCharacter({
     variables: {
@@ -34,6 +34,7 @@ const save = async (props: Props, values: formData) => {
       birthday: formatFromDate(birthday.value, 'YYYY/MM/DD'),
       description: description.value,
       imageUrl: imageUri ? generatePublicMediaUrl(imagePath, new Date()) : null,
+      sex: sex.value,
     },
     update: (store, result) => {
       selectCharacter({ variables: { characterId }})

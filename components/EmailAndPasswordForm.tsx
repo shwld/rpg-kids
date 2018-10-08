@@ -7,7 +7,7 @@ import {
   Button,
   Text,
 } from 'native-base'
-import { TextInput, InputString } from '../components/Forms'
+import TextInput, { InputString } from '../components/forms/TextInput'
 import Toast from '../lib/Toast'
 
 interface Props {
