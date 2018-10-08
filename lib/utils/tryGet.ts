@@ -1,4 +1,4 @@
-export default (action: Function, defaultValue: any) => {
+export default (action: Function, defaultValue: any = null) => {
   try {
     return action()
   } catch(e) {

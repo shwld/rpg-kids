@@ -75,7 +75,7 @@ export default (props: Props) => (
         return <Error navigation={props.navigation} />
       }
 
-      let list = tryGet(() => data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node})), null)
+      let list = tryGet(() => data.character.acquirements.edges.map(({node}) => ({key: node.id, ...node})))
       if (!list) { return <Loading /> }
 
       if (list.length === 0) {
