@@ -12,7 +12,7 @@ import formatFromDate from '../lib/utils/formatFromDate'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
-  addCharacter(payload: { variables: {name, birthday, description}, update?: any, refetchQueries?: any })
+  addCharacter(payload: { variables: {name, birthday, description, sex}, update?: any, refetchQueries?: any })
   editCharacter(payload: { variables: {id, imageUrl} })
   selectCharacter(payload: { variables: {characterId: string}})
 }
@@ -21,12 +21,13 @@ interface Props {
 const save = async (props: Props, data: formData) => {
   trackEvent('AddCharacter: save')
   const { addCharacter, editCharacter, selectCharacter } = props
-  const { name, birthday, description, imageUri } = data
+  const { name, birthday, description, imageUri, sex } = data
   const result = await addCharacter({
     variables: {
       name: name.value,
       birthday: formatFromDate(birthday.value, 'YYYY/MM/DD'),
       description: description.value,
+      sex: sex.value,
     },
     ...MutateCallbacks.AddCharacter(),
   })

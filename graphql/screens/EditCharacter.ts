@@ -14,6 +14,8 @@ const getCharacterQuery = gql`
       birthday
       description
       imageUrl
+      sex
+      acquirementsCount
     }
   }
 `
