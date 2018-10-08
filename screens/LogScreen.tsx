@@ -81,8 +81,8 @@ export default (props: Props) => (
       if (list.length === 0) {
         return (
           <Body style={{justifyContent: 'center', alignItems: 'stretch'}}>
-            <Text onPress={() => props.navigation.pop()} note style={{textAlign: 'center'}}>まだ何もできないみたいだね</Text>
-            <Text onPress={() => props.navigation.pop()} note style={{textAlign: 'center'}}>できたことを登録しよう！</Text>
+            <Text onPress={() => props.navigation.pop()} note style={{textAlign: 'center'}}>まだ何も記録されていないよ</Text>
+            <Text onPress={() => props.navigation.pop()} note style={{textAlign: 'center'}}>「記録」からできたことを登録しよう！</Text>
           </Body>
         )
       }
