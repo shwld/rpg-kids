@@ -16,7 +16,7 @@ import CharacterIcon from './CharacterIcon'
 import toDate from '../lib/utils/toDate'
 import { Character } from '../graphql/types'
 import Toast from '../lib/Toast'
-import SEXES from '../lib/constants/SEXES'
+import SEXES from '../lib/constants/sexes'
 
 interface Props {
   defaultValues?: Character

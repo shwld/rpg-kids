@@ -15,19 +15,12 @@ import getAge from '../lib/utils/getAge'
 import styles from '../styles'
 import theme from '../native-base-theme/variables/platform'
 import Lottie from './Lottie'
+import { Acquirement, Character } from '../graphql/types'
 
 
 interface Props {
-  acquirement: {
-    name: string
-    acquiredAt: Date
-  }
-  character: {
-    id: string
-    name: string
-    birthday: Date
-    imageUrl?: string
-  }
+  acquirement: Acquirement
+  character: Character
   onCharacterClick: Function
   onAcquirementClick: Function
   onBlockClick?: Function
@@ -58,7 +51,7 @@ const blockOrReport = (name: string, onBlockClick) => {
 export default ({ acquirement, character, onCharacterClick, onAcquirementClick, onBlockClick }: Props) => (
   <Card>
     <CardItem button onPress={() => onCharacterClick()}>
-      <CharacterIcon uri={character.imageUrl} style={{marginRight: 20}} />
+      <CharacterIcon uri={character.imageUrl} sex={character.sex} style={{marginRight: 20}} />
       <Body style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
         <Text style={styles.w100}>{character.name}</Text>
         <Text note numberOfLines={1} style={styles.w100}>{getAge(character.birthday, acquirement.acquiredAt)}ころ</Text>

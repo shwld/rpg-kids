@@ -19,6 +19,7 @@ const getCharactersQuery = gql`
           birthday
           description
           imageUrl
+          sex
           acquirementsCount
         }
         cursor

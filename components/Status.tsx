@@ -13,6 +13,7 @@ import getAge from '../lib/utils/getAge'
 import CharacterIcon from '../components/CharacterIcon'
 import { Character } from '../graphql/types'
 import theme from '../native-base-theme/variables/platform'
+import getSexLabel from '../lib/utils/getSexLabel'
 
 interface OptionActions {
   editCharacter: () => any,
@@ -78,6 +79,7 @@ export default ({character, selectableCharacters, addCharacter = () => {}, chang
     <CardItem style={{justifyContent: 'center', alignItems: 'center'}}>
       <CharacterIcon
         uri={character.imageUrl}
+        sex={character.sex}
         style={{marginRight: 20}}
       />
       {selectableCharacters && (
@@ -103,6 +105,7 @@ export default ({character, selectableCharacters, addCharacter = () => {}, chang
     </CardItem>
     {!hideDetails && <CardItem style={{justifyContent: 'space-around', alignItems: 'center'}}>
       <Body style={{flexDirection: 'column', justifyContent: 'space-around'}}>
+        <Text note>性別: {getSexLabel(character.sex)}</Text>
         <Text note>{getAge(character.birthday, new Date())}  できること: {character.acquirementsCount}個</Text>
         <Text>{character.description}</Text>
       </Body>

@@ -23,6 +23,7 @@ const getAcquirementsQuery = gql`
             name
             birthday
             imageUrl
+            sex
           }
         }
       }

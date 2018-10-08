@@ -21,6 +21,7 @@ export default ({character, handlePress}: Props) => (
     <CardItem button onPress={() => handlePress ? handlePress() : {}} style={{justifyContent: 'flex-start', alignItems: 'center'}}>
       <CharacterIcon
         uri={character.imageUrl}
+        sex={character.sex}
         style={{marginRight: 20}}
       />
       <Body style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
