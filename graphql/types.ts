@@ -22,6 +22,7 @@ export interface Character {
   imageUrl?: string
   sex?: string
   acquirements: RelayConnection<Acquirement>
+  nextAcquirements: RelayConnection<Acquirement>
   acquirementsCount: number
   acquirement: Acquirement
 }

@@ -23,10 +23,11 @@ interface Props {
   birthday: Date,
   acquirements: Acquirement[],
   goLogs?: () => any,
-  goSkill: (id: string) => any,
+  goSkill?: (id: string) => any,
+  emptyItemRender?: () => any,
 }
 
-export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
+export default ({title, birthday, acquirements, goLogs, goSkill, emptyItemRender}: Props) => (
   <Card style={{flex: 0}}>
     <List style={{ elevation: 3, backgroundColor: 'white' }}>
       <ListItem header itemDivider onPress={() => {goLogs ? goLogs() : () => {}}}>
@@ -39,14 +40,15 @@ export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
       </ListItem>
       {acquirements.length === 0 && (
         <ListItem>
-          <Body style={styles.stretch}>
+          { !emptyItemRender && <Body style={styles.stretch}>
             <Text note>まだ何も記録されていないよ</Text>
             <Text note>「記録」からできたことを登録しよう！</Text>
-          </Body>
+          </Body>}
+          { emptyItemRender && emptyItemRender() }
         </ListItem>
       )}
       {acquirements.map(it => (
-        <ListItem key={it.id} onPress={() => {goSkill(it.id)}}>
+        <ListItem key={it.id} onPress={() => goSkill ? goSkill(it.id) : {}}>
           <Body>
             <Text>{it.name}</Text>
             <Text note numberOfLines={1}>{getAge(birthday, it.acquiredAt)}ころ</Text>
