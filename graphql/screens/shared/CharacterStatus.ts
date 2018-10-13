@@ -28,6 +28,15 @@ query GetUser {
               }
             }
           }
+          nextAcquirements(first: 3) {
+            edges {
+              node {
+                id
+                name
+                acquiredAt
+              }
+            }
+          }
         }
       }
     }
