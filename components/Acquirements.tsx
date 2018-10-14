@@ -24,10 +24,9 @@ interface Props {
   acquirements: Acquirement[],
   goLogs?: () => any,
   goSkill?: (id: string) => any,
-  emptyItemRender?: () => any,
 }
 
-export default ({title, birthday, acquirements, goLogs, goSkill, emptyItemRender}: Props) => (
+export default ({title, birthday, acquirements, goLogs, goSkill}: Props) => (
   <Card style={{flex: 0}}>
     <List style={{ elevation: 3, backgroundColor: 'white' }}>
       <ListItem header itemDivider onPress={() => {goLogs ? goLogs() : () => {}}}>
@@ -40,11 +39,10 @@ export default ({title, birthday, acquirements, goLogs, goSkill, emptyItemRender
       </ListItem>
       {acquirements.length === 0 && (
         <ListItem>
-          { !emptyItemRender && <Body style={styles.stretch}>
+          <Body style={styles.stretch}>
             <Text note>まだ何も記録されていないよ</Text>
             <Text note>「記録」からできたことを登録しよう！</Text>
-          </Body>}
-          { emptyItemRender && emptyItemRender() }
+          </Body>
         </ListItem>
       )}
       {acquirements.map(it => (

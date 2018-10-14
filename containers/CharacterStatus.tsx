@@ -15,7 +15,7 @@ import Toast from '../lib/Toast'
 
 
 interface Props {
-  render: (payload: {character: Character, characters: Character[], acquirements: Acquirement[], refetch: Function}) => JSX.Element
+  render: (payload: {character: Character, characters: Character[], acquirements: Acquirement[], nextAcquirements: Acquirement[], refetch: Function}) => JSX.Element
   navigation: NavigationScreenProp<any, any>
   selectCharacter(payload: { variables: {characterId: string}})
   removeCharacter(payload: { variables: {id: string}, refetchQueries: any, update: any })
@@ -45,9 +45,14 @@ const Screen = (props: Props) => (
 
       const characters = data.user.characters.edges.map(it => it.node)
       const character = Getter.getCurrentCharacter(data)
+      console.log(Query.GetUser)
+      console.log(data)
+      console.log(character)
 
       if (!character) { return <EmptyChild navigation={props.navigation} /> }
       const acquirements: any[] = character.acquirements.edges.map(it => it.node)
+      const nextAcquirements: any[] = character.nextAcquirements.edges.map(it => it.node)
+      console.log(nextAcquirements)
 
       const options = props.useOptions !== false ? {
         editCharacter: () => props.navigation.navigate('EditCharacter', {characterId: character.id}),
@@ -66,7 +71,7 @@ const Screen = (props: Props) => (
             addCharacter={() => props.navigation.navigate('AddCharacter')}
             hideDetails={props.hideDetails}
           ></Status>
-          {props.render({character, characters, acquirements, refetch})}
+          {props.render({character, characters, acquirements, nextAcquirements, refetch})}
         </Content>
       )
     }}
