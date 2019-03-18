@@ -34,7 +34,7 @@ export default (callback: (uri: string) => any) => {
     {
       options: [
         { text: 'カメラ', icon: 'camera', iconColor: theme.brandDark },
-        { text: 'カメラロール', icon: 'file', iconColor: theme.brandDark },
+        { text: 'カメラロール', icon: 'ios-image', iconColor: theme.brandDark },
         { text: 'キャンセル', icon: 'close', iconColor: theme.brandDark }
       ],
       cancelButtonIndex: 2,
