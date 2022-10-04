@@ -9,7 +9,7 @@
     "apollo-link-http": "^1.5.4",
     "apollo-link-state": "^0.4.1",
     "date-fns": "^1.29.0",
-    "expo": "^28.0.0",
+    "expo": "^46.0.14",
     "firebase": "^5.2.0",
     "graphql": "^0.13.0",
     "graphql-tag": "^2.9.2",
